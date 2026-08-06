@@ -1,0 +1,3 @@
+# GitHub Pages (Jekyll) — keep docs in the repo but do not publish them
+exclude:
+  - docs
