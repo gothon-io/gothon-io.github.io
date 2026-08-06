@@ -1,1 +1,677 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gothon — Software for founders who ship</title>
+<meta name="description" content="Gothon helps SaaS and product founders design, build, and ship production-ready software — from MVP to scale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF4;
+  --bg-deep:#0B1220;
+  --surface:#F7F9FC;
+  --ink:#0B1220;
+  --muted:#5A6578;
+  --line:#C9D3E0;
+  --blue:#1B4DFF;
+  --blue-soft:#DCE5FF;
+  --cyan:#00B3A6;
+  --signal:#FF5A2F;
+  --pharma:#0E6B54;
+  --pharma-deep:#083D30;
+  --disp:'Syne',system-ui,sans-serif;
+  --body:'Manrope',system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(11,18,32,.06),0 18px 48px -24px rgba(11,18,32,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button,a.btn{font-family:inherit;cursor:pointer}
+img{display:block;max-width:100%}
+.wrap{width:min(1120px,100% - 40px);margin-inline:auto}
+.kicker{
+  font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--blue);
+}
+
+/* ----- nav ----- */
+.nav{
+  position:fixed;inset:0 0 auto;z-index:40;
+  backdrop-filter:blur(14px);
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:border-color .25s, background .25s, color .25s;
+  color:#fff;
+}
+.nav .nav-links a{color:rgba(255,255,255,.7)}
+.nav .nav-links a:hover{color:#fff}
+.nav .btn-primary{background:#fff;color:var(--ink)}
+.nav .btn-primary:hover{background:#e8edf8}
+.nav .menu-btn{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08)}
+.nav .menu-btn span{background:#fff}
+.nav.scrolled{
+  border-color:var(--line);
+  background:rgba(247,249,252,.92);
+  color:var(--ink);
+}
+.nav.scrolled .nav-links a{color:var(--muted)}
+.nav.scrolled .nav-links a:hover{color:var(--ink)}
+.nav.scrolled .btn-primary{background:var(--ink);color:#fff}
+.nav.scrolled .btn-primary:hover{background:#161f33}
+.nav.scrolled .menu-btn{border-color:var(--line);background:var(--surface)}
+.nav.scrolled .menu-btn span{background:var(--ink)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.03em;
+}
+.mark{
+  width:28px;height:28px;border-radius:8px;
+  background:linear-gradient(135deg,var(--blue),#4F7CFF 55%,var(--cyan));
+  position:relative;flex:none;
+  box-shadow:0 6px 16px -8px rgba(27,77,255,.8);
+}
+.mark::after{
+  content:"";position:absolute;inset:7px 7px 7px 11px;
+  border:2.5px solid #fff;border-left:0;border-radius:0 6px 6px 0;
+}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:600;color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:none;border-radius:999px;padding:12px 22px;
+  font-weight:700;font-size:14px;transition:transform .2s,background .2s,box-shadow .2s;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{background:#161f33}
+.btn-ghost{
+  background:transparent;color:var(--ink);
+  border:1.5px solid var(--line);padding:11px 20px;
+}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 12px 28px -14px rgba(27,77,255,.9)}
+.btn-blue:hover{background:#143de0}
+.menu-btn{
+  display:none;width:42px;height:42px;border-radius:10px;
+  border:1.5px solid var(--line);background:var(--surface);
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+}
+.menu-btn span{width:16px;height:2px;background:var(--ink);border-radius:2px}
+
+/* ----- hero ----- */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+  color:#fff;
+  background:
+    radial-gradient(ellipse 90% 70% at 78% 18%, rgba(27,77,255,.45), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 12% 80%, rgba(0,179,166,.28), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,90,47,.12), transparent 45%),
+    linear-gradient(165deg,#070B14 0%,#0B1220 42%,#121C33 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 70% 60% at 60% 40%, #000 20%, transparent 75%);
+  animation:gridDrift 28s linear infinite;
+}
+@keyframes gridDrift{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-64px,-64px,0)}
+}
+.hero-orb{
+  position:absolute;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(27,77,255,.35),transparent 68%);
+  top:8%;right:8%;filter:blur(8px);
+  animation:orbFloat 9s ease-in-out infinite;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(-24px,18px)}
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:110px 0 64px;
+  width:min(1120px,100% - 40px);margin-inline:auto;
+}
+.hero-word{
+  font-family:var(--disp);
+  font-weight:800;
+  font-size:clamp(52px,9vw,96px);
+  line-height:.9;
+  letter-spacing:-.055em;
+  margin-bottom:20px;
+  opacity:0;
+  animation:rise .9s cubic-bezier(.16,1,.3,1) .1s forwards;
+}
+.hero-word span{
+  background:linear-gradient(105deg,#fff 20%,#A8C0FF 55%,#7DE8DF 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero h1{
+  font-family:var(--disp);
+  font-size:clamp(26px,3.6vw,40px);
+  line-height:1.12;
+  letter-spacing:-.03em;
+  font-weight:700;
+  max-width:18ch;
+  margin-bottom:12px;
+  opacity:0;
+  animation:rise .9s cubic-bezier(.16,1,.3,1) .25s forwards;
+}
+.hero .lead{
+  color:rgba(255,255,255,.68);
+  font-size:clamp(15px,1.4vw,17px);
+  max-width:42ch;
+  margin-bottom:28px;
+  opacity:0;
+  animation:rise .9s cubic-bezier(.16,1,.3,1) .4s forwards;
+}
+.hero-cta{
+  display:flex;flex-wrap:wrap;gap:12px;
+  opacity:0;
+  animation:rise .9s cubic-bezier(.16,1,.3,1) .55s forwards;
+}
+.hero .btn-primary{background:#fff;color:var(--ink)}
+.hero .btn-primary:hover{background:#e8edf8}
+.hero .btn-ghost{border-color:rgba(255,255,255,.28);color:#fff}
+.hero .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+@keyframes rise{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:none}
+}
+
+/* ----- sections ----- */
+section{padding:96px 0}
+.sec-head{max-width:620px;margin-bottom:48px}
+.sec-head h2{
+  font-family:var(--disp);
+  font-size:clamp(30px,4vw,46px);
+  letter-spacing:-.035em;
+  line-height:1.08;
+  margin:12px 0 14px;
+}
+.sec-head p{color:var(--muted);font-size:17px}
+
+/* ----- about ----- */
+.about{
+  background:var(--surface);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.about-grid{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:end;
+}
+.about h2{
+  font-family:var(--disp);
+  font-size:clamp(32px,4.2vw,48px);
+  letter-spacing:-.035em;
+  line-height:1.08;
+  margin-bottom:18px;
+}
+.about p{color:var(--muted);font-size:17px;max-width:46ch}
+.about p+p{margin-top:14px}
+.about-aside{
+  border-left:2px solid var(--blue);
+  padding:8px 0 8px 24px;
+}
+.about-aside b{
+  display:block;font-family:var(--disp);font-size:22px;letter-spacing:-.02em;margin-bottom:6px;
+}
+.about-aside span{color:var(--muted);font-size:15px}
+
+/* ----- capabilities ----- */
+.cap-list{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.cap{
+  background:var(--surface);
+  padding:32px 28px;
+  transition:background .25s;
+}
+.cap:hover{background:#fff}
+.cap .n{
+  font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.08em;
+  color:var(--blue);margin-bottom:18px;
+}
+.cap h3{
+  font-family:var(--disp);font-size:22px;letter-spacing:-.02em;margin-bottom:10px;
+}
+.cap p{color:var(--muted);font-size:15px}
+
+/* ----- products ----- */
+.products{background:var(--bg-deep);color:#fff;position:relative;overflow:hidden}
+.products::before{
+  content:"";position:absolute;inset:auto -20% -40% 40%;
+  height:70%;background:radial-gradient(circle,rgba(27,77,255,.35),transparent 60%);
+  pointer-events:none;
+}
+.products .sec-head{position:relative;z-index:1}
+.products .kicker{color:#8FA8FF}
+.products .sec-head p{color:rgba(255,255,255,.62)}
+.product-feature{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center;
+}
+.product-copy .tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(14,107,84,.2);border:1px solid rgba(14,107,84,.45);
+  color:#7DDBC4;border-radius:999px;padding:6px 12px;
+  font-size:12px;font-weight:700;letter-spacing:.04em;margin-bottom:16px;
+}
+.product-copy .tag i{width:7px;height:7px;border-radius:50%;background:#2ECC8F}
+.product-copy h3{
+  font-family:var(--disp);font-size:clamp(28px,3.2vw,36px);
+  letter-spacing:-.03em;margin-bottom:12px;
+}
+.product-copy p{color:rgba(255,255,255,.64);font-size:16px;max-width:38ch;margin-bottom:22px}
+.product-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.product-meta span{
+  font-size:12px;font-weight:700;color:rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 12px;
+}
+
+/* browser preview */
+.preview-link{display:block;border-radius:18px;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.preview-link:hover{transform:translateY(-6px)}
+.browser{
+  background:#0F1A16;border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.7);
+}
+.browser-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;background:#14241E;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+.dots i:nth-child(1){background:#F4B4B0}
+.dots i:nth-child(2){background:#F7DFA5}
+.dots i:nth-child(3){background:#B4E3CB}
+.url{
+  flex:1;text-align:center;font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.45);background:rgba(255,255,255,.05);
+  border-radius:7px;padding:6px 10px;
+}
+.preview-ui{
+  display:grid;grid-template-columns:148px 1fr;min-height:320px;
+  background:#F3FAF6;color:#0F2A21;
+}
+.pv-side{background:#083D30;color:#fff;padding:14px 10px}
+.pv-brand{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:700;font-size:13px;padding:4px 6px 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:10px}
+.pv-logo{width:22px;height:22px;border-radius:6px;background:#0E6B54;position:relative}
+.pv-logo::before,.pv-logo::after{content:"";position:absolute;background:#fff;border-radius:2px}
+.pv-logo::before{width:10px;height:3px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.pv-logo::after{width:3px;height:10px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.pv-nav{display:flex;flex-direction:column;gap:3px}
+.pv-nav span{
+  font-size:11px;font-weight:600;padding:8px 10px;border-radius:8px;color:rgba(255,255,255,.55);
+}
+.pv-nav span.on{background:rgba(255,255,255,.12);color:#fff}
+.pv-main{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.pv-top{display:flex;justify-content:space-between;align-items:center}
+.pv-top h4{font-family:var(--disp);font-size:15px;letter-spacing:-.02em}
+.pv-chip{font-size:10px;font-weight:700;background:#E3F2EB;color:#0E6B54;border-radius:999px;padding:4px 9px}
+.pv-panels{display:grid;grid-template-columns:1.2fr .8fr;gap:10px;flex:1}
+.pv-panel{background:#fff;border:1px solid #DCEAE3;border-radius:12px;padding:12px;box-shadow:0 8px 20px -16px rgba(8,61,48,.4)}
+.pv-panel h5{font-size:11px;font-weight:700;color:#5B7268;margin-bottom:10px}
+.pv-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid #E9F3EE;font-size:11px;font-weight:600;
+}
+.pv-row:last-child{border-bottom:0}
+.pv-row b{font-weight:700}
+.pv-row .price{font-variant-numeric:tabular-nums;color:#0E6B54}
+.pv-alert{
+  display:flex;gap:8px;align-items:flex-start;
+  background:#FDE8E7;border-radius:10px;padding:10px;margin-top:8px;
+}
+.pv-alert .dot{width:8px;height:8px;border-radius:50%;background:#E4322B;margin-top:3px;flex:none}
+.pv-alert div{font-size:10px;line-height:1.35}
+.pv-alert b{display:block;font-size:11px;margin-bottom:2px}
+.pv-cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #DCEAE3}
+.pv-cart-total span{font-size:11px;font-weight:600;color:#5B7268}
+.pv-cart-total b{font-family:var(--disp);font-size:18px;letter-spacing:-.02em}
+.pv-cta-bar{
+  margin-top:10px;background:#0E6B54;color:#fff;text-align:center;
+  border-radius:9px;padding:10px;font-size:12px;font-weight:700;
+}
+
+/* ----- process ----- */
+.process-list{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.step{padding-top:20px;border-top:2px solid var(--ink)}
+.step .n{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.1em;color:var(--blue);margin-bottom:16px}
+.step h3{font-family:var(--disp);font-size:24px;letter-spacing:-.02em;margin-bottom:10px}
+.step p{color:var(--muted);font-size:15px}
+
+/* ----- who ----- */
+.who{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.who-card{
+  padding:28px 24px;border-radius:18px;
+  background:var(--bg);border:1px solid var(--line);
+}
+.who-card h3{font-family:var(--disp);font-size:20px;letter-spacing:-.02em;margin-bottom:8px}
+.who-card p{color:var(--muted);font-size:14.5px}
+
+/* ----- cta ----- */
+.cta-band{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 80% at 85% 20%, rgba(27,77,255,.5), transparent 55%),
+    radial-gradient(ellipse 50% 60% at 10% 90%, rgba(0,179,166,.25), transparent 50%),
+    var(--bg-deep);
+  color:#fff;text-align:center;padding:100px 0;
+}
+.cta-band h2{
+  font-family:var(--disp);
+  font-size:clamp(32px,5vw,52px);
+  letter-spacing:-.04em;line-height:1.08;
+  max-width:16ch;margin:0 auto 16px;
+}
+.cta-band p{color:rgba(255,255,255,.65);font-size:17px;margin-bottom:28px}
+.cta-band .btn-primary{background:#fff;color:var(--ink)}
+
+/* ----- footer ----- */
+footer{
+  background:var(--bg-deep);color:rgba(255,255,255,.55);
+  padding:40px 0 48px;border-top:1px solid rgba(255,255,255,.08);
+}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot .brand{color:#fff}
+.foot a:hover{color:#fff}
+
+/* ----- mobile ----- */
+@media (max-width:900px){
+  .nav-links{display:none}
+  .nav-links.open{
+    display:flex;flex-direction:column;align-items:stretch;
+    position:absolute;left:20px;right:20px;top:76px;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:16px;gap:4px;box-shadow:var(--shadow);
+  }
+  .nav-links.open a{padding:12px 10px;border-radius:10px;color:var(--muted)}
+  .nav-links.open a:hover{background:var(--bg);color:var(--ink)}
+  .nav-links.open .btn{width:100%;margin-top:8px;background:var(--ink);color:#fff}
+  .nav-links.open .btn:hover{background:#161f33}
+  .menu-btn{display:flex}
+  .about-grid,.product-feature{grid-template-columns:1fr;gap:32px}
+  .cap-list,.process-list,.who-grid{grid-template-columns:1fr}
+  .preview-ui{grid-template-columns:1fr}
+  .pv-side{display:none}
+  .hero-content{padding:120px 0 56px}
+}
+@media (max-width:640px){
+  .pv-panels{grid-template-columns:1fr}
+  .hero-word{font-size:clamp(56px,18vw,88px)}
+}
+</style>
+<script defer src="https://analytics.raftlabs.com/script.js" data-website-id="ee9521e4-0442-4e66-b4e9-9a25f58ad4c9"></script>
+<script defer src="https://analytics.raftlabs.com/recorder.js" data-website-id="ee9521e4-0442-4e66-b4e9-9a25f58ad4c9"></script>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="mark" aria-hidden="true"></span>
+      Gothon
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#products">Products</a>
+      <a href="#process">Process</a>
+      <a class="btn btn-primary" href="#contact">Start a project</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" type="button">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-orb" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-word"><span>Gothon</span></div>
+    <h1>Software that founders can ship.</h1>
+    <p class="lead">We partner with SaaS and product founders to design, build, and launch production-ready products — not endless prototypes.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#contact">Book a discovery call</a>
+      <a class="btn btn-ghost" href="#products">See our products</a>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="wrap about-grid">
+    <div>
+      <p class="kicker">Who we are</p>
+      <h2>A product studio for founders who need real software, fast.</h2>
+      <p>Gothon is a software development company built around one job: helping SaaS and product founders turn an idea into a living product. We own architecture, UI, backend, and delivery — so you stay focused on customers and growth.</p>
+      <p>We ship the same way we expect our clients to: clear scope, short cycles, and software that holds up after launch day.</p>
+    </div>
+    <aside class="about-aside">
+      <b>Built by people who ship products.</b>
+      <span>We design and run our own software too — so the engineering you get is battle-tested, not deck-tested.</span>
+    </aside>
+  </div>
+</section>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Capabilities</p>
+      <h2>Everything between idea and production.</h2>
+      <p>From first MVP to the systems that keep a SaaS product growing — one partner across the stack.</p>
+    </div>
+    <div class="cap-list">
+      <article class="cap">
+        <div class="n">01</div>
+        <h3>Product MVPs</h3>
+        <p>Scoped builds that put a real product in users’ hands — web apps, dashboards, and multi-tenant SaaS foundations.</p>
+      </article>
+      <article class="cap">
+        <div class="n">02</div>
+        <h3>Full-stack systems</h3>
+        <p>APIs, auth, billing hooks, admin tools, and data models designed to grow with your roadmap — not fight it.</p>
+      </article>
+      <article class="cap">
+        <div class="n">03</div>
+        <h3>Product UI & UX</h3>
+        <p>Interfaces founders can demo with confidence: clear flows, sharp design systems, and screens that convert.</p>
+      </article>
+      <article class="cap">
+        <div class="n">04</div>
+        <h3>Integrations</h3>
+        <p>Payments, CRMs, messaging, analytics, and the third-party stack your product already depends on.</p>
+      </article>
+      <article class="cap">
+        <div class="n">05</div>
+        <h3>Mobile & progressive apps</h3>
+        <p>Companion apps and responsive product experiences when your users live on the move.</p>
+      </article>
+      <article class="cap">
+        <div class="n">06</div>
+        <h3>Ongoing product teams</h3>
+        <p>Stay with you past launch — iteration, performance, and feature delivery as your user base grows.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Products</p>
+      <h2>Shipped evidence — not slides.</h2>
+      <p>We build and operate our own products. Here’s one you can open and explore right now.</p>
+    </div>
+
+    <div class="product-feature">
+      <div class="product-copy">
+        <div class="tag"><i></i> LIVE DEMO</div>
+        <h3>PharmaDesk BD</h3>
+        <p>Pharmacy POS with batch-wise stock, supplier dues, and expiry alerts — built for real counters in Bangladesh. Scan, sell, and catch near-expiry stock before it becomes waste.</p>
+        <div class="product-meta">
+          <span>POS</span>
+          <span>Inventory</span>
+          <span>Expiry alerts</span>
+          <span>Web + mobile</span>
+        </div>
+        <a class="btn btn-blue" href="/pharma-desk/">Open PharmaDesk demo →</a>
+      </div>
+
+      <a class="preview-link" href="/pharma-desk/" aria-label="Open PharmaDesk BD demo">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="url">gothon.io/pharma-desk</div>
+          </div>
+          <div class="preview-ui" aria-hidden="true">
+            <aside class="pv-side">
+              <div class="pv-brand"><span class="pv-logo"></span> PharmaDesk</div>
+              <div class="pv-nav">
+                <span class="on">Sales POS</span>
+                <span>Inventory</span>
+                <span>Expiry alerts</span>
+                <span>Suppliers</span>
+                <span>Reports</span>
+              </div>
+            </aside>
+            <div class="pv-main">
+              <div class="pv-top">
+                <h4>Sales POS</h4>
+                <span class="pv-chip">FEFO active</span>
+              </div>
+              <div class="pv-panels">
+                <div class="pv-panel">
+                  <h5>Fast search — tap to add</h5>
+                  <div class="pv-row"><span>Napa 500mg</span><b class="price">৳1.20</b></div>
+                  <div class="pv-row"><span>Seclo 20mg</span><b class="price">৳6.00</b></div>
+                  <div class="pv-row"><span>Ace Plus</span><b class="price">৳2.50</b></div>
+                  <div class="pv-row"><span>Monas 10</span><b class="price">৳18.00</b></div>
+                  <div class="pv-alert">
+                    <span class="dot"></span>
+                    <div><b>Antacid Plus · expired</b>Blocked at POS · move to disposal</div>
+                  </div>
+                </div>
+                <div class="pv-panel">
+                  <h5>Current sale</h5>
+                  <div class="pv-row"><span>Napa × 20</span><b>৳24</b></div>
+                  <div class="pv-row"><span>Seclo × 2</span><b>৳12</b></div>
+                  <div class="pv-row"><span>Monas × 1</span><b>৳18</b></div>
+                  <div class="pv-cart-total"><span>Total</span><b>৳54</b></div>
+                  <div class="pv-cta-bar">Complete sale</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Process</p>
+      <h2>A clear path from brief to launch.</h2>
+      <p>No account-manager maze. You work with the people building the product.</p>
+    </div>
+    <div class="process-list">
+      <article class="step">
+        <div class="n">01 · DISCOVERY</div>
+        <h3>Scope what matters</h3>
+        <p>A short call to map users, constraints, and the fastest path to a shippable first version.</p>
+      </article>
+      <article class="step">
+        <div class="n">02 · BUILD</div>
+        <h3>Design and ship in cycles</h3>
+        <p>Weekly demos, tight feedback loops, and production-ready code — not throwaway prototypes.</p>
+      </article>
+      <article class="step">
+        <div class="n">03 · LAUNCH</div>
+        <h3>Go live, then grow</h3>
+        <p>Deploy, instrument, and keep iterating as real users show you what to build next.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="who">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Who we build for</p>
+      <h2>Founders who need a product team, not a vendor.</h2>
+      <p>Whether you’re validating an MVP or scaling a live SaaS, we plug in where it hurts most.</p>
+    </div>
+    <div class="who-grid">
+      <article class="who-card">
+        <h3>Pre-seed & seed</h3>
+        <p>Ship an MVP that investors and early users can actually use — scoped, polished, and ready to learn from.</p>
+      </article>
+      <article class="who-card">
+        <h3>SaaS product teams</h3>
+        <p>Extend your roadmap with senior engineering when hiring is slow and the backlog won’t wait.</p>
+      </article>
+      <article class="who-card">
+        <h3>Operators going digital</h3>
+        <p>Turn a working business process into software — POS, ops tools, and internal products that staff adopt.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band" id="contact">
+  <div class="wrap">
+    <h2>Ready to build your product?</h2>
+    <p>Tell us what you’re shipping. We’ll map the fastest path to launch.</p>
+    <a class="btn btn-primary" href="mailto:gothon.official@gmail.com">gothon.official@gmail.com</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="/">
+      <span class="mark" aria-hidden="true"></span>
+      Gothon
+    </a>
+    <div>© 2026 Gothon. Software for founders who ship.</div>
+    <a href="/pharma-desk/">PharmaDesk BD</a>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+},{passive:true});
+
+menuBtn.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+</script>
+</body>
+</html>
