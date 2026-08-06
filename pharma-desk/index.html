@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaDesk BD — Pharmacy POS + Expiry Alert</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3FAF6; --surface:#FFFFFF; --ink:#0F2A21; --muted:#5B7268;
+  --green:#0E6B54; --green-deep:#083D30; --green-soft:#E3F2EB;
+  --red:#E4322B; --red-dark:#B91C1C; --red-soft:#FDE8E7;
+  --amber:#B45309; --amber-soft:#FDF0D5;
+  --line:#DCEAE3; --line-soft:#E9F3EE;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:'Bricolage Grotesque','Inter',system-ui,sans-serif;
+  --body:'Inter',system-ui,-apple-system,sans-serif;
+  --shadow:0 1px 2px rgba(15,42,33,.05),0 8px 24px -12px rgba(15,42,33,.18);
+  --shadow-lg:0 24px 60px -24px rgba(8,61,48,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+button{font-family:inherit;cursor:pointer}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(243,250,246,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.logomark{position:relative;width:32px;height:32px;border-radius:9px;background:var(--green);display:grid;place-items:center;flex:none}
+.logomark::before{content:"";width:14px;height:4px;background:#fff;border-radius:2px;position:absolute}
+.logomark::after{content:"";width:4px;height:14px;background:#fff;border-radius:2px;position:absolute}
+.logodot{position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+.logo small{color:var(--muted);font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-left:2px}
+.topnav{display:flex;gap:22px;margin-left:auto}
+.topnav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600}
+.topnav a:hover{color:var(--green)}
+.pill-cta{background:var(--green);color:#fff;border:none;border-radius:99px;padding:9px 18px;font-weight:700;font-size:13.5px;box-shadow:var(--shadow)}
+.pill-cta:hover{background:var(--green-deep)}
+
+/* ---------- hero ---------- */
+.hero{padding:72px 0 40px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:700;color:var(--green);letter-spacing:.04em}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(228,50,43,.4)}50%{box-shadow:0 0 0 6px rgba(228,50,43,0)}}
+h1{font-family:var(--disp);font-size:clamp(38px,5vw,58px);line-height:1.04;letter-spacing:-.03em;font-weight:800;margin:20px 0 8px}
+h1 .hl{color:var(--green)}
+.bn{font-size:clamp(17px,2vw,21px);color:var(--green-deep);font-weight:600;margin-bottom:14px}
+.hero p.lead{color:var(--muted);font-size:17px;max-width:52ch;margin-bottom:26px}
+.hero-stats{display:flex;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.hstat{flex:1;padding:16px 18px}
+.hstat+.hstat{border-left:1px solid var(--line-soft)}
+.hstat b{display:block;font-family:var(--disp);font-size:24px;letter-spacing:-.02em}
+.hstat span{font-size:12px;color:var(--muted);font-weight:600}
+/* expiry horizon — signature */
+.horizon-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:var(--shadow-lg)}
+.horizon-card h3{font-family:var(--disp);font-size:18px;letter-spacing:-.01em;margin-bottom:2px}
+.horizon-card .sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.horizon-track{position:relative;height:10px;border-radius:99px;background:linear-gradient(90deg,#D92D20 0%,#F79009 22%,#F7C948 40%,#12B76A 70%,#0E6B54 100%);margin:34px 6px 8px}
+.h-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid var(--green);box-shadow:0 2px 6px rgba(0,0,0,.18);cursor:default;transition:transform .15s}
+.h-dot:hover{transform:translate(-50%,-50%) scale(1.25)}
+.h-dot.amber{border-color:#F79009}.h-dot.red{border-color:#D92D20}
+.h-dot .tip{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);background:var(--green-deep);color:#fff;font-size:11px;font-weight:600;padding:5px 9px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.h-dot:hover .tip{opacity:1}
+.horizon-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600;padding:0 4px;margin-top:10px}
+.horizon-legend{display:flex;gap:16px;margin-top:18px;font-size:12px;font-weight:600;color:var(--muted);flex-wrap:wrap}
+.horizon-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+
+/* ---------- section headers ---------- */
+section{padding:64px 0}
+.sec-head{max-width:640px;margin-bottom:36px}
+.sec-head .kicker{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.sec-head h2{font-family:var(--disp);font-size:clamp(28px,3.4vw,40px);letter-spacing:-.025em;line-height:1.1;margin:10px 0 8px}
+.sec-head p{color:var(--muted);font-size:16px}
+
+/* ---------- demo toggle ---------- */
+.demo-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:5px;gap:4px;box-shadow:var(--shadow)}
+.seg button{border:none;background:transparent;padding:10px 22px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.seg button.active{background:var(--green);color:#fff}
+.demo-hint{font-size:13px;color:var(--muted);font-weight:600}
+.demo-hint b{color:var(--green)}
+/* ---------- browser frame (web demo) ---------- */
+.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.browser-top{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:#FBFEFC}
+.b-dots{display:flex;gap:6px}
+.b-dots i{width:11px;height:11px;border-radius:50%;background:#E5EFE9}
+.b-dots i:first-child{background:#F4B4B0}.b-dots i:nth-child(2){background:#F7DFA5}.b-dots i:nth-child(3){background:#B4E3CB}
+.b-url{flex:1;max-width:420px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted);padding:6px 12px;text-align:center;font-weight:600}
+.app{display:grid;grid-template-columns:216px 1fr;min-height:640px}
+.sidebar{background:var(--green-deep);color:#fff;padding:18px 12px;display:flex;flex-direction:column}
+.sb-brand{display:flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:700;font-size:15px;padding:6px 10px 16px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:12px}
+.sb-brand .logomark{width:26px;height:26px;border-radius:7px;background:#fff}
+.sb-brand .logomark::before,.sb-brand .logomark::after{background:var(--green)}
+.sb-brand .logodot{border-color:var(--green-deep)}
+.snav{display:flex;flex-direction:column;gap:3px}
+.snav button{display:flex;align-items:center;gap:11px;background:transparent;border:none;color:rgba(255,255,255,.72);font-size:13.5px;font-weight:600;padding:10px 12px;border-radius:9px;text-align:left;width:100%}
+.snav button svg{flex:none;opacity:.85}
+.snav button:hover{background:rgba(255,255,255,.08);color:#fff}
+.snav button.active{background:var(--green);color:#fff}
+.snav .badge{margin-left:auto;background:var(--red);color:#fff;font-size:10.5px;font-weight:700;border-radius:99px;padding:1px 7px}
+.sb-foot{margin-top:auto;font-size:11px;color:rgba(255,255,255,.5);padding:12px 10px;border-top:1px solid rgba(255,255,255,.12)}
+.sb-foot b{display:block;color:#fff;font-size:12px}
+.main{background:#F7FBF8;padding:22px 24px;overflow:auto}
+.main-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.main-head h4{font-family:var(--disp);font-size:20px;letter-spacing:-.015em}
+.main-head .date{font-size:12.5px;color:var(--muted);font-weight:600}
+.searchbox{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px;color:var(--muted);min-width:250px}
+.searchbox input{border:none;outline:none;background:none;font:inherit;color:var(--ink);width:100%}
+kbd{font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--muted)}
+
+/* cards & tables inside app */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card .lbl{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.card .val{font-family:var(--disp);font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.card .delta{font-size:11.5px;font-weight:700;margin-top:2px}
+.up{color:#0E9F6E}.warn{color:var(--amber)}.bad{color:var(--red-dark)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line-soft)}
+.panel-head h5{font-size:13.5px;font-weight:700}
+.panel-head .link{font-size:12px;font-weight:700;color:var(--green);background:none;border:none}
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 16px;background:#FBFDFC;border-bottom:1px solid var(--line-soft);font-weight:700}
+td{padding:10px 16px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td .med{font-weight:600}
+td .gen{display:block;font-size:11px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;border-radius:99px;padding:3px 10px}
+.chip i{width:6px;height:6px;border-radius:50%}
+.chip.ok{background:var(--green-soft);color:var(--green)}.chip.ok i{background:var(--green)}
+.chip.amber{background:var(--amber-soft);color:var(--amber)}.chip.amber i{background:var(--amber)}
+.chip.red{background:var(--red-soft);color:var(--red-dark)}.chip.red i{background:var(--red-dark)}
+.tk{font-family:var(--mono);font-weight:600}
+.batch{font-family:var(--mono);font-size:11.5px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.bars{display:flex;align-items:flex-end;gap:10px;height:150px;padding:18px 16px 8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar i{width:100%;max-width:38px;border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,var(--green),#0A5744);transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.bar.today i{background:linear-gradient(180deg,#12B76A,var(--green));box-shadow:0 0 0 3px var(--green-soft)}
+.bar span{font-size:10.5px;color:var(--muted);font-weight:700}
+.bar b{font-size:10px;color:var(--green-deep);font-family:var(--mono)}
+/* POS layout */
+.pos{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.pos-items{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}
+.pitem{border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#FDFEFD;text-align:left;transition:border-color .12s, transform .12s}
+.pitem:hover{border-color:var(--green);transform:translateY(-1px)}
+.pitem b{display:block;font-size:12.8px}
+.pitem span{font-size:11px;color:var(--muted)}
+.pitem .pr{display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+.pitem .pr .tk{font-size:12.5px;color:var(--green-deep)}
+.pitem .add{font-size:10.5px;font-weight:800;color:var(--green);background:var(--green-soft);border-radius:6px;padding:2px 8px}
+.cart-rows{padding:4px 0}
+.crow{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+.crow b{flex:1;font-weight:600}
+.qty{display:flex;align-items:center;gap:7px}
+.qty button{width:20px;height:20px;border-radius:6px;border:1px solid var(--line);background:#fff;font-weight:800;color:var(--green);line-height:1}
+.totals{padding:12px 16px;font-size:13px}
+.totals div{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted);font-weight:600}
+.totals .grand{color:var(--ink);font-weight:800;font-size:16px;border-top:1px dashed var(--line);margin-top:8px;padding-top:10px}
+.paybtns{display:flex;gap:8px;padding:0 16px 16px}
+.paybtns button{flex:1;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px}
+.pay-cash{background:var(--green);color:#fff}
+.pay-print{background:var(--surface);border:1px solid var(--line) !important;color:var(--green-deep)}
+.scanline{display:flex;align-items:center;gap:10px;margin:0 16px 10px;background:var(--bg);border:1px dashed var(--green);border-radius:10px;padding:9px 12px;font-size:12px;color:var(--green-deep);font-weight:600}
+.barcode{display:inline-flex;align-items:stretch;height:16px;gap:1.5px}
+.barcode i{width:2px;background:var(--ink)}
+.barcode i:nth-child(2n){width:1px}
+.barcode i:nth-child(3n){width:3px}
+/* receipt */
+.receipt{background:#fff;border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow);font-family:var(--mono);font-size:11.5px;padding:18px 16px;position:relative;max-width:290px;margin:0 auto}
+.receipt::before,.receipt::after{content:"";position:absolute;left:0;right:0;height:7px;background:radial-gradient(circle at 6px -2px, transparent 6px, #fff 6.5px);background-size:14px 8px}
+.receipt::before{top:-7px;transform:rotate(180deg)}
+.receipt::after{bottom:-7px}
+.receipt h6{text-align:center;font-size:13px;letter-spacing:.04em}
+.receipt .rc-sub{text-align:center;color:var(--muted);font-size:10px;margin-bottom:8px}
+.receipt hr{border:none;border-top:1px dashed #C8D8CF;margin:7px 0}
+.receipt .r-row{display:flex;justify-content:space-between;padding:1.5px 0}
+.receipt .r-grand{font-weight:700;font-size:12.5px}
+.receipt .rc-foot{text-align:center;font-size:10px;color:var(--muted);margin-top:8px}
+/* alerts screen */
+.alert-strip{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line-soft)}
+.alert-strip:last-child{border-bottom:none}
+.alert-ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;font-size:15px}
+.ai-red{background:var(--red-soft)}.ai-amber{background:var(--amber-soft)}.ai-green{background:var(--green-soft)}
+.alert-strip .a-body{flex:1}
+.alert-strip b{font-size:13px;display:block}
+.alert-strip span{font-size:11.5px;color:var(--muted)}
+.abtn{border:1px solid var(--line);background:#fff;border-radius:8px;font-size:11.5px;font-weight:700;color:var(--green-deep);padding:6px 12px}
+.abtn:hover{border-color:var(--green)}
+/* progress bar for stock */
+.stockbar{height:6px;background:var(--line-soft);border-radius:99px;width:90px;overflow:hidden}
+.stockbar i{display:block;height:100%;border-radius:99px}
+
+/* ---------- phone frame (mobile demo) ---------- */
+.mobile-stage{display:none;grid-template-columns:340px 1fr;gap:44px;align-items:start}
+.phone{width:340px;background:#0B1F18;border-radius:44px;padding:12px;box-shadow:var(--shadow-lg),inset 0 0 0 2px rgba(255,255,255,.06)}
+.phone-screen{background:#F7FBF8;border-radius:34px;overflow:hidden;height:660px;display:flex;flex-direction:column;position:relative}
+.notch{height:28px;background:#F7FBF8;display:grid;place-items:center}
+.notch i{width:110px;height:20px;background:#0B1F18;border-radius:99px}
+.m-head{padding:10px 18px 12px;background:var(--green-deep);color:#fff}
+.m-head .m-row{display:flex;align-items:center;justify-content:space-between}
+.m-head h5{font-family:var(--disp);font-size:16px}
+.m-head .m-shop{font-size:10.5px;opacity:.75;font-weight:600}
+.m-bell{position:relative;width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.m-bell::after{content:"3";position:absolute;top:-4px;right:-4px;background:var(--red);font-size:9px;font-weight:800;border-radius:99px;padding:1px 5px}
+.m-body{flex:1;overflow:auto;padding:14px;-ms-overflow-style:none;scrollbar-width:none}
+.m-body::-webkit-scrollbar{display:none}
+.m-tabs{display:flex;background:#fff;border-top:1px solid var(--line);padding:8px 6px 12px}
+.m-tabs button{flex:1;background:none;border:none;font-size:9.5px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.m-tabs button svg{opacity:.75}
+.m-tabs button.active{color:var(--green)}
+.m-tabs button.active svg{opacity:1}
+.m-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:11px}
+.m-card .lbl{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.m-card .val{font-family:var(--disp);font-size:21px;font-weight:700}
+.m-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-list-row{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line-soft);font-size:12px}
+.m-list-row:last-child{border:none}
+.m-list-row b{flex:1;font-weight:600}
+.m-sec-title{font-size:12px;font-weight:800;margin:14px 2px 8px;display:flex;justify-content:space-between;align-items:center}
+.m-sec-title span{font-size:10.5px;color:var(--green);font-weight:700}
+.m-fab{position:absolute;bottom:76px;right:16px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:12px 16px;font-weight:800;font-size:12px;box-shadow:0 10px 24px -8px rgba(14,107,84,.6);display:flex;gap:7px;align-items:center}
+.mobile-notes h3{font-family:var(--disp);font-size:24px;letter-spacing:-.02em;margin-bottom:14px}
+.note-li{display:flex;gap:13px;margin-bottom:18px}
+.note-li .n{flex:none;width:30px;height:30px;border-radius:9px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:800;font-size:13px;font-family:var(--mono)}
+.note-li b{display:block;font-size:14.5px}
+.note-li span{font-size:13px;color:var(--muted)}
+/* ---------- user flow ---------- */
+.flow{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:14px;counter-reset:flow}
+.flow::before{content:"";position:absolute;top:21px;left:4%;right:4%;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px)}
+.fstep{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:50px 14px 16px;box-shadow:var(--shadow)}
+.fstep::before{counter-increment:flow;content:counter(flow,decimal-leading-zero);position:absolute;top:8px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700;box-shadow:0 0 0 5px var(--bg)}
+.fstep b{display:block;font-size:13px;margin-bottom:4px;text-align:center}
+.fstep span{display:block;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.45}
+.fstep.hot::before{background:var(--red)}
+
+/* ---------- features ---------- */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;transition:transform .15s,box-shadow .15s,border-color .15s}
+.feat:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--green)}
+.feat .f-num{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.05em}
+.feat .f-ico{width:40px;height:40px;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;margin:10px 0 12px;color:var(--green)}
+.feat.f-warn .f-ico{background:var(--amber-soft);color:var(--amber)}
+.feat.f-alert .f-ico{background:var(--red-soft);color:var(--red-dark)}
+.feat b{display:block;font-size:14.5px;margin-bottom:4px;letter-spacing:-.01em}
+.feat span{font-size:12.5px;color:var(--muted);line-height:1.5}
+
+/* ---------- footer / cta ---------- */
+.cta-band{background:var(--green-deep);border-radius:24px;padding:52px 48px;color:#fff;display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;position:relative;overflow:hidden}
+.cta-band::after{content:"+";position:absolute;right:-30px;top:-70px;font-family:var(--disp);font-size:340px;font-weight:800;color:rgba(255,255,255,.05);line-height:1}
+.cta-band h2{font-family:var(--disp);font-size:clamp(26px,3vw,36px);letter-spacing:-.02em;line-height:1.12;margin-bottom:10px}
+.cta-band p{color:rgba(255,255,255,.75);font-size:15px;max-width:46ch}
+.cta-band .roadmap{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px}
+.cta-band .roadmap h6{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px}
+.cta-band .roadmap div{display:flex;gap:10px;font-size:13.5px;padding:6px 0;font-weight:600}
+.cta-band .roadmap i{color:#7BE0BC;font-style:normal}
+footer{padding:36px 0 48px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* screens visibility */
+.screen{display:none}
+.screen.active{display:block}
+.mscreen{display:none}
+.mscreen.active{display:block}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:1000px){
+  .hero-grid,.two-col,.pos,.cta-band{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .flow{grid-template-columns:repeat(2,1fr)}
+  .flow::before{display:none}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .app{grid-template-columns:1fr}
+  .sidebar{flex-direction:row;overflow-x:auto;align-items:center;gap:8px;padding:10px}
+  .sb-brand{border:none;margin:0;padding:0 8px 0 0}
+  .snav{flex-direction:row}
+  .snav button{white-space:nowrap;padding:8px 12px}
+  .sb-foot{display:none}
+  .mobile-stage{grid-template-columns:1fr;justify-items:center}
+  .topnav{display:none}
+}
+@media (max-width:560px){
+  .feat-grid,.flow,.cards,.pos-items,.m-grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <div class="logo">
+      <span class="logomark"><span class="logodot"></span></span>
+      PharmaDesk <small>BD</small>
+    </div>
+    <nav class="topnav">
+      <a href="#demo">Live demo</a>
+      <a href="#flow">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="pill-cta" onclick="document.getElementById('demo').scrollIntoView()">Try the demo ↓</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> POS + Expiry Alert for Bangladeshi pharmacies</span>
+      <h1>Every strip counted.<br>No medicine <span class="hl">expires unseen.</span></h1>
+      <div class="bn">ওষুধের হিসাব, ব্যাচ ও মেয়াদ — সব এক স্ক্রিনে।</div>
+      <p class="lead">PharmaDesk BD runs your counter: fast barcode sales, batch-wise stock, supplier dues, and automatic alerts before any batch expires — on web and mobile.</p>
+      <div class="hero-stats">
+        <div class="hstat"><b>&lt; 8 sec</b><span>per sale at the counter</span></div>
+        <div class="hstat"><b>90 / 60 / 30</b><span>day expiry warnings</span></div>
+        <div class="hstat"><b>৳0 lost</b><span>to unseen expiry</span></div>
+      </div>
+    </div>
+    <div class="horizon-card">
+      <h3>The Expiry Horizon</h3>
+      <div class="sub">Every batch in your shop, plotted by days to expiry. Return amber stock to suppliers while you still can.</div>
+      <div class="horizon-track">
+        <span class="h-dot red" style="left:6%"><span class="tip">Antacid Plus · B-OP301 · expired 28 Jun</span></span>
+        <span class="h-dot amber" style="left:20%"><span class="tip">Monas 10 · AC-118 · 18 days left</span></span>
+        <span class="h-dot amber" style="left:30%"><span class="tip">Ace Plus · SQ-7719 · 32 days left</span></span>
+        <span class="h-dot" style="left:52%"><span class="tip">Napa 500 · B-2411A · 3 months left</span></span>
+        <span class="h-dot" style="left:70%"><span class="tip">Fexo 120 · SQ-4410 · 6 months left</span></span>
+        <span class="h-dot" style="left:88%"><span class="tip">Maxpro 20 · RN-902 · 11 months left</span></span>
+      </div>
+      <div class="horizon-scale"><span>Expired</span><span>30 days</span><span>90 days</span><span>6 months</span><span>12+ months</span></div>
+      <div class="horizon-legend">
+        <span><i style="background:#D92D20"></i>Block from sale</span>
+        <span><i style="background:#F79009"></i>Return to supplier</span>
+        <span><i style="background:#12B76A"></i>Healthy stock</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ============ LIVE DEMO ============ -->
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Live product demo</div>
+      <h2>One system. Web at the counter, mobile in your pocket.</h2>
+      <p>Click through real screens with sample data from a Dhaka pharmacy. Everything below is the actual product layout.</p>
+    </div>
+
+    <div class="demo-bar">
+      <div class="seg" role="tablist">
+        <button id="segWeb" class="active" onclick="setPlatform('web')">🖥️ Web dashboard</button>
+        <button id="segMob" onclick="setPlatform('mobile')">📱 Mobile app</button>
+      </div>
+      <div class="demo-hint">👆 <b>This demo is clickable</b> — use the sidebar, tabs and “+ Add” buttons.</div>
+    </div>
+
+    <!-- ===== WEB DEMO ===== -->
+    <div id="webStage" class="browser">
+      <div class="browser-top">
+        <div class="b-dots"><i></i><i></i><i></i></div>
+        <div class="b-url">🔒 app.pharmadesk.com.bd — Lakshmipur Pharmacy, Mirpur-10, Dhaka</div>
+      </div>
+      <div class="app">
+        <aside class="sidebar">
+          <div class="sb-brand"><span class="logomark"><span class="logodot"></span></span> PharmaDesk</div>
+          <nav class="snav">
+            <button class="nav-btn active" data-s="dash"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+            <button class="nav-btn" data-s="pos"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.5a2 2 0 0 0 2 1.5h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>Sales POS</button>
+            <button class="nav-btn" data-s="inv"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Inventory</button>
+            <button class="nav-btn" data-s="pur"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Purchase entry</button>
+            <button class="nav-btn" data-s="sup"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>Suppliers &amp; dues</button>
+            <button class="nav-btn" data-s="alerts"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Alerts<span class="badge">6</span></button>
+            <button class="nav-btn" data-s="rep"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>Reports</button>
+          </nav>
+          <div class="sb-foot"><b>Rafiq Islam</b>Owner · Main branch</div>
+        </aside>
+
+        <div class="main">
+          <!-- DASHBOARD -->
+          <div class="screen active" id="s-dash">
+            <div class="main-head">
+              <h4>Good evening, Rafiq bhai 👋</h4>
+              <div class="date">Monday, 13 July 2026 · 7:42 PM</div>
+            </div>
+            <div class="cards">
+              <div class="card"><div class="lbl">Today's sales</div><div class="val tk">৳18,470</div><div class="delta up">▲ 12% vs last Monday</div></div>
+              <div class="card"><div class="lbl">Today's profit</div><div class="val tk">৳3,912</div><div class="delta up">▲ 21.2% margin</div></div>
+              <div class="card"><div class="lbl">Expiring ≤ 30 days</div><div class="val">6 batches</div><div class="delta warn">৳9,340 at risk — act now</div></div>
+              <div class="card"><div class="lbl">Low stock items</div><div class="val">4 items</div><div class="delta bad">Napa Extra nearly out</div></div>
+            </div>
+            <div class="two-col">
+              <div class="panel">
+                <div class="panel-head"><h5>This week's sales</h5><button class="link">Daily report →</button></div>
+                <div class="bars">
+                  <div class="bar"><b>14.2k</b><i style="height:52%"></i><span>Tue</span></div>
+                  <div class="bar"><b>16.8k</b><i style="height:62%"></i><span>Wed</span></div>
+                  <div class="bar"><b>12.1k</b><i style="height:45%"></i><span>Thu</span></div>
+                  <div class="bar"><b>22.6k</b><i style="height:84%"></i><span>Fri</span></div>
+                  <div class="bar"><b>25.4k</b><i style="height:94%"></i><span>Sat</span></div>
+                  <div class="bar"><b>19.9k</b><i style="height:74%"></i><span>Sun</span></div>
+                  <div class="bar today"><b>18.4k</b><i style="height:68%"></i><span>Today</span></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h5>Needs your attention</h5><button class="link nav-jump" data-s="alerts">All alerts →</button></div>
+                <div class="alert-strip"><div class="alert-ico ai-red">⛔</div><div class="a-body"><b>Antacid Plus · batch B-OP301 expired</b><span>14 units blocked from sale automatically</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-amber">⏳</div><div class="a-body"><b>Monas 10 expires in 18 days</b><span>96 units · return window closes 21 Jul</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-amber">📉</div><div class="a-body"><b>Fexo 120 below minimum</b><span>45 left · reorder point is 60</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">💰</div><div class="a-body"><b>Square Pharma due ৳48,250</b><span>Payment scheduled 20 Jul</span></div></div>
+              </div>
+            </div>
+          </div>
+          <!-- POS -->
+          <div class="screen" id="s-pos">
+            <div class="main-head">
+              <h4>Sales POS</h4>
+              <div class="searchbox">🔍 <input id="posSearch" placeholder="Search medicine or scan barcode…" oninput="filterPos(this.value)"> <kbd>F2</kbd></div>
+            </div>
+            <div class="pos">
+              <div class="panel">
+                <div class="panel-head"><h5>Fast search — tap to add</h5><span class="chip ok"><i></i>Batch auto-picked: earliest expiry first</span></div>
+                <div class="pos-items" id="posItems"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h5>Invoice #INV-8241</h5><span class="chip ok"><i></i>Walk-in customer</span></div>
+                <div class="scanline"><span class="barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span> Scanner ready — scan any strip to add it</div>
+                <div class="cart-rows" id="cartRows"></div>
+                <div class="totals" id="cartTotals"></div>
+                <div class="paybtns">
+                  <button class="pay-cash" onclick="completeSale()">Take cash payment</button>
+                  <button class="pay-print" onclick="alert('Sending 80mm receipt to printer…\n(Demo)')">Print receipt</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INVENTORY -->
+          <div class="screen" id="s-inv">
+            <div class="main-head">
+              <h4>Medicine database</h4>
+              <div class="searchbox">🔍 <input placeholder="Napa, Seclo, omeprazole, Square…"> <kbd>F3</kbd></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h5>2,148 medicines · batch &amp; expiry tracked</h5><button class="link">+ Add medicine</button></div>
+              <table>
+                <thead><tr><th>Medicine</th><th>Batch no.</th><th>Expiry</th><th>Stock</th><th>TP / MRP</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="med">Napa 500 mg</span><span class="gen">Paracetamol · Beximco</span></td><td><span class="batch">B-2411A</span></td><td class="mono">Oct 2026</td><td>320 <div class="stockbar"><i style="width:85%;background:var(--green)"></i></div></td><td class="tk">৳0.80 / ৳1.20</td><td><span class="chip ok"><i></i>Healthy</span></td></tr>
+                  <tr><td><span class="med">Seclo 20</span><span class="gen">Omeprazole · Square</span></td><td><span class="batch">SQ-5521</span></td><td class="mono">Jan 2027</td><td>180 <div class="stockbar"><i style="width:70%;background:var(--green)"></i></div></td><td class="tk">৳4.20 / ৳6.00</td><td><span class="chip ok"><i></i>Healthy</span></td></tr>
+                  <tr><td><span class="med">Monas 10</span><span class="gen">Montelukast · ACI</span></td><td><span class="batch">AC-118</span></td><td class="mono">31 Jul 2026</td><td>96 <div class="stockbar"><i style="width:55%;background:var(--amber)"></i></div></td><td class="tk">৳10.50 / ৳16.00</td><td><span class="chip amber"><i></i>18 days left</span></td></tr>
+                  <tr><td><span class="med">Fexo 120</span><span class="gen">Fexofenadine · Square</span></td><td><span class="batch">SQ-4410</span></td><td class="mono">Jan 2027</td><td>45 <div class="stockbar"><i style="width:22%;background:var(--red)"></i></div></td><td class="tk">৳5.80 / ৳9.00</td><td><span class="chip red"><i></i>Low stock</span></td></tr>
+                  <tr><td><span class="med">Maxpro 20</span><span class="gen">Esomeprazole · Renata</span></td><td><span class="batch">RN-902</span></td><td class="mono">Jun 2027</td><td>240 <div class="stockbar"><i style="width:78%;background:var(--green)"></i></div></td><td class="tk">৳5.60 / ৳8.00</td><td><span class="chip ok"><i></i>Healthy</span></td></tr>
+                  <tr><td><span class="med">Antacid Plus</span><span class="gen">Al(OH)₃ + Mg · Opsonin</span></td><td><span class="batch">B-OP301</span></td><td class="mono">28 Jun 2026</td><td>14 <div class="stockbar"><i style="width:10%;background:var(--red-dark)"></i></div></td><td class="tk">৳1.50 / ৳2.50</td><td><span class="chip red"><i></i>Expired — blocked</span></td></tr>
+                  <tr><td><span class="med">Ceevit 250</span><span class="gen">Vitamin C · Square</span></td><td><span class="batch">SQ-3308</span></td><td class="mono">Mar 2027</td><td>28 <div class="stockbar"><i style="width:18%;background:var(--red)"></i></div></td><td class="tk">৳1.00 / ৳1.50</td><td><span class="chip red"><i></i>Low stock</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PURCHASE -->
+          <div class="screen" id="s-pur">
+            <div class="main-head"><h4>Purchase entry</h4><div class="date">GRN #PUR-1097 · Invoice from supplier</div></div>
+            <div class="two-col">
+              <div class="panel">
+                <div class="panel-head"><h5>New purchase — Square Pharmaceuticals</h5><span class="chip amber"><i></i>Credit purchase</span></div>
+                <table>
+                  <thead><tr><th>Item</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>TP</th><th>Total</th></tr></thead>
+                  <tbody>
+                    <tr><td class="med">Seclo 20</td><td><span class="batch">SQ-6710</span></td><td class="mono">May 2028</td><td>500</td><td class="tk">৳4.20</td><td class="tk">৳2,100</td></tr>
+                    <tr><td class="med">Fexo 120</td><td><span class="batch">SQ-6711</span></td><td class="mono">Feb 2028</td><td>300</td><td class="tk">৳5.80</td><td class="tk">৳1,740</td></tr>
+                    <tr><td class="med">Ceevit 250</td><td><span class="batch">SQ-6712</span></td><td class="mono">Nov 2027</td><td>400</td><td class="tk">৳1.00</td><td class="tk">৳400</td></tr>
+                    <tr><td colspan="5" style="text-align:right;font-weight:700">Invoice total → due ledger</td><td class="tk" style="font-weight:800">৳4,240</td></tr>
+                  </tbody>
+                </table>
+                <div class="paybtns" style="padding:14px 16px">
+                  <button class="pay-cash" onclick="alert('Purchase saved!\n• Stock updated batch-wise\n• Expiry dates registered for alerts\n• ৳4,240 added to Square Pharma due ledger\n(Demo)')">Save purchase &amp; update stock</button>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h5>Why batch-wise entry matters</h5></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">🧾</div><div class="a-body"><b>Every strip joins a batch</b><span>Stock, cost and expiry live at batch level — not just item level</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-amber">⏰</div><div class="a-body"><b>Expiry alerts start immediately</b><span>90 / 60 / 30-day warnings are scheduled the moment you save</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">🔁</div><div class="a-body"><b>FEFO selling</b><span>POS always sells the earliest-expiring batch first</span></div></div>
+              </div>
+            </div>
+          </div>
+          <!-- SUPPLIERS -->
+          <div class="screen" id="s-sup">
+            <div class="main-head"><h4>Suppliers &amp; due ledger</h4><div class="date">Total payable: <b class="tk" style="color:var(--red-dark)">৳89,600</b></div></div>
+            <div class="panel">
+              <div class="panel-head"><h5>Supplier list</h5><button class="link">+ Add supplier</button></div>
+              <table>
+                <thead><tr><th>Supplier</th><th>Rep contact</th><th>Last purchase</th><th>Due amount</th><th>Next payment</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td class="med">Square Pharmaceuticals</td><td class="mono">01711-XXXX21</td><td>13 Jul 2026</td><td class="tk" style="font-weight:700">৳48,250</td><td><span class="chip amber"><i></i>20 Jul</span></td><td><button class="abtn">Pay / adjust</button></td></tr>
+                  <tr><td class="med">Renata PLC</td><td class="mono">01819-XXXX40</td><td>10 Jul 2026</td><td class="tk" style="font-weight:700">৳21,150</td><td><span class="chip amber"><i></i>24 Jul</span></td><td><button class="abtn">Pay / adjust</button></td></tr>
+                  <tr><td class="med">Beximco Pharma</td><td class="mono">01677-XXXX93</td><td>08 Jul 2026</td><td class="tk" style="font-weight:700">৳12,400</td><td><span class="chip ok"><i></i>02 Aug</span></td><td><button class="abtn">Pay / adjust</button></td></tr>
+                  <tr><td class="med">ACI Limited</td><td class="mono">01911-XXXX07</td><td>05 Jul 2026</td><td class="tk" style="font-weight:700">৳7,800</td><td><span class="chip ok"><i></i>05 Aug</span></td><td><button class="abtn">Pay / adjust</button></td></tr>
+                  <tr><td class="med">Incepta Pharma</td><td class="mono">01522-XXXX65</td><td>29 Jun 2026</td><td class="tk">৳0</td><td><span class="chip ok"><i></i>Clear</span></td><td><button class="abtn">New order</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h5>Return to supplier — near-expiry stock</h5><span class="chip amber"><i></i>Recover money before it's lost</span></div>
+              <div class="alert-strip"><div class="alert-ico ai-amber">↩️</div><div class="a-body"><b>Monas 10 · 96 units → ACI Limited</b><span>Return value ৳1,008 will be adjusted against due</span></div><button class="abtn" onclick="alert('Return note RTN-114 created.\n৳1,008 adjusted against ACI due.\n(Demo)')">Create return note</button></div>
+              <div class="alert-strip"><div class="alert-ico ai-amber">↩️</div><div class="a-body"><b>Ace Plus · 60 units → Square Pharma</b><span>Return value ৳540 · window closes 14 Aug</span></div><button class="abtn" onclick="alert('Return note RTN-115 created.\n৳540 adjusted against Square due.\n(Demo)')">Create return note</button></div>
+            </div>
+          </div>
+
+          <!-- ALERTS -->
+          <div class="screen" id="s-alerts">
+            <div class="main-head"><h4>Alerts center</h4><div class="date">6 active · also sent by SMS at 9:00 AM daily</div></div>
+            <div class="panel">
+              <div class="panel-head"><h5>⏳ Expiry alerts</h5><span class="chip amber"><i></i>90 / 60 / 30 day rules</span></div>
+              <div class="alert-strip"><div class="alert-ico ai-red">⛔</div><div class="a-body"><b>Antacid Plus · B-OP301 — EXPIRED 28 Jun</b><span>14 units · ৳35 cost · blocked at POS, move to disposal register</span></div><button class="abtn">Dispose</button></div>
+              <div class="alert-strip"><div class="alert-ico ai-amber">⏳</div><div class="a-body"><b>Monas 10 · AC-118 — 18 days left</b><span>96 units · ৳1,008 at risk · supplier accepts returns until 21 Jul</span></div><button class="abtn nav-jump" data-s="sup">Return</button></div>
+              <div class="alert-strip"><div class="alert-ico ai-amber">⏳</div><div class="a-body"><b>Ace Plus · SQ-7719 — 32 days left</b><span>60 units · ৳540 at risk · sell-first rule active at POS</span></div><button class="abtn nav-jump" data-s="sup">Return</button></div>
+              <div class="alert-strip"><div class="alert-ico ai-amber">⏳</div><div class="a-body"><b>Deslor 5 · IN-2210 — 61 days left</b><span>110 units · FEFO priority applied</span></div><button class="abtn">Snooze</button></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h5>📉 Low stock alerts</h5><span class="chip red"><i></i>Below reorder point</span></div>
+              <div class="alert-strip"><div class="alert-ico ai-red">📦</div><div class="a-body"><b>Napa Extra — 12 left (min 50)</b><span>Sells ~35/day · will run out tomorrow</span></div><button class="abtn nav-jump" data-s="pur">Reorder</button></div>
+              <div class="alert-strip"><div class="alert-ico ai-red">📦</div><div class="a-body"><b>Fexo 120 — 45 left (min 60)</b><span>Added to Square Pharma draft order</span></div><button class="abtn nav-jump" data-s="pur">Reorder</button></div>
+            </div>
+          </div>
+
+          <!-- REPORTS -->
+          <div class="screen" id="s-rep">
+            <div class="main-head"><h4>Reports</h4><div class="date">Daily sales · profit · export to Excel/PDF</div></div>
+            <div class="cards">
+              <div class="card"><div class="lbl">July sales (13 days)</div><div class="val tk">৳2,41,880</div><div class="delta up">▲ 9% vs June pace</div></div>
+              <div class="card"><div class="lbl">July profit</div><div class="val tk">৳50,102</div><div class="delta up">20.7% avg margin</div></div>
+              <div class="card"><div class="lbl">Loss prevented</div><div class="val tk">৳11,214</div><div class="delta up">via returns before expiry</div></div>
+              <div class="card"><div class="lbl">Invoices</div><div class="val">1,842</div><div class="delta">avg ৳131 per invoice</div></div>
+            </div>
+            <div class="two-col">
+              <div class="panel">
+                <div class="panel-head"><h5>Daily sales report — today</h5><button class="link" onclick="alert('Exported: sales-13-07-2026.xlsx (Demo)')">Export ⬇</button></div>
+                <table>
+                  <thead><tr><th>Time</th><th>Invoice</th><th>Items</th><th>Amount</th><th>Profit</th></tr></thead>
+                  <tbody>
+                    <tr><td class="mono">7:31 PM</td><td class="mono">INV-8240</td><td>Napa ×2, Seclo ×1</td><td class="tk">৳126</td><td class="tk up">৳27</td></tr>
+                    <tr><td class="mono">7:18 PM</td><td class="mono">INV-8239</td><td>Maxpro ×2, Fexo ×1</td><td class="tk">৳250</td><td class="tk up">৳58</td></tr>
+                    <tr><td class="mono">6:54 PM</td><td class="mono">INV-8238</td><td>Monas ×3</td><td class="tk">৳480</td><td class="tk up">৳165</td></tr>
+                    <tr><td class="mono">6:41 PM</td><td class="mono">INV-8237</td><td>Amodis ×1, Ceevit ×5</td><td class="tk">৳143</td><td class="tk up">৳31</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h5>Top profit makers — July</h5></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">🥇</div><div class="a-body"><b>Monas 10</b><span>৳8,940 profit · 34% margin</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">🥈</div><div class="a-body"><b>Seclo 20</b><span>৳6,120 profit · 30% margin</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">🥉</div><div class="a-body"><b>Maxpro 20</b><span>৳4,480 profit · 30% margin</span></div></div>
+                <div class="alert-strip"><div class="alert-ico ai-green">📊</div><div class="a-body"><b>Napa 500</b><span>Highest volume · 4,110 units sold</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== MOBILE DEMO ===== -->
+    <div id="mobStage" class="mobile-stage">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="notch"><i></i></div>
+          <div class="m-head">
+            <div class="m-row">
+              <div><h5>PharmaDesk BD</h5><div class="m-shop">Lakshmipur Pharmacy · Mirpur-10</div></div>
+              <div class="m-bell">🔔</div>
+            </div>
+          </div>
+          <div class="m-body">
+
+            <!-- m: home -->
+            <div class="mscreen active" id="m-home">
+              <div class="m-grid2">
+                <div class="m-card"><div class="lbl">Today's sales</div><div class="val tk">৳18,470</div><div class="delta up" style="font-size:10.5px;font-weight:700">▲ 12%</div></div>
+                <div class="m-card"><div class="lbl">Profit</div><div class="val tk">৳3,912</div><div class="delta up" style="font-size:10.5px;font-weight:700">21.2%</div></div>
+              </div>
+              <div class="m-card" style="border-color:#F4CD9C;background:#FFFBF2">
+                <div class="lbl" style="color:var(--amber)">⏳ Expiry horizon</div>
+                <div class="horizon-track" style="margin:22px 2px 4px;height:8px">
+                  <span class="h-dot red" style="left:7%;width:14px;height:14px;border-width:3px"></span>
+                  <span class="h-dot amber" style="left:22%;width:14px;height:14px;border-width:3px"></span>
+                  <span class="h-dot amber" style="left:33%;width:14px;height:14px;border-width:3px"></span>
+                  <span class="h-dot" style="left:60%;width:14px;height:14px;border-width:3px"></span>
+                  <span class="h-dot" style="left:86%;width:14px;height:14px;border-width:3px"></span>
+                </div>
+                <div class="horizon-scale" style="font-size:9px"><span>Expired</span><span>30d</span><span>90d</span><span>12m+</span></div>
+              </div>
+              <div class="m-sec-title">Needs attention <span class="m-jump" data-m="alerts">See all</span></div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><span>⛔</span><b>Antacid Plus expired</b><span class="chip red"><i></i>Blocked</span></div>
+                <div class="m-list-row"><span>⏳</span><b>Monas 10 · 18 days</b><span class="chip amber"><i></i>Return</span></div>
+                <div class="m-list-row"><span>📉</span><b>Napa Extra low</b><span class="chip red"><i></i>12 left</span></div>
+              </div>
+              <div class="m-sec-title">Supplier dues <span class="m-jump" data-m="stock">Ledger</span></div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Square Pharma</b><span class="tk" style="font-weight:700">৳48,250</span></div>
+                <div class="m-list-row"><b>Renata PLC</b><span class="tk" style="font-weight:700">৳21,150</span></div>
+              </div>
+            </div>
+
+            <!-- m: sell -->
+            <div class="mscreen" id="m-sell">
+              <div class="m-card" style="display:flex;gap:8px;align-items:center;border-style:dashed;border-color:var(--green)">
+                <span style="font-size:17px">📷</span><div style="font-size:11.5px;font-weight:700;color:var(--green-deep)">Scan barcode with camera<br><span style="font-weight:600;color:var(--muted)">or search below</span></div>
+              </div>
+              <div class="m-card" style="padding:9px 12px;font-size:12px;color:var(--muted)">🔍 napa…</div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Napa 500 mg <span style="color:var(--muted);font-weight:500">· ৳1.20</span></b><button class="abtn" style="padding:4px 10px" onclick="mAdd(this,'Napa 500')">+ Add</button></div>
+                <div class="m-list-row"><b>Napa Extra <span style="color:var(--muted);font-weight:500">· ৳2.50</span></b><button class="abtn" style="padding:4px 10px" onclick="mAdd(this,'Napa Extra')">+ Add</button></div>
+                <div class="m-list-row"><b>Napa Syrup <span style="color:var(--muted);font-weight:500">· ৳35.00</span></b><button class="abtn" style="padding:4px 10px" onclick="mAdd(this,'Napa Syrup')">+ Add</button></div>
+              </div>
+              <div class="m-sec-title">Cart · INV-8241</div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Napa 500 ×10</b><span class="tk">৳12</span></div>
+                <div class="m-list-row"><b>Seclo 20 ×14</b><span class="tk">৳84</span></div>
+                <div class="m-list-row" id="mCartExtra" style="display:none"><b>New item ×1</b><span class="tk">—</span></div>
+                <div class="m-list-row" style="font-weight:800"><b style="font-weight:800">Total</b><span class="tk" style="font-weight:800">৳96</span></div>
+              </div>
+              <button class="m-fab" onclick="alert('Cash received ✓\nStock reduced batch-wise.\nReceipt sent to Bluetooth printer.\n(Demo)')">💵 Take payment</button>
+            </div>
+
+            <!-- m: stock -->
+            <div class="mscreen" id="m-stock">
+              <div class="m-card" style="padding:9px 12px;font-size:12px;color:var(--muted)">🔍 Search 2,148 medicines…</div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Napa 500<br><span class="mono" style="font-size:10px;color:var(--muted)">B-2411A · Oct 26</span></b><span class="chip ok"><i></i>320</span></div>
+                <div class="m-list-row"><b>Seclo 20<br><span class="mono" style="font-size:10px;color:var(--muted)">SQ-5521 · Jan 27</span></b><span class="chip ok"><i></i>180</span></div>
+                <div class="m-list-row"><b>Monas 10<br><span class="mono" style="font-size:10px;color:var(--muted)">AC-118 · 31 Jul 26</span></b><span class="chip amber"><i></i>96 · 18d</span></div>
+                <div class="m-list-row"><b>Fexo 120<br><span class="mono" style="font-size:10px;color:var(--muted)">SQ-4410 · Jan 27</span></b><span class="chip red"><i></i>45 low</span></div>
+                <div class="m-list-row"><b>Antacid Plus<br><span class="mono" style="font-size:10px;color:var(--muted)">B-OP301 · expired</span></b><span class="chip red"><i></i>Blocked</span></div>
+              </div>
+              <div class="m-sec-title">Quick purchase entry</div>
+              <div class="m-card" style="border-style:dashed">
+                <div style="font-size:12px;font-weight:700">+ New purchase (GRN)</div>
+                <div style="font-size:11px;color:var(--muted)">Snap the supplier invoice — batch &amp; expiry in 30 seconds</div>
+              </div>
+            </div>
+
+            <!-- m: alerts -->
+            <div class="mscreen" id="m-alerts">
+              <div class="m-sec-title">⏳ Expiry</div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Antacid Plus<br><span style="font-size:10px;color:var(--red-dark);font-weight:700">EXPIRED · blocked from sale</span></b><button class="abtn" style="padding:4px 10px">Dispose</button></div>
+                <div class="m-list-row"><b>Monas 10<br><span style="font-size:10px;color:var(--amber);font-weight:700">18 days · ৳1,008 at risk</span></b><button class="abtn" style="padding:4px 10px">Return</button></div>
+                <div class="m-list-row"><b>Ace Plus<br><span style="font-size:10px;color:var(--amber);font-weight:700">32 days · sell-first active</span></b><button class="abtn" style="padding:4px 10px">Return</button></div>
+              </div>
+              <div class="m-sec-title">📉 Low stock</div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Napa Extra<br><span style="font-size:10px;color:var(--muted)">12 left · min 50</span></b><button class="abtn" style="padding:4px 10px">Reorder</button></div>
+                <div class="m-list-row"><b>Fexo 120<br><span style="font-size:10px;color:var(--muted)">45 left · min 60</span></b><button class="abtn" style="padding:4px 10px">Reorder</button></div>
+              </div>
+              <div class="m-card" style="background:var(--green-soft);border-color:#BEE3D2;font-size:11px;font-weight:600;color:var(--green-deep)">📲 Owner also gets these by SMS every morning at 9:00 — even without opening the app.</div>
+            </div>
+
+            <!-- m: reports -->
+            <div class="mscreen" id="m-reports">
+              <div class="m-grid2">
+                <div class="m-card"><div class="lbl">July sales</div><div class="val tk" style="font-size:17px">৳2,41,880</div></div>
+                <div class="m-card"><div class="lbl">July profit</div><div class="val tk" style="font-size:17px">৳50,102</div></div>
+              </div>
+              <div class="m-card">
+                <div class="lbl">This week</div>
+                <div class="bars" style="height:110px;padding:10px 0 0">
+                  <div class="bar"><i style="height:52%"></i><span>T</span></div>
+                  <div class="bar"><i style="height:62%"></i><span>W</span></div>
+                  <div class="bar"><i style="height:45%"></i><span>T</span></div>
+                  <div class="bar"><i style="height:84%"></i><span>F</span></div>
+                  <div class="bar"><i style="height:94%"></i><span>S</span></div>
+                  <div class="bar"><i style="height:74%"></i><span>S</span></div>
+                  <div class="bar today"><i style="height:68%"></i><span>M</span></div>
+                </div>
+              </div>
+              <div class="m-card" style="padding:6px 14px">
+                <div class="m-list-row"><b>Loss prevented (returns)</b><span class="tk" style="font-weight:700;color:var(--green)">৳11,214</span></div>
+                <div class="m-list-row"><b>Invoices this month</b><span class="tk" style="font-weight:700">1,842</span></div>
+                <div class="m-list-row"><b>Avg margin</b><span class="tk" style="font-weight:700">20.7%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="m-tabs">
+            <button class="m-tab active" data-m="home"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg>Home</button>
+            <button class="m-tab" data-m="sell"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.5a2 2 0 0 0 2 1.5h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>Sell</button>
+            <button class="m-tab" data-m="stock"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Stock</button>
+            <button class="m-tab" data-m="alerts"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Alerts</button>
+            <button class="m-tab" data-m="reports"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>Reports</button>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-notes">
+        <h3>The owner's pocket office</h3>
+        <div class="note-li"><div class="n">01</div><div><b>Sell from the phone too</b><span>Camera barcode scanning + Bluetooth receipt printer — a full POS in your pocket for the second counter or home delivery.</span></div></div>
+        <div class="note-li"><div class="n">02</div><div><b>Morning SMS digest</b><span>Expiry, low stock, and due reminders arrive at 9:00 AM daily — the owner stays informed even away from the shop.</span></div></div>
+        <div class="note-li"><div class="n">03</div><div><b>Live shop pulse</b><span>Today's sales and profit update in real time. Check from home, from the bank, from anywhere.</span></div></div>
+        <div class="note-li"><div class="n">04</div><div><b>Works on cheap Android phones</b><span>Light app, Bangla + English interface, and offline mode that syncs when the connection returns.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ USER FLOW ============ -->
+<section id="flow" style="background:linear-gradient(180deg,transparent,var(--green-soft) 30%,transparent)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Step-by-step user flow</div>
+      <h2>From stock entry to profit report — one clean loop.</h2>
+      <p>This is exactly how a pharmacy uses PharmaDesk every day. Steps 04–06 are where competitors stop and PharmaDesk keeps going.</p>
+    </div>
+    <div class="flow">
+      <div class="fstep"><b>Add medicine stock</b><span>Build the shop's medicine database once — name, generic, company, price.</span></div>
+      <div class="fstep"><b>Purchase with batch + expiry</b><span>Every purchase entry records batch number and expiry date.</span></div>
+      <div class="fstep"><b>Sell — stock reduces</b><span>Scan or search at the POS; the earliest-expiring batch is sold first.</span></div>
+      <div class="fstep hot"><b>Low stock warning</b><span>The system flags items below the reorder point before shelves go empty.</span></div>
+      <div class="fstep hot"><b>Expiry warning</b><span>90 / 60 / 30-day alerts on screen and by SMS. Expired stock is blocked.</span></div>
+      <div class="fstep hot"><b>Return near-expiry stock</b><span>One-tap return notes recover money from suppliers while returns are still accepted.</span></div>
+      <div class="fstep"><b>Monthly sales &amp; profit</b><span>Daily and monthly reports show sales, profit, and losses prevented.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">MVP — all 14 features</div>
+      <h2>Everything a medicine shop needs. Nothing it doesn't.</h2>
+      <p>Each feature below is live in the demo above — hover any card, then find it in the web or mobile view.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="f-num">01</div><div class="f-ico">💊</div><b>Medicine database</b><span>2,000+ medicines with brand, generic, company, and pack size — pre-loaded for Bangladesh.</span></div>
+      <div class="feat"><div class="f-num">02</div><div class="f-ico">🏷️</div><b>Batch number tracking</b><span>Stock lives at batch level, so the same medicine can hold multiple batches and costs.</span></div>
+      <div class="feat f-warn"><div class="f-num">03</div><div class="f-ico">📅</div><b>Expiry date tracking</b><span>Every batch carries its expiry. FEFO rule: first-expiry, first-out at the counter.</span></div>
+      <div class="feat"><div class="f-num">04</div><div class="f-ico">🚚</div><b>Supplier list</b><span>All companies and reps with contacts, purchase history, and payment terms.</span></div>
+      <div class="feat"><div class="f-num">05</div><div class="f-ico">📥</div><b>Purchase entry</b><span>Fast GRN entry from supplier invoices — cash or credit, batch and expiry included.</span></div>
+      <div class="feat"><div class="f-num">06</div><div class="f-ico">🛒</div><b>Sales entry (POS)</b><span>Under-8-second counter sales with search, scan, discounts, and stock auto-reduction.</span></div>
+      <div class="feat f-alert"><div class="f-num">07</div><div class="f-ico">📉</div><b>Low stock alert</b><span>Reorder-point warnings with sales-speed prediction: "runs out tomorrow."</span></div>
+      <div class="feat f-alert"><div class="f-num">08</div><div class="f-ico">⏰</div><b>Expiry alert</b><span>90/60/30-day warnings on dashboard, mobile, and SMS. Expired batches blocked from sale.</span></div>
+      <div class="feat"><div class="f-num">09</div><div class="f-ico">📒</div><b>Supplier due ledger</b><span>Who you owe, how much, and when — with return-note adjustments built in.</span></div>
+      <div class="feat"><div class="f-num">10</div><div class="f-ico">🧾</div><b>Daily sales report</b><span>Every invoice of the day with amount and profit, exportable to Excel or PDF.</span></div>
+      <div class="feat"><div class="f-num">11</div><div class="f-ico">📈</div><b>Profit report</b><span>Item-wise and monthly profit from TP vs MRP — know your real earners.</span></div>
+      <div class="feat"><div class="f-num">12</div><div class="f-ico">⚡</div><b>Fast search</b><span>Find any medicine in 2 keystrokes by brand, generic, or company. Keyboard-first.</span></div>
+      <div class="feat"><div class="f-num">13</div><div class="f-ico">▮▯▮</div><b>Barcode support</b><span>USB scanner on web, phone camera on mobile. Print your own labels for loose items.</span></div>
+      <div class="feat"><div class="f-num">14</div><div class="f-ico">🖨️</div><b>Receipt print</b><span>Clean 80mm receipts with shop name, items, batch, and money-back expiry promise.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="contact" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Stop losing money to the back shelf.</h2>
+        <p>Get PharmaDesk BD running in your pharmacy in one afternoon — we import your stock, train your staff, and the alerts start the same day.</p>
+        <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+          <button class="pill-cta" style="background:#fff;color:var(--green-deep)" onclick="alert('Thanks for your interest!\n(Hook this button to your booking form / WhatsApp)')">Book a free demo</button>
+          <button class="pill-cta" style="background:transparent;border:1px solid rgba(255,255,255,.35)" onclick="alert('(Hook this to your pricing page)')">See pricing</button>
+        </div>
+      </div>
+      <div class="roadmap">
+        <h6>Coming next</h6>
+        <div><i>✚</i> Multi-branch support — one owner, many shops</div>
+        <div><i>✚</i> Customer due (baki) ledger &amp; SMS reminders</div>
+        <div><i>✚</i> bKash / Nagad payment logging</div>
+        <div><i>✚</i> DGDA-friendly stock registers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div><b style="color:var(--ink)">PharmaDesk BD</b> — Pharmacy POS + Expiry Alert SaaS · Demo build for client presentations</div>
+  <div>Sample data shown. ৳ = Bangladeshi Taka.</div>
+</footer>
+<script>
+/* ---------- platform toggle ---------- */
+function setPlatform(p){
+  const web=document.getElementById('webStage'), mob=document.getElementById('mobStage');
+  document.getElementById('segWeb').classList.toggle('active',p==='web');
+  document.getElementById('segMob').classList.toggle('active',p==='mobile');
+  web.style.display = p==='web' ? 'block' : 'none';
+  mob.style.display = p==='mobile' ? 'grid' : 'none';
+}
+
+/* ---------- web sidebar nav ---------- */
+function showScreen(s){
+  document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
+  document.getElementById('s-'+s).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===s));
+}
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.s)));
+document.querySelectorAll('.nav-jump').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.s)));
+
+/* ---------- mobile tabs ---------- */
+function showM(s){
+  document.querySelectorAll('.mscreen').forEach(el=>el.classList.remove('active'));
+  document.getElementById('m-'+s).classList.add('active');
+  document.querySelectorAll('.m-tab').forEach(b=>b.classList.toggle('active',b.dataset.m===s));
+}
+document.querySelectorAll('.m-tab').forEach(b=>b.addEventListener('click',()=>showM(b.dataset.m)));
+document.querySelectorAll('.m-jump').forEach(b=>b.addEventListener('click',()=>showM(b.dataset.m)));
+function mAdd(btn,name){ btn.textContent='✓ Added'; btn.style.background='var(--green-soft)'; setTimeout(()=>{btn.textContent='+ Add';btn.style.background='';},1200); }
+
+/* ---------- POS cart logic ---------- */
+const MEDS=[
+ {n:'Napa 500 mg',g:'Paracetamol · Beximco',b:'B-2411A',e:'Oct 26',p:1.20},
+ {n:'Seclo 20',g:'Omeprazole · Square',b:'SQ-5521',e:'Jan 27',p:6.00},
+ {n:'Monas 10',g:'Montelukast · ACI',b:'AC-118',e:'31 Jul 26 ⏳',p:16.00},
+ {n:'Fexo 120',g:'Fexofenadine · Square',b:'SQ-4410',e:'Jan 27',p:9.00},
+ {n:'Maxpro 20',g:'Esomeprazole · Renata',b:'RN-902',e:'Jun 27',p:8.00},
+ {n:'Amodis 400',g:'Metronidazole · Square',b:'SQ-2190',e:'Sep 27',p:2.00},
+ {n:'Ceevit 250',g:'Vitamin C · Square',b:'SQ-3308',e:'Mar 27',p:1.50},
+ {n:'Ace Plus',g:'Para + Caffeine · Square',b:'SQ-7719',e:'14 Aug 26 ⏳',p:2.50},
+ {n:'Sergel 20',g:'Esomeprazole · Healthcare',b:'HC-771',e:'Dec 27',p:7.00}
+];
+let cart=[{i:0,q:10},{i:1,q:14}];
+
+function renderPosItems(filter=''){
+  const box=document.getElementById('posItems');
+  box.innerHTML='';
+  MEDS.filter(m=>(m.n+m.g).toLowerCase().includes(filter.toLowerCase())).forEach(m=>{
+    const i=MEDS.indexOf(m);
+    const el=document.createElement('button');
+    el.className='pitem';
+    el.innerHTML=`<b>${m.n}</b><span>${m.g}</span><span class="mono" style="font-size:10px">${m.b} · exp ${m.e}</span><div class="pr"><span class="tk">৳${m.p.toFixed(2)}</span><span class="add">+ Add</span></div>`;
+    el.onclick=()=>{addToCart(i)};
+    box.appendChild(el);
+  });
+}
+function filterPos(v){renderPosItems(v)}
+function addToCart(i){
+  const row=cart.find(c=>c.i===i);
+  row?row.q++:cart.push({i,q:1});
+  renderCart();
+}
+function chQty(idx,d){
+  cart[idx].q+=d;
+  if(cart[idx].q<1)cart.splice(idx,1);
+  renderCart();
+}
+function renderCart(){
+  const rows=document.getElementById('cartRows'), tot=document.getElementById('cartTotals');
+  rows.innerHTML='';
+  let sub=0;
+  cart.forEach((c,idx)=>{
+    const m=MEDS[c.i], line=m.p*c.q; sub+=line;
+    const el=document.createElement('div');
+    el.className='crow';
+    el.innerHTML=`<b>${m.n} <span class="mono" style="font-size:10px;color:var(--muted)">${m.b}</span></b>
+      <span class="qty"><button onclick="chQty(${idx},-1)">−</button><span class="mono">${c.q}</span><button onclick="chQty(${idx},1)">+</button></span>
+      <span class="tk" style="width:64px;text-align:right">৳${line.toFixed(2)}</span>`;
+    rows.appendChild(el);
+  });
+  if(!cart.length)rows.innerHTML='<div class="crow" style="color:var(--muted)">Cart is empty — tap a medicine to add it.</div>';
+  const disc=sub*0.05, grand=sub-disc;
+  tot.innerHTML=`<div><span>Subtotal</span><span class="tk">৳${sub.toFixed(2)}</span></div>
+    <div><span>Discount 5%</span><span class="tk">−৳${disc.toFixed(2)}</span></div>
+    <div class="grand"><span>Payable</span><span class="tk">৳${grand.toFixed(2)}</span></div>`;
+}
+function completeSale(){
+  if(!cart.length)return alert('Cart is empty.');
+  alert('Sale complete ✓\n\n• Stock reduced from earliest-expiry batches (FEFO)\n• Invoice INV-8241 saved to daily report\n• Profit recorded automatically\n\n(Demo)');
+  cart=[]; renderCart();
+}
+renderPosItems(); renderCart();
+</script>
+</body>
+</html>
