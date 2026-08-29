@@ -356,6 +356,8 @@
   @media(max-width:1080px){.omni-wrap{grid-template-columns:1fr}.hero-card{display:none}}
   @media(max-width:920px){.layout{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto}.nav-group{display:none}.nav-btn{white-space:nowrap;margin-bottom:0}.content{padding:26px 20px 60px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.ind-grid,.qgrid{grid-template-columns:1fr}.checklist{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="/assets/gothon-badge.css">
+<script defer src="/assets/gothon-badge.js"></script>
 </head>
 <body>
 
@@ -1044,5 +1046,12 @@ document.getElementById("guestBtn").addEventListener("click",enterApp);
 document.getElementById("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")enterApp();});
 document.getElementById("logoutBtn").addEventListener("click",()=>{document.getElementById("app").style.display="none";document.getElementById("login").style.display="grid";window.scrollTo(0,0);});
 </script>
+<a class="gothon-badge" href="/#contact" aria-label="Contact us — যোগাযোগ করুন">
+  <span class="gothon-badge-mark" aria-hidden="true"></span>
+  <span class="gothon-badge-copy">
+    <strong>Contact us</strong>
+    <span lang="bn">যোগাযোগ করুন</span>
+  </span>
+</a>
 </body>
 </html>

@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@600;700&display=swap');
+
+/* Floating contact badge — color-shifting + shine */
+.gothon-badge{
+  --gothon-font:'Plus Jakarta Sans','Inter','Segoe UI',system-ui,sans-serif;
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:9998;
+  isolation:isolate;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 16px 8px 9px;
+  border-radius:999px;
+  color:#fff;
+  text-decoration:none;
+  font-family:var(--gothon-font);
+  font-size:13px;
+  font-weight:650;
+  letter-spacing:-.01em;
+  line-height:1.15;
+  white-space:nowrap;
+  background:
+    linear-gradient(#111214,#111214) padding-box,
+    linear-gradient(90deg,#D8FE91,#5CE1E6,#8B7CFF,#F472B6,#FFC857,#D8FE91) border-box;
+  background-size:100% 100%, 280% 100%;
+  border:1.5px solid transparent;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.28),
+    0 0 22px rgba(216,254,145,.28);
+  overflow:hidden;
+  cursor:pointer;
+  animation:
+    gothon-shift 5s linear infinite,
+    gothon-glow 6s ease-in-out infinite;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.gothon-badge:hover{
+  transform:translateY(-2px) scale(1.03);
+  color:#fff;
+}
+.gothon-badge:focus-visible{
+  outline:2px solid #D8FE91;
+  outline-offset:3px;
+}
+.gothon-badge-copy{
+  display:grid;
+  grid-template-areas:"txt";
+  align-items:center;
+  justify-items:start;
+}
+.gothon-badge-copy > *{
+  grid-area:txt;
+  font-weight:750;
+  font-size:13px;
+  letter-spacing:-.02em;
+}
+.gothon-badge-copy strong{
+  animation:gothon-lang-en 10s ease-in-out infinite;
+}
+.gothon-badge-copy [lang="bn"]{
+  font-family:'Hind Siliguri','Nirmala UI','Noto Sans Bengali',sans-serif;
+  letter-spacing:0;
+  animation:gothon-lang-bn 10s ease-in-out infinite;
+}
+@keyframes gothon-lang-en{
+  0%,45%{opacity:1}
+  50%,95%{opacity:0}
+  100%{opacity:1}
+}
+@keyframes gothon-lang-bn{
+  0%,45%{opacity:0}
+  50%,95%{opacity:1}
+  100%{opacity:0}
+}
+.gothon-badge-mark{
+  width:20px;height:20px;border-radius:5px;flex:none;
+  background:#D8FE91;position:relative;
+}
+.gothon-badge-mark::after{
+  content:"";position:absolute;inset:4px 4px 4px 6px;
+  border:2px solid #111214;border-left:0;border-radius:0 3px 3px 0;
+}
+.gothon-badge::after{
+  content:"";
+  position:absolute;
+  top:-40%;bottom:-40%;
+  width:46%;
+  left:0;
+  background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.55) 50%,transparent 80%);
+  transform:translateX(-140%) skewX(-20deg);
+  animation:gothon-shine 2.8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes gothon-shift{
+  0%{background-position:0 0, 0% 50%}
+  100%{background-position:0 0, 280% 50%}
+}
+@keyframes gothon-shine{
+  0%{transform:translateX(-140%) skewX(-20deg)}
+  45%,100%{transform:translateX(280%) skewX(-20deg)}
+}
+@keyframes gothon-glow{
+  0%,100%{box-shadow:0 10px 28px rgba(0,0,0,.28),0 0 22px rgba(216,254,145,.32)}
+  33%{box-shadow:0 10px 28px rgba(0,0,0,.28),0 0 24px rgba(92,225,230,.38)}
+  66%{box-shadow:0 10px 28px rgba(0,0,0,.28),0 0 24px rgba(244,114,182,.36)}
+}
+@media (max-width:640px){
+  .gothon-badge{
+    right:12px;bottom:12px;
+    font-size:12px;padding:7px 12px 7px 8px;gap:7px;
+  }
+  .gothon-badge-mark{width:18px;height:18px;border-radius:4px}
+}
+body.gothon-contact-open{overflow:hidden}
+.gothon-modal{
+  position:fixed;inset:0;z-index:10000;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:12px 12px 16px;
+  overflow:auto;
+}
+.gothon-modal[hidden]{display:none}
+.gothon-modal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(6,8,10,.62);
+  backdrop-filter:blur(8px);
+  opacity:0;transition:opacity .2s ease;
+}
+.gothon-modal.is-open .gothon-modal-backdrop{opacity:1}
+.gothon-modal-card{
+  position:relative;z-index:1;
+  width:min(440px,100%);
+  background:#111214;color:#fff;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:22px 22px 20px;
+  box-shadow:0 24px 60px -18px rgba(0,0,0,.55);
+  font-family:var(--gothon-font);
+  max-height:calc(100svh - 28px);
+  overflow-y:auto;
+  transform:translateY(16px);opacity:0;
+  transition:transform .22s ease,opacity .22s ease;
+}
+.gothon-modal.is-open .gothon-modal-card{transform:none;opacity:1}
+.gothon-modal-close{
+  position:absolute;top:12px;right:12px;
+  width:32px;height:32px;border:0;border-radius:8px;
+  background:rgba(255,255,255,.06);color:#fff;
+  font-size:20px;line-height:1;cursor:pointer;
+}
+.gothon-modal-close:hover{background:rgba(255,255,255,.12)}
+.gothon-modal-head{
+  display:flex;align-items:center;gap:12px;margin:0 28px 18px 0;
+}
+.gothon-modal-head h2{
+  margin:0;font-size:18px;font-weight:750;letter-spacing:-.03em;color:#fff;
+}
+.gothon-modal-head p{
+  margin:2px 0 0;font-size:13px;font-weight:600;color:rgba(255,255,255,.62);
+  font-family:'Hind Siliguri','Nirmala UI','Noto Sans Bengali',sans-serif;
+}
+.gothon-form{display:flex;flex-direction:column;gap:12px}
+.gothon-form[hidden]{display:none}
+.gothon-form label{display:flex;flex-direction:column;gap:6px;min-width:0}
+.gothon-form label > span{
+  font-size:12px;font-weight:650;color:rgba(255,255,255,.72);
+}
+.gothon-form label > span i{color:#D8FE91;font-style:normal}
+.gothon-form input,.gothon-form textarea{
+  width:100%;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);color:#fff;
+  border-radius:10px;padding:11px 12px;
+  font:inherit;font-size:14px;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.gothon-form textarea{resize:vertical;min-height:88px;line-height:1.45}
+.gothon-form input::placeholder,.gothon-form textarea::placeholder{color:rgba(255,255,255,.38)}
+.gothon-form input:focus,.gothon-form textarea:focus{
+  border-color:#D8FE91;box-shadow:0 0 0 3px rgba(216,254,145,.18);
+}
+.gothon-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gothon-form-hint{margin:0;font-size:12px;color:rgba(255,255,255,.48)}
+.gothon-form label.is-invalid input,
+.gothon-form label.is-invalid textarea{border-color:#f472b6}
+.gothon-field-err{font-style:normal;font-size:11.5px;color:#f9a8d4}
+.gothon-form-status{margin:0;min-height:1.2em;font-size:13px}
+.gothon-form-status[data-kind="error"]{color:#f9a8d4}
+.gothon-form-submit{
+  border:0;border-radius:10px;padding:12px 16px;cursor:pointer;
+  background:#D8FE91;color:#111214;
+  font:inherit;font-size:14px;font-weight:750;
+}
+.gothon-form-submit:hover{filter:brightness(1.06)}
+.gothon-form-submit:disabled{opacity:.65;cursor:wait}
+.gothon-form-done{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 8px 10px;text-align:center;
+}
+.gothon-form-done[hidden]{display:none}
+.gothon-form-done-icon{
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#D8FE91;color:#111214;
+  font-size:22px;font-weight:800;margin-bottom:4px;
+}
+.gothon-form-done b{font-size:18px;letter-spacing:-.03em}
+.gothon-form-done span{font-size:13.5px;color:rgba(255,255,255,.68);max-width:32ch}
+.gothon-form-done-bn{
+  font-family:'Hind Siliguri','Nirmala UI','Noto Sans Bengali',sans-serif;
+  font-size:14px;font-weight:600;color:rgba(216,254,145,.9);
+}
+@media (min-width:640px){
+  .gothon-modal{align-items:safe center;padding:24px}
+}
+@media (max-width:560px){
+  .gothon-form-row{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .gothon-badge,.gothon-badge::after,
+  .gothon-badge-copy strong,.gothon-badge-copy [lang="bn"],
+  .gothon-modal-backdrop,.gothon-modal-card{animation:none;transition:none}
+  .gothon-badge-copy [lang="bn"]{opacity:0}
+}
