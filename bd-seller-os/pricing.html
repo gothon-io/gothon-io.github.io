@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — BD Seller OS</title>
+<meta name="description" content="BD Seller OS subscription plans for Bangladeshi social-commerce sellers. Starter, Pro, and Enterprise — priced against returns prevented, not feature counts.">
+<style>
+:root{
+  --bg:#F3F6F2; --surface:#FFFFFF; --ink:#15241D; --muted:#5C6B62;
+  --green:#0E6B4F; --green-deep:#0A3D2E; --green-soft:#E3F0E9;
+  --red:#CE3B34; --red-soft:#FBE9E7;
+  --amber:#B97514; --amber-bright:#E8A13D; --amber-soft:#FCF1DC;
+  --blue:#2A5FA8; --blue-soft:#E6EEF9; --violet:#6B4FA8; --violet-soft:#EEE9F8;
+  --line:#DDE5DE; --line-soft:#EBF0EA;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(21,36,29,.05),0 8px 24px -12px rgba(21,36,29,.18);
+  --shadow-lg:0 24px 60px -24px rgba(10,61,46,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+button,a.pill-cta{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(243,246,242,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.logomark{position:relative;width:32px;height:32px;border-radius:9px;background:var(--green);display:grid;place-items:center;flex:none;color:#fff;font-family:var(--mono);font-weight:700;font-size:15px;border:1px solid rgba(255,255,255,.25)}
+.logodot{position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+.logo small{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-left:2px}
+.topnav{display:flex;gap:22px;margin-left:auto}
+.topnav a{color:var(--muted);font-size:14px;font-weight:600}
+.topnav a:hover,.topnav a.active{color:var(--green)}
+.pill-cta{display:inline-flex;align-items:center;justify-content:center;background:var(--green);color:#fff;border:none;border-radius:99px;padding:9px 18px;font-weight:700;font-size:13.5px;box-shadow:var(--shadow)}
+.pill-cta:hover{background:var(--green-deep)}
+.pill-cta.ghost{background:transparent;color:var(--green-deep);border:1px solid var(--line);box-shadow:none}
+.pill-cta.ghost:hover{border-color:var(--green);background:var(--green-soft)}
+.pill-cta.lg{padding:13px 24px;font-size:14.5px}
+.pill-cta.white{background:#fff;color:var(--green-deep)}
+.pill-cta.white:hover{background:#E8F5EF}
+.pill-cta.outline-light{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;box-shadow:none}
+.pill-cta.outline-light:hover{background:rgba(255,255,255,.08)}
+
+/* hero */
+.hero{padding:64px 0 28px;text-align:center;position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:-20% -10% auto;height:70%;
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(14,107,79,.14), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 15% 40%, rgba(206,59,52,.06), transparent 60%),
+    radial-gradient(ellipse 35% 35% at 85% 30%, rgba(185,117,20,.07), transparent 60%);
+  pointer-events:none;
+}
+.hero .wrap{position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:700;color:var(--green);letter-spacing:.04em}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(206,59,52,.4)}50%{box-shadow:0 0 0 6px rgba(206,59,52,0)}}
+.hero h1{font-size:clamp(32px,5vw,48px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin:18px auto 12px;max-width:19ch}
+.hero h1 .hl{color:var(--green)}
+.hero .lead{color:var(--muted);font-size:17px;max-width:52ch;margin:0 auto 28px}
+
+.bill-toggle{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:5px;box-shadow:var(--shadow);margin-bottom:8px}
+.bill-toggle button{border:none;background:transparent;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted)}
+.bill-toggle button.active{background:var(--green);color:#fff}
+.bill-hint{font-size:13px;color:var(--muted);font-weight:600;margin-top:12px}
+.bill-hint b{color:var(--green)}
+
+/* pricing cards */
+.plans{padding:20px 0 12px}
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plan{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:28px 26px 26px;display:flex;flex-direction:column;
+  box-shadow:var(--shadow);position:relative;transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.plan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.plan.featured{
+  border-color:var(--green);border-width:2px;padding:27px 25px 25px;
+  background:linear-gradient(180deg,#FBFDFB 0%,#F3F6F2 100%);
+  box-shadow:var(--shadow-lg),0 0 0 4px var(--green-soft);
+}
+.plan.featured:hover{transform:translateY(-4px)}
+.plan-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#fff;font-size:11px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:99px;
+  white-space:nowrap;
+}
+.plan-name{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.plan-who{font-size:13px;color:var(--muted);font-weight:600;margin:4px 0 20px;min-height:2.6em}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.plan-price .currency{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green-deep)}
+.plan-price .amount{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.plan-price .period{font-size:14px;color:var(--muted);font-weight:600}
+.plan-annual{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:22px;min-height:1.4em}
+.plan-annual b{color:var(--green);font-weight:700}
+.plan-cta{width:100%;margin-bottom:22px;text-align:center}
+.plan.featured .plan-cta{background:var(--green);color:#fff}
+.plan.featured .plan-cta:hover{background:var(--green-deep)}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:11px;flex:1}
+.feat-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;line-height:1.4}
+.feat-list li::before{
+  content:"";flex:none;width:18px;height:18px;border-radius:50%;margin-top:1px;
+  background:var(--green-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%230E6B4F' stroke-width='2.4'%3E%3Cpath d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E") center/12px no-repeat;
+}
+.feat-list li.strong{color:var(--green-deep)}
+.feat-list .muted-feat{color:var(--muted);font-weight:500}
+.plans-note{text-align:center;color:var(--muted);font-size:12.5px;max-width:66ch;margin:24px auto 0;padding:0 20px}
+
+/* ROI band */
+.roi{padding:8px 0 64px}
+.roi-band{
+  background:var(--green-deep);border-radius:24px;padding:40px 44px;color:#fff;
+  display:grid;grid-template-columns:1.15fr 1fr;gap:36px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.roi-band::after{
+  content:"৳";position:absolute;right:-10px;top:-40px;
+  font-size:280px;font-weight:800;color:rgba(255,255,255,.04);line-height:1;
+}
+.roi-band h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;line-height:1.15;margin-bottom:10px;position:relative}
+.roi-band p{color:rgba(255,255,255,.72);font-size:15px;max-width:48ch;position:relative}
+.roi-math{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:22px;position:relative;display:grid;gap:14px;
+}
+.roi-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:14px;font-weight:600}
+.roi-row span{color:rgba(255,255,255,.65)}
+.roi-row b{font-family:var(--mono);font-size:15px}
+.roi-row.hl{border-top:1px dashed rgba(255,255,255,.2);padding-top:14px;margin-top:4px}
+.roi-row.hl b{color:#7BE0BC;font-size:18px}
+.roi-row.cost b{color:#F7C948}
+
+/* compare */
+section{padding:56px 0}
+.sec-head{max-width:640px;margin-bottom:32px}
+.sec-head .kicker{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.sec-head h2{font-size:clamp(26px,3.2vw,36px);letter-spacing:-.025em;line-height:1.12;margin:10px 0 8px}
+.sec-head p{color:var(--muted);font-size:16px}
+
+.compare-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);font-size:14px}
+.compare-table th,.compare-table td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.compare-table th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:#FAFCFA;font-weight:800}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .name{font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+.compare-table .price{font-family:var(--mono);font-weight:700;color:var(--green-deep);white-space:nowrap}
+.compare-table .us{background:linear-gradient(90deg,rgba(14,107,79,.06),transparent)}
+.compare-table .us .name{color:var(--green)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;border-radius:99px;padding:3px 10px}
+.chip i{width:6px;height:6px;border-radius:50%}
+.chip.ok{background:var(--green-soft);color:var(--green)}.chip.ok i{background:var(--green)}
+.chip.muted{background:var(--bg);color:var(--muted)}.chip.muted i{background:var(--muted)}
+.chip.amber{background:var(--amber-soft);color:var(--amber)}.chip.amber i{background:var(--amber)}
+
+/* pay + faq strip */
+.pay-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.pay-card,.faq-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow);
+}
+.pay-card h3,.faq-card h3{font-size:20px;letter-spacing:-.02em;margin-bottom:8px}
+.pay-card p,.faq-card p{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.pay-logos{display:flex;flex-wrap:wrap;gap:10px}
+.pay-logo{
+  display:inline-flex;align-items:center;gap:8px;background:var(--bg);
+  border:1px solid var(--line);border-radius:12px;padding:10px 16px;
+  font-weight:800;font-size:13.5px;
+}
+.pay-logo .mark{width:10px;height:10px;border-radius:50%}
+.faq-item{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.faq-item:last-child{border-bottom:none;padding-bottom:0}
+.faq-item:first-child{padding-top:0}
+.faq-item b{display:block;font-size:14px;margin-bottom:4px}
+.faq-item span{font-size:13.5px;color:var(--muted)}
+
+/* cta */
+.cta-band{
+  background:var(--green-deep);border-radius:24px;padding:48px;color:#fff;text-align:center;
+  position:relative;overflow:hidden;margin-bottom:8px;
+}
+.cta-band::after{content:"+";position:absolute;right:-30px;top:-70px;font-size:340px;font-weight:800;color:rgba(255,255,255,.05);line-height:1}
+.cta-band h2{font-size:clamp(26px,3vw,36px);letter-spacing:-.02em;line-height:1.12;margin-bottom:10px;position:relative}
+.cta-band p{color:rgba(255,255,255,.75);font-size:15px;max-width:46ch;margin:0 auto 22px;position:relative}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+footer{padding:36px 0 48px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{font-weight:600;color:var(--green)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:960px){
+  .plan-grid,.roi-band,.pay-grid{grid-template-columns:1fr}
+  .plan.featured{order:-1}
+  .topnav{display:none}
+  .compare-table{display:block;overflow-x:auto}
+}
+@media (max-width:560px){
+  .hero h1{font-size:30px}
+  .plan-price .amount{font-size:36px}
+  .roi-band,.cta-band{padding:28px 22px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="./index.html">
+      <span class="logomark">৳<span class="logodot"></span></span>
+      BD Seller <small>OS</small>
+    </a>
+    <nav class="topnav">
+      <a href="./index.html">Live demo</a>
+      <a href="./pricing.html" class="active">Pricing</a>
+    </nav>
+    <a class="pill-cta" href="#contact">Book a demo</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> Priced against returns prevented — not against feature counts</span>
+    <h1>Plans that pay for themselves in <span class="hl">two prevented returns.</span></h1>
+    <p class="lead">Tier-based monthly subscription for solo F-commerce sellers, growing SME operations, and established multi-channel brands across Bangladesh. Pay with bKash, Nagad or Rocket.</p>
+    <div class="bill-toggle" role="tablist" aria-label="Billing period">
+      <button type="button" id="billMonth" class="active" onclick="setBilling('month')">Monthly</button>
+      <button type="button" id="billYear" onclick="setBilling('year')">Annual <span style="opacity:.85;font-weight:600">· save ~17%</span></button>
+    </div>
+    <div class="bill-hint">Annual plans billed once a year — <b>2 months free</b> vs month-to-month.</div>
+  </div>
+</div>
+
+<section class="plans">
+  <div class="wrap">
+    <div class="plan-grid">
+
+      <article class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-who">Solo sellers &amp; new pages — 1 seat, 200 orders / month</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" data-m="499" data-y="416">499</span>
+          <span class="period">/ month</span>
+        </div>
+        <div class="plan-annual" data-annual="৳4,990 / year">or ৳4,990 / year</div>
+        <a class="pill-cta ghost plan-cta lg" href="#contact">Start with Starter</a>
+        <ul class="feat-list">
+          <li>Order creation &amp; central order list</li>
+          <li>All 5 couriers — Steadfast, Pathao, RedX, Paperfly, Sundarban</li>
+          <li>Automatic COD calculation &amp; stock check before saving</li>
+          <li>Basic invoice generation</li>
+          <li>7-day sales reports</li>
+        </ul>
+      </article>
+
+      <article class="plan featured">
+        <div class="plan-badge">Recommended</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-who">Growing SME sellers — up to 5 seats, 2,000 orders / month</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" data-m="1499" data-y="1249">1,499</span>
+          <span class="period">/ month</span>
+        </div>
+        <div class="plan-annual" data-annual="৳14,990 / year">or ৳14,990 / year</div>
+        <a class="pill-cta plan-cta lg" href="#contact">Choose Pro</a>
+        <ul class="feat-list">
+          <li class="muted-feat">Everything in Starter</li>
+          <li class="strong">Courier-wise pending cash &amp; full COD settlement tracking</li>
+          <li class="strong">Branded invoices + automated order confirmation (SMS/WhatsApp)*</li>
+          <li>Return reason analysis &amp; best-selling product report</li>
+          <li>Customer risk flags (Low / Moderate / High)</li>
+          <li>200 free SMS credits every month</li>
+        </ul>
+      </article>
+
+      <article class="plan">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-who">Established brands &amp; multi-branch — unlimited seats &amp; orders</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" data-m="4999" data-y="4166">4,999</span>
+          <span class="period">+ / mo</span>
+        </div>
+        <div class="plan-annual" data-annual="৳49,990+ / year">or ৳49,990+ / year</div>
+        <a class="pill-cta ghost plan-cta lg" href="#contact">Talk to sales</a>
+        <ul class="feat-list">
+          <li class="muted-feat">Everything in Pro</li>
+          <li class="strong">Multi-branch / multi-warehouse stock visibility</li>
+          <li class="strong">API &amp; webhook access + courier auto-booking included</li>
+          <li>Custom role-based permissions</li>
+          <li>Fully custom reports &amp; invoices</li>
+          <li>Dedicated account manager, phone SLA &amp; on-site staff training</li>
+        </ul>
+      </article>
+
+    </div>
+    <p class="plans-note">*Automated SMS/WhatsApp order confirmation runs on your own SMS gateway or WhatsApp Business API connection — we help you connect it, but it's never automatic out of the box. Custom pricing above 10,000 orders/month.</p>
+  </div>
+</section>
+
+<section class="roi">
+  <div class="wrap">
+    <div class="roi-band">
+      <div>
+        <h2>Pro at ৳1,499 — cut returns by two points and the plan is already free.</h2>
+        <p>A Segment B seller running 300 COD orders a month at a 10% return rate can offset the entire Pro subscription by preventing just 6 returns — before counting the ~50 hours a month currently spent on order sheets, courier panels and reconciliation.</p>
+      </div>
+      <div class="roi-math">
+        <div class="roi-row"><span>Orders handled monthly</span><b>300</b></div>
+        <div class="roi-row"><span>Return rate today (10%)</span><b>30 orders/mo</b></div>
+        <div class="roi-row cost"><span>Pro plan</span><b>৳1,499/mo · ~৳5/order</b></div>
+        <div class="roi-row hl"><span>Cut returns by 2 points</span><b>6 orders saved/mo</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Market context · Bangladesh</div>
+      <h2>Built for COD &amp; courier chaos — not a generic order sheet.</h2>
+      <p>Excel sheets, Facebook Group coordination, and generic inventory tools each leave a gap. BD Seller OS closes the one that costs real money: courier-wise settlement and return prevention.</p>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Pricing</th>
+          <th>Strength</th>
+          <th>Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="name">Manual Excel / notebook</div><span style="font-size:12.5px;color:var(--muted)">Order sheets &amp; paper registers</span></td>
+          <td class="price">৳0</td>
+          <td>Free, familiar to every staff member</td>
+          <td><span class="chip amber"><i></i>No COD automation, no courier visibility</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Facebook Group + manual DMs</div><span style="font-size:12.5px;color:var(--muted)">Comment/DM order taking</span></td>
+          <td class="price">৳0</td>
+          <td>Zero setup friction to start selling</td>
+          <td><span class="chip amber"><i></i>Error-prone, no stock sync, easy oversells</span></td>
+        </tr>
+        <tr>
+          <td><div class="name">Generic inventory / retail POS</div><span style="font-size:12.5px;color:var(--muted)">Local SaaS built for shops, not COD</span></td>
+          <td class="price">৳1,000–3,000 / mo</td>
+          <td>Web-accessible stock &amp; sales tracking</td>
+          <td><span class="chip amber"><i></i>No courier-wise COD settlement or return-reason analysis</span></td>
+        </tr>
+        <tr class="us">
+          <td><div class="name">BD Seller OS</div><span style="font-size:12.5px;color:var(--muted)">Order + COD manager for social commerce</span></td>
+          <td class="price">৳499 – ৳4,999+ / mo</td>
+          <td>All 5 couriers, COD accuracy, return prevention</td>
+          <td><span class="chip ok"><i></i>Priced against returns prevented</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="pay-grid">
+      <div class="pay-card">
+        <h3>Pay the way sellers already pay</h3>
+        <p>Monthly automated billing via mobile financial services, plus bank transfer and card for larger accounts — with an auto-reminder 5 days before every renewal.</p>
+        <div class="pay-logos">
+          <span class="pay-logo"><span class="mark" style="background:#E2136E"></span> bKash</span>
+          <span class="pay-logo"><span class="mark" style="background:#F68712"></span> Nagad</span>
+          <span class="pay-logo"><span class="mark" style="background:#8C1D82"></span> Rocket</span>
+        </div>
+      </div>
+      <div class="faq-card">
+        <h3>Quick answers</h3>
+        <div class="faq-item">
+          <b>What happens if I go over my order limit?</b>
+          <span>An extra 1,000 orders costs ৳300 on Starter or Pro. Enterprise is unlimited.</span>
+        </div>
+        <div class="faq-item">
+          <b>Is SMS/WhatsApp order confirmation fully automatic?</b>
+          <span>It runs on your own SMS gateway or WhatsApp Business API connection — we set it up together, but it's never automatic out of the box.</span>
+        </div>
+        <div class="faq-item">
+          <b>What happens if a renewal payment fails?</b>
+          <span>A 7-day grace period, then the account drops to read-only. We never delete your order or customer data.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding-top:24px;padding-bottom:64px">
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Ready to get out of the spreadsheet?</h2>
+      <p>We import your Excel sheet, connect your couriers, and get your first order flowing the same day. Most sellers start on Pro.</p>
+      <div class="cta-actions">
+        <a class="pill-cta white lg" href="#" onclick="alert('Thanks for your interest!\n(Hook this to your booking form / WhatsApp)');return false">Book a free demo</a>
+        <a class="pill-cta outline-light lg" href="./index.html">Try the live demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div><b style="color:var(--ink)">BD Seller OS</b> — <a href="./index.html">Product demo</a> · Pricing R&amp;D for client presentations</div>
+  <div>All prices in Bangladeshi Taka (৳). Annual = 2 months free (~17% off).</div>
+</footer>
+
+<script>
+function fmt(n){
+  return n.toLocaleString('en-IN');
+}
+function setBilling(mode){
+  const year = mode === 'year';
+  document.getElementById('billMonth').classList.toggle('active', !year);
+  document.getElementById('billYear').classList.toggle('active', year);
+  document.querySelectorAll('.plan-price .amount').forEach(el => {
+    el.textContent = fmt(Number(year ? el.dataset.y : el.dataset.m));
+  });
+  document.querySelectorAll('.plan-annual').forEach(el => {
+    el.innerHTML = year
+      ? 'billed yearly · <b>save ~17%</b>'
+      : 'or ' + el.dataset.annual;
+  });
+}
+</script>
+</body>
+</html>

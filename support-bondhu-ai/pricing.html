@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — SupportBondhu AI</title>
+<meta name="description" content="SupportBondhu AI pricing for 24/7 customer support & lead capture — Starter, Pro and Enterprise plans priced per conversation, not per seat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2B5E; --ink:#0E1B33; --ink-soft:#3C4A63;
+  --blue:#1F6FEB; --blue-deep:#1653BE; --blue-bright:#3B86F5;
+  --sky:#EAF1FC; --sky-line:#D3E2F7;
+  --green:#22A34A; --green-deep:#178139; --green-soft:#E4F5E9;
+  --amber:#F5A623; --amber-soft:#FFF3DC;
+  --violet:#6B58D6; --violet-soft:#ECE8FB;
+  --paper:#FFFFFF; --bg:#F4F6FA; --line:#E4E8F0; --muted:#6B7A90;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 6px 18px -10px rgba(11,43,94,.28);
+  --shadow-lg:0 18px 44px -24px rgba(11,43,94,.40);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Hind Siliguri',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.dsp{font-family:'Poppins',sans-serif}
+::selection{background:var(--blue);color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+button,a.pill-cta{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,246,250,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Poppins';font-weight:800;font-size:18px;letter-spacing:-.01em}
+.logo svg{width:32px;height:32px;flex:none}
+.logo span.bn{color:var(--green)}
+.logo small{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-left:2px}
+.topnav{display:flex;gap:22px;margin-left:auto}
+.topnav a{color:var(--muted);font-size:14px;font-weight:600}
+.topnav a:hover,.topnav a.active{color:var(--blue)}
+.pill-cta{display:inline-flex;align-items:center;justify-content:center;background:var(--blue);color:#fff;border:none;border-radius:99px;padding:9px 18px;font-weight:700;font-size:13.5px;box-shadow:var(--shadow)}
+.pill-cta:hover{background:var(--blue-deep)}
+.pill-cta.ghost{background:transparent;color:var(--blue-deep);border:1px solid var(--line);box-shadow:none}
+.pill-cta.ghost:hover{border-color:var(--blue);background:var(--sky)}
+.pill-cta.lg{padding:13px 24px;font-size:14.5px}
+.pill-cta.white{background:#fff;color:var(--blue-deep)}
+.pill-cta.white:hover{background:#EAF1FC}
+.pill-cta.outline-light{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;box-shadow:none}
+.pill-cta.outline-light:hover{background:rgba(255,255,255,.08)}
+
+/* hero */
+.hero{padding:64px 0 28px;text-align:center;position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:-20% -10% auto;height:70%;
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(31,111,235,.14), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 15% 40%, rgba(34,163,74,.07), transparent 60%),
+    radial-gradient(ellipse 35% 35% at 85% 30%, rgba(107,88,214,.07), transparent 60%);
+  pointer-events:none;
+}
+.hero .wrap{position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:700;color:var(--blue-deep);letter-spacing:.04em}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.4)}50%{box-shadow:0 0 0 6px rgba(245,166,35,0)}}
+.hero h1{font-size:clamp(30px,4.8vw,48px);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin:18px auto 12px;max-width:20ch}
+.hero h1 .hl{color:var(--blue)}
+.hero .lead{color:var(--muted);font-size:17px;max-width:54ch;margin:0 auto 28px}
+
+.bill-toggle{display:inline-flex;align-items:center;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:5px;box-shadow:var(--shadow);margin-bottom:8px}
+.bill-toggle button{border:none;background:transparent;padding:10px 20px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted);font-family:inherit}
+.bill-toggle button.active{background:var(--blue);color:#fff}
+.bill-hint{font-size:13px;color:var(--muted);font-weight:600;margin-top:12px}
+.bill-hint b{color:var(--blue)}
+
+/* pricing cards */
+.plans{padding:20px 0 12px}
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plan{
+  background:var(--paper);border:1px solid var(--line);border-radius:20px;
+  padding:28px 26px 26px;display:flex;flex-direction:column;
+  box-shadow:var(--shadow);position:relative;transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.plan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.plan.featured{
+  border-color:var(--blue);border-width:2px;padding:27px 25px 25px;
+  background:linear-gradient(180deg,#FCFDFF 0%,var(--sky) 240%);
+  box-shadow:var(--shadow-lg),0 0 0 4px var(--sky);
+}
+.plan.featured:hover{transform:translateY(-4px)}
+.plan-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--blue);color:#fff;font-size:11px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:99px;
+  white-space:nowrap;
+}
+.plan-name{font-family:'Poppins';font-size:21px;font-weight:800;letter-spacing:-.01em}
+.plan-from{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-top:14px}
+.plan-who{font-size:13px;color:var(--muted);font-weight:600;margin:4px 0 20px;min-height:2.6em}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.plan-price .currency{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue-deep)}
+.plan-price .amount{font-family:'Poppins';font-size:42px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.plan-price .period{font-size:14px;color:var(--muted);font-weight:600}
+.plan-annual{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:22px;min-height:1.4em}
+.plan-annual b{color:var(--blue);font-weight:700}
+.plan-cta{width:100%;margin-bottom:22px;text-align:center}
+.plan.featured .plan-cta{background:var(--blue);color:#fff}
+.plan.featured .plan-cta:hover{background:var(--blue-deep)}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:11px;flex:1}
+.feat-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;font-weight:600;line-height:1.4}
+.feat-list li::before{
+  content:"";flex:none;width:18px;height:18px;border-radius:50%;margin-top:1px;
+  background:var(--sky) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231F6FEB' stroke-width='2.4'%3E%3Cpath d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E") center/12px no-repeat;
+}
+.feat-list li.strong{color:var(--blue-deep)}
+.feat-list .muted-feat{color:var(--muted);font-weight:500}
+.plans-note{text-align:center;color:var(--muted);font-size:12.5px;max-width:66ch;margin:24px auto 0;padding:0 20px}
+
+/* ROI band */
+.roi{padding:8px 0 20px}
+.roi-band{
+  background:var(--navy);border-radius:24px;padding:40px 44px;color:#fff;
+  display:grid;grid-template-columns:1.15fr 1fr;gap:36px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.roi-band::after{
+  content:"৳";position:absolute;right:-10px;top:-40px;
+  font-family:'Poppins';font-size:280px;font-weight:800;color:rgba(255,255,255,.05);line-height:1;
+}
+.roi-band h2{font-size:clamp(22px,2.8vw,30px);letter-spacing:-.01em;line-height:1.2;margin-bottom:10px;position:relative}
+.roi-band p{color:rgba(255,255,255,.72);font-size:15px;max-width:48ch;position:relative}
+.roi-math{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;padding:22px;position:relative;display:grid;gap:14px;
+}
+.roi-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:13.5px;font-weight:600}
+.roi-row span{color:rgba(255,255,255,.65)}
+.roi-row b{font-family:var(--mono);font-size:15px}
+.roi-row.hl{border-top:1px dashed rgba(255,255,255,.2);padding-top:14px;margin-top:4px}
+.roi-row.hl b{color:#7CF0A6;font-size:18px}
+.roi-row.cost b{color:#F7C948}
+.roi-note{text-align:center;font-size:12px;color:var(--muted);max-width:70ch;margin:14px auto 0}
+
+/* compare */
+section{padding:56px 0}
+.sec-head{max-width:640px;margin-bottom:32px}
+.sec-head .kicker{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--violet)}
+.sec-head h2{font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;line-height:1.16;margin:10px 0 8px}
+.sec-head p{color:var(--muted);font-size:16px}
+
+.compare-table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);font-size:14px}
+.compare-table th,.compare-table td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.compare-table th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:#FAFBFE;font-weight:800}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .name{font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+.compare-table .price{font-family:var(--mono);font-weight:700;color:var(--blue-deep);white-space:nowrap}
+.compare-table .us{background:linear-gradient(90deg,rgba(31,111,235,.06),transparent)}
+.compare-table .us .name{color:var(--blue)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;border-radius:99px;padding:3px 10px}
+.chip i{width:6px;height:6px;border-radius:50%}
+.chip.ok{background:var(--green-soft);color:var(--green-deep)}.chip.ok i{background:var(--green)}
+.chip.muted{background:var(--bg);color:var(--muted)}.chip.muted i{background:var(--muted)}
+.chip.amber{background:var(--amber-soft);color:var(--amber)}.chip.amber i{background:var(--amber)}
+
+/* pay + faq strip */
+.pay-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.pay-card,.faq-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow);
+}
+.pay-card h3,.faq-card h3{font-size:20px;letter-spacing:-.01em;margin-bottom:8px}
+.pay-card p,.faq-card p{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.pay-logos{display:flex;flex-wrap:wrap;gap:10px}
+.pay-logo{
+  display:inline-flex;align-items:center;gap:8px;background:var(--bg);
+  border:1px solid var(--line);border-radius:12px;padding:10px 16px;
+  font-weight:800;font-size:13.5px;font-family:'Poppins';
+}
+.pay-logo .mark{width:10px;height:10px;border-radius:50%}
+.faq-item{padding:14px 0;border-bottom:1px solid var(--line)}
+.faq-item:last-child{border-bottom:none;padding-bottom:0}
+.faq-item:first-child{padding-top:0}
+.faq-item b{display:block;font-size:14px;margin-bottom:4px}
+.faq-item span{font-size:13.5px;color:var(--muted)}
+
+/* cta */
+.cta-band{
+  background:var(--navy);border-radius:24px;padding:48px;color:#fff;text-align:center;
+  position:relative;overflow:hidden;margin-bottom:8px;
+}
+.cta-band::after{content:"+";position:absolute;right:-30px;top:-70px;font-family:'Poppins';font-size:340px;font-weight:800;color:rgba(255,255,255,.06);line-height:1}
+.cta-band h2{font-size:clamp(24px,3vw,34px);letter-spacing:-.01em;line-height:1.16;margin-bottom:10px;position:relative}
+.cta-band p{color:rgba(255,255,255,.75);font-size:15px;max-width:46ch;margin:0 auto 22px;position:relative}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+footer{padding:36px 0 48px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{font-weight:600;color:var(--blue)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:960px){
+  .plan-grid,.roi-band,.pay-grid{grid-template-columns:1fr}
+  .plan.featured{order:-1}
+  .topnav{display:none}
+  .compare-table{display:block;overflow-x:auto}
+}
+@media (max-width:560px){
+  .hero h1{font-size:30px}
+  .plan-price .amount{font-size:34px}
+  .roi-band,.cta-band{padding:28px 22px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="./index.html">
+      <svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#1F6FEB"/><rect x="7" y="9" width="26" height="20" rx="6" fill="#fff"/><circle cx="16" cy="19" r="2.1" fill="#1F6FEB"/><circle cx="24" cy="19" r="2.1" fill="#1F6FEB"/><path d="M20 5v4" stroke="#22A34A" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="4" r="2.4" fill="#22A34A"/><path d="M15.5 24c1.6 1.6 7.4 1.6 9 0" stroke="#22A34A" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Support<span class="bn">Bondhu</span> <small>AI</small>
+    </a>
+    <nav class="topnav">
+      <a href="./index.html">Live demo</a>
+      <a href="./pricing.html" class="active">Pricing</a>
+    </nav>
+    <a class="pill-cta" href="#contact">Book a free pilot</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> Priced per conversation handled — not per staff seat</span>
+    <h1>Plans that cost less than <span class="hl">one shift of round-the-clock coverage.</span></h1>
+    <p class="lead">Conversation-based monthly subscription for solo pages and single outlets, growing multi-channel businesses, and multi-branch groups across Bangladesh — Bangla &amp; English, on Website, Messenger and WhatsApp.</p>
+    <div class="bill-toggle" role="tablist" aria-label="Billing period">
+      <button type="button" id="billMonth" class="active" onclick="setBilling('month')">Monthly</button>
+      <button type="button" id="billYear" onclick="setBilling('year')">Annual <span style="opacity:.85;font-weight:600">· save ~17%</span></button>
+    </div>
+    <div class="bill-hint">Annual plans billed once a year — <b>2 months free</b> vs month-to-month.</div>
+  </div>
+</div>
+
+<section class="plans">
+  <div class="wrap">
+    <div class="plan-grid">
+
+      <article class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-who">F-commerce pages, single outlets, small chambers &amp; solo agencies</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" data-m="2900" data-y="2417">2,900</span>
+          <span class="period">/ mo</span>
+        </div>
+        <div class="plan-annual" data-annual="৳29,000 / year">or ৳29,000 / year</div>
+        <a class="pill-cta ghost plan-cta lg" href="#contact">Start with Starter</a>
+        <ul class="feat-list">
+          <li>1 channel — Website or Messenger</li>
+          <li>500 AI conversations / month</li>
+          <li>Bangla + English</li>
+          <li>Knowledge base — 50 FAQs, 1 document, 1 website link</li>
+          <li>Automatic lead capture + CSV export</li>
+          <li>After-hours mode &amp; basic analytics</li>
+        </ul>
+      </article>
+
+      <article class="plan featured">
+        <div class="plan-badge">Recommended</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-who">Online stores, multi-doctor clinics, travel agencies &amp; institutes</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" data-m="8900" data-y="7417">8,900</span>
+          <span class="period">/ mo</span>
+        </div>
+        <div class="plan-annual" data-annual="৳89,000 / year">or ৳89,000 / year</div>
+        <a class="pill-cta plan-cta lg" href="#contact">Choose Pro</a>
+        <ul class="feat-list">
+          <li class="muted-feat">Everything in Starter</li>
+          <li class="strong">All 3 channels — Website + Messenger + WhatsApp*</li>
+          <li class="strong">3,000 AI conversations / month</li>
+          <li>Unlimited FAQs, up to 25 documents</li>
+          <li>Full analytics dashboard + human handover flag</li>
+          <li>3 admin users, CRM export &amp; priority WhatsApp support</li>
+        </ul>
+      </article>
+
+      <article class="plan">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-from">Starting from</div>
+        <div class="plan-who">Multi-branch retail, hospital groups, large travel groups &amp; corporates</div>
+        <div class="plan-price">
+          <span class="currency">৳</span>
+          <span class="amount" style="font-size:36px">29,000</span>
+          <span class="period">+ / mo</span>
+        </div>
+        <div class="plan-annual">Custom contract — let's scope it together</div>
+        <a class="pill-cta ghost plan-cta lg" href="#contact">Talk to sales</a>
+        <ul class="feat-list">
+          <li class="muted-feat">Everything in Pro</li>
+          <li class="strong">Unlimited channels + custom integrations</li>
+          <li class="strong">10,000+ conversations / month, custom AI tuning</li>
+          <li>Multi-branch / multi-brand management</li>
+          <li>Full API &amp; CRM integration, SSO &amp; audit logs</li>
+          <li>Dedicated account manager + SLA</li>
+        </ul>
+      </article>
+
+    </div>
+    <p class="plans-note">*WhatsApp is billed separately — Meta charges per conversation on top of the subscription, and business verification takes time. We set the timeline expectation before you sign, never "WhatsApp live tomorrow."</p>
+  </div>
+</section>
+
+<section class="roi">
+  <div class="wrap">
+    <div class="roi-band">
+      <div>
+        <h2>Pro costs a fraction of round-the-clock human coverage.</h2>
+        <p>Round-the-clock customer support typically needs about four staff in rotation — realistically ৳80,000–1,00,000 a month in Bangladesh. SupportBondhu AI's Pro plan replaces that always-on coverage for ৳8,900/month.</p>
+      </div>
+      <div class="roi-math">
+        <div class="roi-row"><span>Staff needed for 24/7 coverage</span><b>~4 people</b></div>
+        <div class="roi-row"><span>Typical rotation staff cost</span><b>৳80,000 – ৳1,00,000/mo</b></div>
+        <div class="roi-row cost"><span>Pro plan</span><b>৳8,900 / mo</b></div>
+        <div class="roi-row hl"><span>Cost vs. round-the-clock staffing</span><b>9× – 11× cheaper</b></div>
+      </div>
+    </div>
+    <p class="roi-note">*Illustrative staffing comparison — confirm against current hiring costs before presenting to a client.</p>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">At a glance</div>
+      <h2>Every plan meters conversations, not people.</h2>
+      <p>The price grows with the work SupportBondhu AI actually does for the business — not with how many staff it employs.</p>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Channels</th>
+          <th>AI conversations / mo</th>
+          <th>Knowledge base</th>
+          <th>Support</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="name">Starter</div></td>
+          <td>Website <i>or</i> Messenger (1)</td>
+          <td class="price">500</td>
+          <td>50 FAQs · 1 doc · 1 link</td>
+          <td>Email, 48h</td>
+        </tr>
+        <tr class="us">
+          <td><div class="name">Pro</div></td>
+          <td>All 3 — Website + Messenger + WhatsApp</td>
+          <td class="price">3,000</td>
+          <td>Unlimited FAQs · 25 docs</td>
+          <td>Priority WhatsApp, business hours</td>
+        </tr>
+        <tr>
+          <td><div class="name">Enterprise</div></td>
+          <td>Unlimited + custom</td>
+          <td class="price">10,000+ / custom</td>
+          <td>Unlimited + custom AI tuning</td>
+          <td>Dedicated manager + SLA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="pay-grid">
+      <div class="pay-card">
+        <h3>Simple monthly billing</h3>
+        <p>Automated monthly billing keeps the always-on coverage running — pay by mobile financial services or bank transfer, with an annual option for lower churn and one prepay instead of twelve.</p>
+        <div class="pay-logos">
+          <span class="pay-logo"><span class="mark" style="background:#E2136E"></span> bKash</span>
+          <span class="pay-logo"><span class="mark" style="background:#F68712"></span> Nagad</span>
+          <span class="pay-logo"><span class="mark" style="background:var(--ink-soft)"></span> Bank transfer</span>
+        </div>
+      </div>
+      <div class="faq-card">
+        <h3>Quick answers</h3>
+        <div class="faq-item">
+          <b>Is WhatsApp included in the subscription price?</b>
+          <span>No — Meta charges separately per WhatsApp Business API conversation, and business verification takes time. We quote it as subscription + Meta charges at cost.</span>
+        </div>
+        <div class="faq-item">
+          <b>What happens during the 14-day pilot?</b>
+          <span>Up to 100 conversations on your own knowledge base, with the results review booked at the start of the pilot — not the end.</span>
+        </div>
+        <div class="faq-item">
+          <b>Can I get a lower price than what's quoted?</b>
+          <span>We'd rather move you down a tier than discount the one you want — talk to us about what fits your conversation volume.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding-top:24px;padding-bottom:64px">
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Ready to stop losing leads after 8pm?</h2>
+      <p>We connect your first channel, train the AI on your FAQs, and go live within days. Most businesses start on Pro.</p>
+      <div class="cta-actions">
+        <a class="pill-cta white lg" href="#" onclick="alert('Thanks for your interest!\n(Hook this to your booking form / WhatsApp)');return false">Book a free pilot</a>
+        <a class="pill-cta outline-light lg" href="./index.html">Try the live demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div><b style="color:var(--ink)">SupportBondhu AI</b> — <a href="./index.html">Product demo</a> · Pricing R&amp;D for client presentations</div>
+  <div>All prices in Bangladeshi Taka (৳). Annual = 2 months free (~17% off).</div>
+</footer>
+
+<script>
+function fmt(n){
+  return n.toLocaleString('en-IN');
+}
+function setBilling(mode){
+  const year = mode === 'year';
+  document.getElementById('billMonth').classList.toggle('active', !year);
+  document.getElementById('billYear').classList.toggle('active', year);
+  document.querySelectorAll('.plan-price .amount[data-m]').forEach(el => {
+    el.textContent = fmt(Number(year ? el.dataset.y : el.dataset.m));
+  });
+  document.querySelectorAll('.plan-annual[data-annual]').forEach(el => {
+    el.innerHTML = year
+      ? 'billed yearly · <b>save ~17%</b>'
+      : 'or ' + el.dataset.annual;
+  });
+}
+</script>
+</body>
+</html>

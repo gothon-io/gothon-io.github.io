@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SupportBondhu AI — Product Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B2B5E;
+    --ink:#0E1B33;
+    --ink-soft:#3C4A63;
+    --blue:#1F6FEB;
+    --blue-deep:#1653BE;
+    --blue-bright:#3B86F5;
+    --sky:#EAF1FC;
+    --sky-line:#D3E2F7;
+    --green:#22A34A;
+    --green-deep:#178139;
+    --green-soft:#E4F5E9;
+    --amber:#F5A623;
+    --amber-soft:#FFF3DC;
+    --violet:#6B58D6;
+    --violet-soft:#ECE8FB;
+    --paper:#FFFFFF;
+    --bg:#F4F6FA;
+    --line:#E4E8F0;
+    --muted:#6B7A90;
+    --shadow:0 18px 44px -24px rgba(11,43,94,.40);
+    --shadow-sm:0 6px 18px -10px rgba(11,43,94,.28);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'Inter','Hind Siliguri',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .bn{font-family:'Hind Siliguri',sans-serif}
+  h1,h2,h3,h4,.dsp{font-family:'Poppins',sans-serif}
+  ::selection{background:var(--blue);color:#fff}
+  button{font-family:inherit}
+
+  /* ============ LOGIN ============ */
+  #login{position:fixed;inset:0;z-index:200;display:grid;grid-template-columns:1.05fr .95fr;background:var(--bg)}
+  .login-brand{position:relative;overflow:hidden;color:#fff;padding:56px 60px;display:flex;flex-direction:column;
+    background:linear-gradient(150deg,#0A2E6E 0%,#12469E 45%,#1F6FEB 100%)}
+  .login-brand .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.5}
+  .login-brand .b1{width:360px;height:360px;background:radial-gradient(circle,#3B86F5,transparent 70%);top:-90px;right:-80px}
+  .login-brand .b2{width:300px;height:300px;background:radial-gradient(circle,#22A34A,transparent 70%);bottom:-90px;left:-60px;opacity:.35}
+  .login-brand .grid-dots{position:absolute;top:34px;left:60px;display:grid;grid-template-columns:repeat(6,6px);gap:9px;opacity:.5}
+  .login-brand .grid-dots i{width:6px;height:6px;border-radius:50%;background:#fff;display:block}
+  .lb-top{display:flex;align-items:center;gap:12px;position:relative;z-index:2}
+  .lb-name{font-family:'Poppins';font-weight:800;font-size:21px;letter-spacing:-.01em}
+  .lb-name span{color:#7CF0A6}
+  .login-brand h1{position:relative;z-index:2;font-size:clamp(30px,3.3vw,46px);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:auto 0 18px}
+  .login-brand p.lead{position:relative;z-index:2;font-size:16px;line-height:1.6;color:#CFE0FA;max-width:440px;margin:0 0 30px}
+  .lb-feats{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;margin-bottom:auto}
+  .lb-feat{display:flex;align-items:center;gap:13px;font-size:14.5px;font-weight:500;color:#EAF2FF}
+  .lb-feat .tick{width:26px;height:26px;border-radius:8px;background:rgba(124,240,166,.18);border:1px solid rgba(124,240,166,.4);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .lb-feat .tick svg{width:15px;height:15px;color:#7CF0A6}
+  .lb-stats{position:relative;z-index:2;display:flex;gap:34px;margin-top:34px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+  .lb-stat .n{font-family:'Poppins';font-weight:800;font-size:26px}
+  .lb-stat .l{font-size:12px;color:#B9CEF0;margin-top:2px}
+
+  .login-form{display:flex;align-items:center;justify-content:center;padding:40px}
+  .lf-card{width:100%;max-width:400px}
+  .lf-card .kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+  .lf-card h2{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:10px 0 6px}
+  .lf-card .sub{color:var(--muted);font-size:14.5px;margin:0 0 26px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:7px}
+  .field input{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 14px;font:inherit;font-size:14.5px;outline:none;background:#fff;transition:.15s}
+  .field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)}
+  .lf-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin:6px 0 22px}
+  .lf-row label{display:flex;align-items:center;gap:7px;color:var(--ink-soft);cursor:pointer}
+  .lf-row a{color:var(--blue);text-decoration:none;font-weight:600}
+  .btn-block{width:100%;border:0;border-radius:11px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
+  .btn-fill{background:var(--blue);color:#fff}.btn-fill:hover{background:var(--blue-deep)}
+  .btn-line{background:#fff;border:1px solid var(--line);color:var(--ink);margin-top:11px}.btn-line:hover{background:var(--sky)}
+  .lf-demo{margin-top:20px;background:var(--sky);border:1px dashed var(--sky-line);border-radius:11px;padding:12px 14px;font-size:12.5px;color:var(--ink-soft);text-align:center}
+  .lf-demo b{color:var(--blue-deep)}
+  @media(max-width:900px){#login{grid-template-columns:1fr}.login-brand{display:none}}
+
+  /* ============ APP SHELL ============ */
+  #app{display:none;min-height:100vh}
+  .topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;padding:12px 22px;background:#fff;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .logo{width:38px;height:38px;flex:0 0 auto}
+  .brand .name{font-family:'Poppins';font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1}
+  .brand .name span{color:var(--green)}
+  .brand .sub{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .live{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--green-deep);background:var(--green-soft);border:1px solid #C6EBD1;padding:5px 11px;border-radius:999px}
+  .live .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,163,74,.5)}70%{box-shadow:0 0 0 8px rgba(34,163,74,0)}100%{box-shadow:0 0 0 0 rgba(34,163,74,0)}}
+  .tb-controls{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .select-wrap{position:relative;display:flex;align-items:center}
+  .select-wrap label{font-size:10.5px;color:var(--muted);font-weight:700;margin-right:8px;text-transform:uppercase;letter-spacing:.05em}
+  select.biz{appearance:none;font:inherit;font-weight:600;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 32px 8px 12px;cursor:pointer}
+  .select-wrap .chev{position:absolute;right:11px;pointer-events:none;color:var(--muted)}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;user-select:none}
+  .toggle .track{width:40px;height:23px;border-radius:999px;background:#CBD5E6;position:relative;transition:.2s;flex:0 0 auto}
+  .toggle .knob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .toggle input{display:none}
+  .toggle input:checked + .track{background:var(--blue)}
+  .toggle input:checked + .track .knob{left:19px}
+  .logout{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer}
+  .logout:hover{background:var(--sky)}
+
+  .layout{display:grid;grid-template-columns:250px 1fr;align-items:start}
+  .sidebar{position:sticky;top:63px;height:calc(100vh - 63px);overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:18px 14px}
+  .nav-group{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:12px 12px 8px}
+  .nav-btn{width:100%;display:flex;align-items:center;gap:11px;border:0;background:transparent;cursor:pointer;text-align:left;font-size:13.5px;font-weight:600;color:var(--ink-soft);padding:10px 12px;border-radius:10px;transition:.14s;margin-bottom:2px}
+  .nav-btn svg{width:18px;height:18px;flex:0 0 auto;color:var(--muted)}
+  .nav-btn:hover{background:var(--sky)}
+  .nav-btn.active{background:var(--blue);color:#fff}
+  .nav-btn.active svg{color:#fff}
+  .nav-btn .badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--green);color:#fff;padding:2px 7px;border-radius:999px}
+
+  .content{padding:34px 40px 70px;max-width:1120px}
+  .section{display:none;animation:fade .35s ease}
+  .section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .sec-head{margin-bottom:26px}
+  .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:10px}
+  .sec-head h1{font-size:clamp(25px,3vw,34px);font-weight:800;letter-spacing:-.025em;margin:0;line-height:1.08}
+  .sec-head p{margin:11px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:620px}
+
+  /* generic cards / grids */
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm)}
+  .card h3{margin:0 0 4px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .card .csub{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .mt{margin-top:18px}
+  .prose p{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0 0 12px}
+  .benefit{display:flex;gap:13px;align-items:flex-start}
+  .benefit .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .benefit .ic svg{width:22px;height:22px}
+  .benefit h4{margin:0 0 3px;font-size:15px;font-weight:700}
+  .benefit p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.45}
+  .ic-blue{background:var(--sky);color:var(--blue)}
+  .ic-green{background:var(--green-soft);color:var(--green-deep)}
+  .ic-violet{background:var(--violet-soft);color:var(--violet)}
+  .ic-amber{background:var(--amber-soft);color:#B9781A}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{background:var(--sky);border:1px solid var(--sky-line);color:var(--blue-deep);font-weight:600;font-size:13px;padding:9px 14px;border-radius:999px}
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+  .check{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;color:var(--ink)}
+  .check .c{width:22px;height:22px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .check .c svg{width:13px;height:13px;color:var(--green-deep)}
+
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+  .btn{border:0;cursor:pointer;font-weight:600;border-radius:11px;padding:12px 20px;font-size:14px;transition:.15s;display:inline-flex;align-items:center;gap:9px}
+  .btn svg{width:17px;height:17px}
+  .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-deep)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-ghost:hover{background:var(--sky)}
+  .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-deep)}
+
+  /* flow steps */
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .flow-step{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;position:relative}
+  .flow-step .fic{width:52px;height:52px;border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:var(--sky);color:var(--blue)}
+  .flow-step .fic svg{width:26px;height:26px}
+  .flow-step h4{margin:0 0 5px;font-size:14.5px;font-weight:700}
+  .flow-step p{margin:0;font-size:12px;color:var(--muted);line-height:1.4}
+  .flow-arrow{display:flex;align-items:center;color:var(--sky-line);padding:0 6px}
+  .flow-arrow svg{width:26px;height:26px}
+  .flow-step.done .fic{background:var(--green-soft);color:var(--green-deep)}
+
+  /* diagram / KB hub */
+  .hub{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+  .hub-core{background:linear-gradient(150deg,#12469E,#1F6FEB);color:#fff;border-radius:18px;padding:26px 22px;text-align:center;box-shadow:var(--shadow)}
+  .hub-core .hi{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+  .hub-core .hi svg{width:28px;height:28px;color:#fff}
+  .hub-core h4{margin:0 0 5px;font-size:16px;font-weight:700}
+  .hub-core p{margin:0;font-size:12px;color:#CFE0FA;line-height:1.4}
+  .hub-side{display:flex;flex-direction:column;gap:12px}
+  .hub-pill{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:13px}
+  .hub-pill b{display:block;font-family:'Poppins';font-weight:700;font-size:13.5px;margin-bottom:2px}
+  .hub-pill span{color:var(--muted);font-size:12px}
+
+  /* industry example chat */
+  .ex-chat{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .ex-msg{max-width:85%;padding:10px 13px;border-radius:13px;font-size:13.5px;line-height:1.45}
+  .ex-msg.u{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+  .ex-msg.b{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+  .lead-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .lead-card .lc-top{background:var(--green-soft);color:var(--green-deep);padding:11px 16px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #C6EBD1}
+  .lead-card .lc-top svg{width:17px;height:17px}
+  .lc-row{display:flex;justify-content:space-between;gap:14px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px}
+  .lc-row:last-child{border-bottom:0}
+  .lc-row .k{color:var(--muted);font-weight:500}
+  .lc-row .v{font-weight:600;text-align:right}
+  .lc-row .v.tag{color:var(--green-deep)}
+
+  /* question grid */
+  .qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+  .qg{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:13.5px;font-weight:600}
+  .qg .qi{width:32px;height:32px;border-radius:9px;background:var(--sky);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .qg .qi svg{width:17px;height:17px}
+
+  .ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .ind{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}
+  .ind .it{width:40px;height:40px;border-radius:11px;background:var(--sky);color:var(--blue);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+  .ind .it svg{width:21px;height:21px}
+  .ind h4{margin:0 0 4px;font-size:14.5px;font-weight:700}
+  .ind p{margin:0;font-size:12px;color:var(--muted);line-height:1.45}
+
+  /* journey */
+  .journey{display:flex;gap:0;overflow-x:auto;padding-bottom:6px}
+  .jstep{flex:0 0 210px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-right:14px;position:relative}
+  .jstep .jn{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-family:'Poppins';font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .jstep .jt{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+  .jstep h4{margin:0 0 6px;font-size:14.5px;font-weight:700;line-height:1.2}
+  .jstep p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+  .jstep.night .jn{background:var(--violet)}
+  .jstep.win .jn{background:var(--green)}
+
+  /* ===== Website browser mock + chat widget (Omnichannel) ===== */
+  .browser{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+  .browser-bar{display:flex;align-items:center;gap:12px;padding:11px 15px;background:#EEF2F8;border-bottom:1px solid var(--line)}
+  .dots{display:flex;gap:6px}.dots i{width:11px;height:11px;border-radius:50%;display:block}
+  .dots i:nth-child(1){background:#FF5F57}.dots i:nth-child(2){background:#FEBC2E}.dots i:nth-child(3){background:#28C840}
+  .url{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .url svg{width:12px;height:12px;color:var(--green)}
+  .site{position:relative;min-height:460px;overflow:hidden}
+  .site-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 26px;border-bottom:1px solid var(--line)}
+  .site-logo{font-family:'Poppins';font-weight:800;font-size:19px;letter-spacing:-.01em}
+  .site-nav nav{display:flex;gap:22px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .site-nav .cart{background:var(--navy);color:#fff;padding:8px 14px;border-radius:9px;font-size:12.5px;font-weight:600}
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;padding:30px 26px}
+  .hero-tag{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blue)}
+  .hero h2{font-family:'Poppins';font-weight:800;font-size:clamp(22px,3vw,34px);line-height:1.08;letter-spacing:-.02em;margin:11px 0}
+  .hero p{color:var(--ink-soft);font-size:14px;line-height:1.5;max-width:410px}
+  .hero .buy{margin-top:18px;display:inline-flex;gap:11px}
+  .hero-card{border-radius:16px;background:linear-gradient(150deg,var(--sky),#fff);border:1px solid var(--sky-line);display:flex;align-items:center;justify-content:center;font-size:100px}
+  .strip{display:flex;gap:12px;padding:2px 26px 34px;flex-wrap:wrap}
+  .pill{background:var(--sky);border:1px solid var(--sky-line);border-radius:11px;padding:10px 14px;font-size:12.5px;font-weight:600;color:var(--blue-deep)}
+  .site-fade{position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,#fff)}
+
+  .widget-launcher{position:absolute;bottom:22px;right:22px;z-index:30;display:flex;align-items:center;gap:11px}
+  .launch-bubble{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:13px;padding:10px 14px;font-size:13px;font-weight:600;max-width:220px;line-height:1.35}
+  .launch-bubble .bn{display:block;color:var(--ink-soft);font-weight:500;font-size:12px;margin-top:3px}
+  .launch-btn{width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;background:var(--blue);box-shadow:0 12px 30px -8px rgba(31,111,235,.6);display:flex;align-items:center;justify-content:center;flex:0 0 auto;transition:.2s}
+  .launch-btn:hover{transform:scale(1.06)}
+  .launch-btn svg{width:29px;height:29px}
+
+  .chatbox{position:absolute;bottom:22px;right:22px;z-index:40;width:370px;max-width:calc(100% - 32px);height:540px;max-height:calc(100% - 36px);background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 70px -25px rgba(11,43,94,.5);display:none;flex-direction:column;overflow:hidden}
+  .chatbox.open{display:flex;animation:popin .28s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes popin{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+  .chat-head{background:var(--blue);color:#fff;padding:15px 17px;display:flex;align-items:center;gap:12px}
+  .chat-head .ava{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .chat-head .ava svg{width:23px;height:23px}
+  .chat-head .ttl{font-weight:700;font-size:14.5px;line-height:1.1}
+  .chat-head .st{font-size:11px;opacity:.92;display:flex;align-items:center;gap:6px;margin-top:3px}
+  .chat-head .st .g{width:7px;height:7px;border-radius:50%;background:#7CF0A6}
+  .chat-head .x{margin-left:auto;background:rgba(255,255,255,.16);border:0;color:#fff;width:29px;height:29px;border-radius:8px;cursor:pointer;font-size:17px;line-height:1}
+  .chat-body{flex:1;overflow-y:auto;padding:17px 15px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
+  .chat-body::-webkit-scrollbar{width:8px}.chat-body::-webkit-scrollbar-thumb{background:#CBD5E6;border-radius:8px}
+  .msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+  .msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start;box-shadow:var(--shadow-sm)}
+  .msg.user{background:var(--blue);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+  .msg.sys{align-self:center;background:var(--amber-soft);color:#8A5A12;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid #FBE2B5}
+  .typing{align-self:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;border-bottom-left-radius:5px;padding:12px 15px;display:flex;gap:5px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:#B9C4D6;animation:bounce 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.18s}.typing span:nth-child(3){animation-delay:.36s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+  .quick{display:flex;flex-wrap:wrap;gap:7px;padding:0 15px 8px;background:var(--bg)}
+  .quick button{border:1px solid var(--sky-line);background:#fff;color:var(--blue-deep);font:inherit;font-weight:600;font-size:12px;padding:7px 12px;border-radius:999px;cursor:pointer;transition:.15s}
+  .quick button:hover{background:var(--sky)}
+  .chat-input{display:flex;gap:9px;padding:11px 13px;border-top:1px solid var(--line);background:#fff}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;font-size:13.5px;outline:none}
+  .chat-input input:focus{border-color:var(--blue)}
+  .chat-input button{background:var(--blue);border:0;border-radius:11px;width:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .chat-input button svg{width:19px;height:19px;color:#fff}
+  .chat-foot{text-align:center;font-size:10px;color:var(--muted);padding:0 0 8px;background:#fff}
+  .chat-foot b{color:var(--blue-deep)}
+
+  /* phone */
+  .omni-wrap{display:grid;grid-template-columns:1fr 348px;gap:26px;align-items:start}
+  .phone{width:330px;height:640px;background:#0b0b0c;border-radius:44px;padding:12px;box-shadow:0 40px 80px -30px rgba(11,43,94,.6);position:relative;margin:0 auto}
+  .phone .screen{width:100%;height:100%;background:var(--bg);border-radius:33px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:25px;background:#0b0b0c;border-radius:0 0 15px 15px;z-index:20}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 5px;font-size:11.5px;font-weight:600;color:var(--ink)}
+  .app-head{background:var(--blue);color:#fff;padding:11px 15px 13px;display:flex;align-items:center;gap:10px}
+  .app-head .back{font-size:19px}
+  .app-head .ava{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+  .app-head .ava svg{width:20px;height:20px}
+  .app-head .ttl{font-weight:700;font-size:14px}
+  .app-head .st{font-size:10.5px;opacity:.92;display:flex;align-items:center;gap:5px;margin-top:2px}
+  .app-head .st .g{width:6px;height:6px;border-radius:50%;background:#7CF0A6}
+  .app-chans{display:flex;gap:5px;padding:8px 13px;background:#fff;border-bottom:1px solid var(--line)}
+  .app-chans .ch{font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:999px;display:flex;align-items:center;gap:5px;border:1px solid var(--line);color:var(--ink-soft)}
+  .app-chans .ch.on{background:var(--sky);border-color:var(--sky-line);color:var(--blue-deep)}
+  .app-chans .ch svg{width:12px;height:12px}
+  .phone .chat-body{padding:13px 12px}
+  .phone .msg{font-size:13px}
+  .phone .quick{padding:0 12px 6px}
+  .phone .chat-input{padding:9px 11px}
+
+  /* Admin (Leads & Analytics) */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow-sm)}
+  .kpi .lab{font-size:11.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .kpi .lab svg{width:15px;height:15px;color:var(--blue)}
+  .kpi .val{font-family:'Poppins';font-weight:800;font-size:30px;letter-spacing:-.02em;margin-top:8px;line-height:1}
+  .kpi .delta{font-size:11.5px;font-weight:600;margin-top:6px;color:var(--green-deep)}
+  .kpi .delta.warn{color:var(--amber)}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:0 11px 10px;border-bottom:1px solid var(--line)}
+  td{padding:12px 11px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  .lead-name{font-weight:700}
+  .lead-phone{color:var(--ink-soft);font-size:12px;margin-top:2px}
+  .tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .tag.intent{background:var(--sky);color:var(--blue-deep)}
+  .tag.night{background:var(--violet-soft);color:var(--violet)}
+  .tag.handover{background:var(--amber-soft);color:#8A5A12}
+  .tag.web{background:#E5F0FF;color:#2563A8}
+  .tag.mobile{background:var(--green-soft);color:var(--green-deep)}
+  .lead-sum{color:var(--ink-soft);font-size:12px;line-height:1.4;max-width:260px}
+  .lead-time{color:var(--muted);font-size:11.5px;white-space:nowrap}
+  .new-row{animation:flash 1.6s ease}
+  @keyframes flash{0%{background:var(--sky)}100%{background:transparent}}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;flex-wrap:wrap;gap:10px}
+  .export{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:0;font:inherit;font-weight:600;font-size:13px;padding:9px 15px;border-radius:10px;cursor:pointer}
+  .export svg{width:15px;height:15px}
+  .export:hover{background:var(--blue-deep)}
+  .subtabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+  .subtabs button{border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;font-size:13px;color:var(--ink-soft);padding:9px 15px;border-radius:10px;cursor:pointer}
+  .subtabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .subpanel{display:none}.subpanel.active{display:block}
+  .barlist .bar-row{display:grid;grid-template-columns:130px 1fr 40px;align-items:center;gap:11px;margin-bottom:12px}
+  .bar-row .blab{font-size:12.5px;font-weight:600}
+  .bar-track{height:11px;background:var(--sky);border-radius:999px;overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-bright));border-radius:999px;transition:width .6s ease}
+  .bar-row .bnum{font-size:12px;font-weight:700;color:var(--blue-deep);text-align:right}
+  .spark{display:flex;align-items:flex-end;gap:8px;height:130px;padding-top:8px}
+  .spark .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .spark .b{width:100%;background:linear-gradient(180deg,var(--blue-bright),var(--blue));border-radius:6px 6px 3px 3px;transition:height .6s ease;min-height:6px}
+  .spark .b.night{background:linear-gradient(180deg,#8B79E8,var(--violet))}
+  .spark .d{font-size:10.5px;color:var(--muted);font-weight:600}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:var(--muted);margin-top:13px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
+  .kb-item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .kb-item .q{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px}
+  .kb-item .q .tg{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:var(--sky);color:var(--blue-deep);padding:3px 8px;border-radius:6px}
+  .kb-item .a{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:8px}
+  .kb-item .a b{color:var(--ink)}
+
+  .note{background:var(--sky);border:1px dashed var(--sky-line);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--blue-deep);display:flex;gap:11px;align-items:flex-start}
+  .note svg{width:18px;height:18px;flex:0 0 auto;margin-top:1px}
+
+  @media(max-width:1080px){.omni-wrap{grid-template-columns:1fr}.hero-card{display:none}}
+  @media(max-width:920px){.layout{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto}.nav-group{display:none}.nav-btn{white-space:nowrap;margin-bottom:0}.content{padding:26px 20px 60px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.ind-grid,.qgrid{grid-template-columns:1fr}.checklist{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div class="login-brand">
+    <span class="b1 blob"></span><span class="b2 blob"></span>
+    <span class="grid-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    <div class="lb-top">
+      <svg class="logo" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#fff"/><rect x="7" y="9" width="26" height="20" rx="6" fill="#1F6FEB"/><circle cx="16" cy="19" r="2.1" fill="#fff"/><circle cx="24" cy="19" r="2.1" fill="#fff"/><path d="M20 5v4" stroke="#22A34A" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="4" r="2.4" fill="#22A34A"/><path d="M15.5 24c1.6 1.6 7.4 1.6 9 0" stroke="#7CF0A6" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div class="lb-name">Support<span>Bondhu</span> AI</div>
+    </div>
+    <h1>24/7 Customer Support &amp; Lead Generation for Businesses.</h1>
+    <p class="lead">Customers don't only reach out during office hours. SupportBondhu AI answers questions, captures leads, and supports customers around the clock — even when your sales team is offline.</p>
+    <div class="lb-feats">
+      <div class="lb-feat"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Replies in seconds, in Bangla &amp; English</div>
+      <div class="lb-feat"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Captures every lead automatically</div>
+      <div class="lb-feat"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Works on website, Messenger &amp; WhatsApp</div>
+    </div>
+    <div class="lb-stats">
+      <div class="lb-stat"><div class="n">24/7</div><div class="l">Always available</div></div>
+      <div class="lb-stat"><div class="n">86%</div><div class="l">Auto-handled</div></div>
+      <div class="lb-stat"><div class="n">3s</div><div class="l">Avg. reply time</div></div>
+    </div>
+  </div>
+
+  <div class="login-form">
+    <div class="lf-card">
+      <span class="kicker">Product demo</span>
+      <h2>Sign in to explore</h2>
+      <p class="sub">Take a guided tour of SupportBondhu AI — every feature, live and interactive.</p>
+      <div class="field"><label>Work email</label><input id="loginEmail" type="email" value="demo@supportbondhu.ai"></div>
+      <div class="field"><label>Password</label><input id="loginPass" type="password" value="demo1234"></div>
+      <div class="lf-row"><label><input type="checkbox" checked> Keep me signed in</label><a href="#" onclick="return false">Forgot password?</a></div>
+      <button class="btn-block btn-fill" id="loginBtn">Enter the demo</button>
+      <button class="btn-block btn-line" id="guestBtn">Continue as guest</button>
+      <div class="lf-demo">Demo access is pre-filled — just click <b>Enter the demo</b>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#1F6FEB"/><rect x="7" y="9" width="26" height="20" rx="6" fill="#fff"/><circle cx="16" cy="19" r="2.1" fill="#1F6FEB"/><circle cx="24" cy="19" r="2.1" fill="#1F6FEB"/><path d="M20 5v4" stroke="#22A34A" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="4" r="2.4" fill="#22A34A"/><path d="M15.5 24c1.6 1.6 7.4 1.6 9 0" stroke="#22A34A" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <div><div class="name">Support<span>Bondhu</span> AI</div><div class="sub">Product demo</div></div>
+    </div>
+    <span class="live"><span class="dot"></span> Live demo</span>
+    <a class="logout" href="pricing.html" style="text-decoration:none">Pricing</a>
+    <div class="tb-controls">
+      <div class="select-wrap">
+        <label>Demo business</label>
+        <select class="biz" id="bizSelect">
+          <option value="shop">🛍️ Rongdhonu Fashion</option>
+          <option value="clinic">👁️ Dristi Eye Care</option>
+          <option value="travel">✈️ Akash Travels</option>
+        </select>
+        <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="afterHours"><span class="track"><span class="knob"></span></span> After-hours</label>
+      <button class="logout" id="logoutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-group">Product tour</div>
+      <button class="nav-btn active" data-sec="omni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.2A8 8 0 1121 12z"/></svg> Omnichannel Support <span class="badge">Live</span></button>
+      <button class="nav-btn" data-sec="capture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-8 0v2"/><circle cx="12" cy="7" r="4"/></svg> Automatic Lead Capture</button>
+      <button class="nav-btn" data-sec="after"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a7 7 0 00-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 00-7-7z"/><path d="M12 3a9 9 0 000 14" opacity=".4"/></svg> After-Hours Support</button>
+      <button class="nav-btn" data-sec="kb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M13 3v5h5"/></svg> Knowledge Base</button>
+      <button class="nav-btn" data-sec="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3"/></svg> Leads &amp; Analytics <span class="badge">Live</span></button>
+      <div class="nav-group">By industry</div>
+      <button class="nav-btn" data-sec="ecom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M6 6L5 3H2"/></svg> For E-Commerce</button>
+      <button class="nav-btn" data-sec="clinic2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4 4 0 018-1 4 4 0 018 1c0 5.5-7 10-7 10z"/><path d="M12 8v6M9 11h6" stroke="#fff" opacity="0"/></svg> For Clinics</button>
+      <button class="nav-btn" data-sec="travel2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 16l20-6-8 12-2-6-6-0z" transform="rotate(0)"/><path d="M10 14l11-9"/></svg> For Travel Agencies</button>
+      <button class="nav-btn" data-sec="other"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Other Industries</button>
+      <div class="nav-group">Outcome</div>
+      <button class="nav-btn" data-sec="journey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg> Customer Journey</button>
+    </aside>
+
+    <main class="content">
+
+      <!-- OMNICHANNEL -->
+      <section class="section active" id="sec-omni">
+        <div class="sec-head">
+          <span class="eyebrow">Website · Messenger · WhatsApp</span>
+          <h1>One brain, every channel.</h1>
+          <p>Some customers prefer your website, others live on Messenger or WhatsApp. SupportBondhu AI is built around one central knowledge base, so the price, address and offers stay identical everywhere. Open the chat below — type in Bangla or English.</p>
+        </div>
+        <div class="omni-wrap">
+          <div>
+            <div class="browser">
+              <div class="browser-bar">
+                <span class="dots"><i></i><i></i><i></i></span>
+                <span class="url" id="siteUrl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> rongdhonufashion.com.bd</span>
+              </div>
+              <div class="site" id="siteContent"></div>
+            </div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="screen">
+                <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+                <div class="app-head" id="appHead"></div>
+                <div class="app-chans">
+                  <span class="ch on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.4 1.2 4.6 3.1 6.1L4 21l4-1.6c1.2.4 2.6.6 4 .6 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></svg> Messenger</span>
+                  <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 00-7.7 13.6L3 21l4.5-1.2A9 9 0 1012 3z"/></svg> WhatsApp</span>
+                  <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/></svg> Web</span>
+                </div>
+                <div class="chat-body" id="mobileBody"></div>
+                <div class="quick" id="mobileQuick"></div>
+                <div class="chat-input">
+                  <input id="mobileInput" placeholder="Type a message…" autocomplete="off">
+                  <button id="mobileSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid3 mt">
+          <div class="card"><div class="benefit"><span class="ic ic-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><div><h4>Consistent answers</h4><p>The price on Messenger matches the website. One source of truth.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><h4>Faster updates</h4><p>Change an offer once — it updates across every channel instantly.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg></span><div><h4>Less confusion</h4><p>Customers get the same reliable experience wherever they message.</p></div></div></div>
+        </div>
+      </section>
+
+      <!-- LEAD CAPTURE -->
+      <section class="section" id="sec-capture">
+        <div class="sec-head">
+          <span class="eyebrow">Automatic lead capture</span>
+          <h1>Answering is good. Capturing the buyer is better.</h1>
+          <p>SupportBondhu AI spots high-intent conversations — someone ready to order, book or enquire — and quietly collects the details your sales team needs to follow up.</p>
+        </div>
+        <div class="card">
+          <h3>Signals of buying or booking intent</h3>
+          <p class="csub">When it hears messages like these, it moves to capture the lead:</p>
+          <div class="chips">
+            <span class="chip">"I want to order."</span>
+            <span class="chip bn">"আমি সিরিয়াল নিতে চাই।"</span>
+            <span class="chip">"Can I book this package?"</span>
+            <span class="chip">"Please call me."</span>
+            <span class="chip">"I need visa processing."</span>
+            <span class="chip">"How can I confirm the order?"</span>
+          </div>
+        </div>
+        <div class="card mt">
+          <h3>The lead-capture flow</h3>
+          <p class="csub">When strong intent is detected, the chatbot asks for a name and mobile number — then saves a complete lead.</p>
+          <div class="flow">
+            <div class="flow-step"><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.2A8 8 0 1121 12z"/></svg></span><h4>Intent detected</h4><p>Bot recognises a buying/booking message</p></div>
+            <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></div>
+            <div class="flow-step"><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="12" rx="3"/><path d="M12 4v4M9 14h.01M15 14h.01"/></svg></span><h4>SupportBondhu AI</h4><p>Confirms interest, stays helpful</p></div>
+            <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></div>
+            <div class="flow-step"><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-8 0v2"/><circle cx="12" cy="7" r="4"/></svg></span><h4>Asks name &amp; number</h4><p>Politely collects contact details</p></div>
+            <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></div>
+            <div class="flow-step done"><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></span><h4>Lead captured</h4><p>Saved to the dashboard</p></div>
+          </div>
+        </div>
+        <div class="grid2 mt">
+          <div class="card">
+            <h3>A lead record includes</h3>
+            <p class="csub">Far more useful than just a phone number.</p>
+            <div class="checklist">
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Customer name</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Phone number</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Main interest</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Conversation summary</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Contact channel</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Enquiry time</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Arrived after hours?</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Human support requested?</div>
+            </div>
+          </div>
+          <div class="lead-card">
+            <div class="lc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Example lead summary</div>
+            <div class="lc-row"><span class="k">Name</span><span class="v">Tanvir Ahmed</span></div>
+            <div class="lc-row"><span class="k">Phone</span><span class="v">01712-345 678</span></div>
+            <div class="lc-row"><span class="k">Main interest</span><span class="v">Dubai package</span></div>
+            <div class="lc-row"><span class="k">Summary</span><span class="v" style="max-width:220px">Asked about Dubai package price &amp; visa; wants to book for 2 people</span></div>
+            <div class="lc-row"><span class="k">Status</span><span class="v tag">Ready for follow-up</span></div>
+          </div>
+        </div>
+        <div class="grid3 mt">
+          <div class="card"><div class="benefit"><span class="ic ic-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></span><div><h4>Better-qualified leads</h4><p>Know what the customer wants before you call.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h4>Faster follow-up</h4><p>Leads land instantly, ready to action.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><div><h4>Smarter sales calls</h4><p>Open every call with the right context.</p></div></div></div>
+        </div>
+        <div class="cta-row"><button class="btn btn-primary" onclick="tryLive('shop')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> Try lead capture live</button></div>
+      </section>
+
+      <!-- AFTER HOURS -->
+      <section class="section" id="sec-after">
+        <div class="sec-head">
+          <span class="eyebrow">After-hours support</span>
+          <h1>Keep selling while the office sleeps.</h1>
+          <p>An online shopper browses after dinner. A patient looks for an appointment at midnight. A traveller compares packages over the weekend. Instead of "We're offline," SupportBondhu AI keeps answering and captures the lead for morning follow-up.</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <h3>What it still provides after hours</h3>
+            <p class="csub">The physical office is closed — the answers aren't.</p>
+            <div class="qgrid">
+              <div class="qg"><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-8-8 8-8h5a3 3 0 013 3z"/><circle cx="16" cy="8" r="1.3"/></svg></span> Prices</div>
+              <div class="qg"><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg></span> Delivery info</div>
+              <div class="qg"><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></span> Appointment steps</div>
+              <div class="qg"><span class="qi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></span> Payment options</div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>And still captures the lead</h3>
+            <p class="csub">For your team to follow up during working hours.</p>
+            <div class="checklist" style="grid-template-columns:1fr 1fr">
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Name</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Mobile number</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Enquiry summary</div>
+              <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Follow-up flag</div>
+            </div>
+            <div class="note mt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a7 7 0 00-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 00-7-7z"/></svg><div>Turn on <b>After-hours</b> in the top bar, then open the live chat — the bot greets with an offline message and every lead is tagged <b>🌙 After-hours</b> in the dashboard.</div></div>
+          </div>
+        </div>
+        <div class="cta-row"><button class="btn btn-primary" id="afterTryBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> Enable after-hours &amp; try it</button></div>
+      </section>
+
+      <!-- KNOWLEDGE BASE -->
+      <section class="section" id="sec-kb">
+        <div class="sec-head">
+          <span class="eyebrow">Custom business knowledge base</span>
+          <h1>Train it once. It answers forever.</h1>
+          <p>SupportBondhu AI answers from a business-specific knowledge base — only the information you approve. Upload a price list, FAQ, or website link and it learns in minutes. Edit any answer from the admin area.</p>
+        </div>
+        <div class="card">
+          <h3>What the knowledge base can include</h3>
+          <div class="qgrid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="qg">FAQs</div><div class="qg">Website pages</div>
+            <div class="qg">Product catalogues</div><div class="qg">Delivery information</div>
+            <div class="qg">Price lists</div><div class="qg">Booking procedures</div>
+            <div class="qg">Service documents</div><div class="qg">Current promotions</div>
+            <div class="qg">Company policies</div><div class="qg">Internal support guidelines</div>
+          </div>
+        </div>
+        <div class="card mt">
+          <h3>One knowledge base, reviewed and editable</h3>
+          <p class="csub">The bot answers from it; admins keep it accurate.</p>
+          <div class="hub">
+            <div class="hub-side">
+              <div class="hub-pill"><b>Chatbot answers</b><span>Uses the KB to reply consistently across channels.</span></div>
+              <div class="hub-pill"><b>Edit anytime</b><span>Add, update or refine answers whenever you need.</span></div>
+            </div>
+            <div class="hub-core"><span class="hi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M13 3v5h5"/></svg></span><h4>Knowledge Base</h4><p>Single source of truth</p></div>
+            <div class="hub-side">
+              <div class="hub-pill"><b>Admin review</b><span>Ensure accuracy and alignment with policy.</span></div>
+              <div class="hub-pill"><b>Accurate &amp; reliable</b><span>Customers only get approved information.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head"><div><h3>Live knowledge base</h3><p class="csub" id="kbSub"></p></div></div>
+          <div id="kbList"></div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section class="section" id="sec-dash">
+        <div class="sec-head">
+          <span class="eyebrow">Leads dashboard &amp; analytics</span>
+          <h1>Every conversation becomes a lead you can sell.</h1>
+          <p>The admin view shows captured leads newest-first, with everything the sales team needs. Analytics reveal what customers ask most — and how many enquiries arrive after you've closed.</p>
+        </div>
+        <div class="subtabs" id="dashTabs">
+          <button data-sub="leads" class="active">Leads inbox</button>
+          <button data-sub="analytics">Conversation analytics</button>
+        </div>
+        <div class="subpanel active" id="sub-leads">
+          <div class="kpis">
+            <div class="kpi"><div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-8 0v2"/><circle cx="12" cy="7" r="4"/></svg> Leads captured</div><div class="val" id="kpiLeads">0</div><div class="delta" id="kpiLeadsD">today</div></div>
+            <div class="kpi"><div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Avg. reply time</div><div class="val">3s</div><div class="delta">vs. 4h by staff</div></div>
+            <div class="kpi"><div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a7 7 0 00-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 00-7-7z"/></svg> After-hours leads</div><div class="val" id="kpiNight">0</div><div class="delta warn">would've been lost</div></div>
+            <div class="kpi"><div class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 11-4-7.2"/><path d="M21 4v4h-4"/></svg> Auto-handled</div><div class="val">86%</div><div class="delta">no staff needed</div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>Leads inbox</h3><p class="csub">Newest first — captured automatically from chat</p></div>
+              <button class="export" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l4-4m-4 4l-4-4"/><path d="M5 21h14"/></svg> Export CSV</button></div>
+            <table><thead><tr><th>Customer</th><th>Wanted</th><th>Summary</th><th>Channel</th><th>Time</th></tr></thead><tbody id="leadsTable"></tbody></table>
+          </div>
+        </div>
+        <div class="subpanel" id="sub-analytics">
+          <div class="grid2">
+            <div class="card"><h3>Most-asked questions</h3><p class="csub">Straight from your customers' chats</p><div class="barlist" id="barList"></div></div>
+            <div class="card"><h3>Leads by hour</h3><p class="csub">See how many arrive after you've closed</p><div class="spark" id="spark"></div>
+              <div class="legend"><span><i style="background:var(--blue)"></i>Business hours</span><span><i style="background:var(--violet)"></i>After-hours</span></div></div>
+          </div>
+          <div class="card mt"><h3>Use insights to grow</h3><div class="checklist" style="grid-template-columns:1fr 1fr">
+            <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Add FAQs to your product pages</div>
+            <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Highlight your most-asked offers</div>
+            <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Fix policies that cause confusion</div>
+            <div class="check"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span> Never miss after-hours leads</div>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- E-COMMERCE -->
+      <section class="section" id="sec-ecom">
+        <div class="sec-head"><span class="eyebrow">SupportBondhu AI for e-commerce</span>
+          <h1>Answer repeated questions. Capture order-ready buyers.</h1>
+          <p>Online shops get the same questions again and again. The bot answers them, guides shoppers toward buying, and collects the name and number for order confirmation.</p></div>
+        <div class="card"><h3>Common customer questions</h3>
+          <div class="qgrid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="qg">Prices</div><div class="qg">Sizes</div><div class="qg">Colours</div>
+            <div class="qg">Stock availability</div><div class="qg">Delivery fees</div><div class="qg">Delivery times</div>
+            <div class="qg">Cash on delivery</div><div class="qg">bKash &amp; Nagad</div><div class="qg">Discounts</div>
+            <div class="qg">Returns &amp; exchange</div><div class="qg">Order tracking</div><div class="qg">Payment plans</div>
+          </div>
+        </div>
+        <div class="grid2 mt">
+          <div class="card"><h3>Example conversation</h3>
+            <div class="ex-chat">
+              <div class="ex-msg u">Is this available in medium?</div>
+              <div class="ex-msg b">Yes, medium is available. Delivery inside Dhaka is ৳60. 🚚</div>
+              <div class="ex-msg u">Okay, I want to order.</div>
+              <div class="ex-msg b">Great! 🛒 Please share your name and mobile number for order confirmation.</div>
+              <div class="ex-msg u">Rafiq Hasan, 01712 345 678</div>
+              <div class="ex-msg b">Saved! Our team will call you shortly. ✅</div>
+            </div>
+          </div>
+          <div class="lead-card"><div class="lc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Order-ready lead captured</div>
+            <div class="lc-row"><span class="k">Customer</span><span class="v">Rafiq Hasan</span></div>
+            <div class="lc-row"><span class="k">Phone</span><span class="v">01712 345 678</span></div>
+            <div class="lc-row"><span class="k">Main interest</span><span class="v">Men's hoodie (M)</span></div>
+            <div class="lc-row"><span class="k">Channel</span><span class="v">Website</span></div>
+            <div class="lc-row"><span class="k">Status</span><span class="v tag">Ready to order</span></div>
+          </div>
+        </div>
+        <div class="card mt"><h3>Useful for many online retailers</h3>
+          <div class="qgrid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="qg">👗 Fashion stores</div><div class="qg">💻 Electronics sellers</div><div class="qg">💄 Cosmetics brands</div>
+            <div class="qg">🛋️ Furniture stores</div><div class="qg">🛒 Food sellers</div><div class="qg">📘 Facebook shops</div>
+          </div></div>
+        <div class="cta-row"><button class="btn btn-green" onclick="tryLive('shop')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> Try the e-commerce bot live</button></div>
+      </section>
+
+      <!-- CLINIC -->
+      <section class="section" id="sec-clinic2">
+        <div class="sec-head"><span class="eyebrow">SupportBondhu AI for clinics &amp; healthcare</span>
+          <h1>Answer patient questions. Capture booking-ready enquiries.</h1>
+          <p>Clinics get a flood of appointment questions. The bot shares administrative information and collects appointment requests — it does not diagnose or replace a medical professional.</p></div>
+        <div class="card"><h3>Common patient questions</h3>
+          <div class="qgrid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="qg">Consultation fees</div><div class="qg">Available doctors</div><div class="qg">Appointment times</div>
+            <div class="qg">Clinic address</div><div class="qg">Opening hours</div><div class="qg">Test prices</div>
+            <div class="qg">Treatment options</div><div class="qg">Insurance accepted</div><div class="qg">Report delivery</div>
+          </div></div>
+        <div class="grid2 mt">
+          <div class="card"><h3>Example conversation</h3>
+            <div class="ex-chat">
+              <div class="ex-msg u">What is the consultation fee?</div>
+              <div class="ex-msg b">Consultation fees start from ৳800 depending on the doctor.</div>
+              <div class="ex-msg u">Do you have appointments tomorrow?</div>
+              <div class="ex-msg b">Yes! Please share your name &amp; number and we'll confirm your preferred time and doctor.</div>
+              <div class="ex-msg b" style="font-size:12px;color:var(--muted);background:var(--amber-soft);border-color:#FBE2B5;color:#8A5A12">For appointment coordination only — not medical advice.</div>
+            </div></div>
+          <div class="lead-card"><div class="lc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Appointment lead captured</div>
+            <div class="lc-row"><span class="k">Name</span><span class="v">Nusrat Jahan</span></div>
+            <div class="lc-row"><span class="k">Phone</span><span class="v">01712-345 678</span></div>
+            <div class="lc-row"><span class="k">Interest</span><span class="v">Dermatology appt.</span></div>
+            <div class="lc-row"><span class="k">Preferred time</span><span class="v">Tomorrow afternoon</span></div>
+            <div class="lc-row"><span class="k">Status</span><span class="v tag">Ready for follow-up</span></div>
+          </div></div>
+        <div class="cta-row"><button class="btn btn-primary" onclick="tryLive('clinic')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> Try the clinic bot live</button></div>
+      </section>
+
+      <!-- TRAVEL -->
+      <section class="section" id="sec-travel2">
+        <div class="sec-head"><span class="eyebrow">SupportBondhu AI for travel agencies</span>
+          <h1>Handle the questions. Focus your team on serious travellers.</h1>
+          <p>Travel customers need lots of information before booking. The bot answers instantly and hands over a lead with destination, interest and contact details — so consultants spend time on ready-to-book clients.</p></div>
+        <div class="card"><h3>Common travel queries</h3>
+          <div class="qgrid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="qg">Tour package prices</div><div class="qg">Visa costs</div><div class="qg">Required documents</div>
+            <div class="qg">Processing times</div><div class="qg">Flight tickets</div><div class="qg">Hotel options</div>
+            <div class="qg">Group discounts</div><div class="qg">Payment schedules</div><div class="qg">Hajj &amp; Umrah</div>
+          </div></div>
+        <div class="grid2 mt">
+          <div class="card"><h3>Example conversation</h3>
+            <div class="ex-chat">
+              <div class="ex-msg u bn">Dubai tour package কত এবং কী কী included?</div>
+              <div class="ex-msg b">Dubai 4N/5D from ৳49,900 — return ticket, hotel with breakfast, visa &amp; city tour.</div>
+              <div class="ex-msg u bn">ভিসার জন্য কী কী ডকুমেন্ট লাগবে?</div>
+              <div class="ex-msg b">Passport (6 months validity), photo, NID copy, bank statement (3 months).</div>
+              <div class="ex-msg b">Would you like to speak with our travel consultant? Share your name &amp; number.</div>
+            </div></div>
+          <div class="lead-card"><div class="lc-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Lead captured — ready for consultant</div>
+            <div class="lc-row"><span class="k">Name</span><span class="v">Tanvir Ahmed</span></div>
+            <div class="lc-row"><span class="k">Phone</span><span class="v">01712-345 678</span></div>
+            <div class="lc-row"><span class="k">Destination</span><span class="v">Dubai · 4N/5D</span></div>
+            <div class="lc-row"><span class="k">Summary</span><span class="v" style="max-width:210px">Asked package price, visa cost &amp; documents. Wants to book for 2.</span></div>
+            <div class="lc-row"><span class="k">Status</span><span class="v tag">Ready for follow-up</span></div>
+          </div></div>
+        <div class="cta-row"><button class="btn btn-primary" onclick="tryLive('travel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> Try the travel bot live</button></div>
+      </section>
+
+      <!-- OTHER -->
+      <section class="section" id="sec-other">
+        <div class="sec-head"><span class="eyebrow">Adaptable to any industry</span>
+          <h1>Other businesses that can use SupportBondhu AI.</h1>
+          <p>Any business that receives repeated questions and depends on enquiries can benefit from faster, automated responses.</p></div>
+        <div class="ind-grid">
+          <div class="ind"><span class="it">🏢</span><h4>Real-estate agencies</h4><p>Property details, prices, locations, viewings.</p></div>
+          <div class="ind"><span class="it">🎓</span><h4>Educational institutions</h4><p>Admissions, courses, fees, schedules.</p></div>
+          <div class="ind"><span class="it">📊</span><h4>Training centres</h4><p>Course details, batch schedules, certificates.</p></div>
+          <div class="ind"><span class="it">🍽️</span><h4>Restaurants</h4><p>Menu, delivery, table booking, offers.</p></div>
+          <div class="ind"><span class="it">🏨</span><h4>Hotels</h4><p>Room availability, prices, amenities, check-in.</p></div>
+          <div class="ind"><span class="it">⚖️</span><h4>Law firms</h4><p>Practice areas, consultation, appointment booking.</p></div>
+          <div class="ind"><span class="it">📣</span><h4>Digital agencies</h4><p>Services, packages, case studies, pricing.</p></div>
+          <div class="ind"><span class="it">🔧</span><h4>Home-service companies</h4><p>Services, pricing, service areas, booking.</p></div>
+          <div class="ind"><span class="it">🚗</span><h4>Car dealerships</h4><p>Models, features, prices, test drives.</p></div>
+          <div class="ind"><span class="it">💇</span><h4>Beauty salons</h4><p>Services, packages, appointments, promotions.</p></div>
+          <div class="ind"><span class="it">🏋️</span><h4>Fitness centres</h4><p>Memberships, schedules, trainers, trials.</p></div>
+          <div class="ind"><span class="it">🎉</span><h4>Event management</h4><p>Packages, venues, services, availability.</p></div>
+        </div>
+      </section>
+
+      <!-- JOURNEY -->
+      <section class="section" id="sec-journey">
+        <div class="sec-head"><span class="eyebrow">How it improves the customer journey</span>
+          <h1>From a late-night visitor to a booked customer.</h1>
+          <p>A real example: an online shopper visits the store at 11:30 p.m. Watch how the chatbot turns a late-night visit into a qualified lead — and a next-morning sale.</p></div>
+        <div class="journey">
+          <div class="jstep"><span class="jn">1</span><div class="jt">11:30 p.m.</div><h4>Customer visits</h4><p>Browsing after dinner, has questions about a product.</p></div>
+          <div class="jstep"><span class="jn">2</span><div class="jt">Instant</div><h4>Answers from the bot</h4><p>Price, delivery charge, COD — all answered immediately.</p></div>
+          <div class="jstep"><span class="jn">3</span><div class="jt">Intent</div><h4>Lead capture</h4><p>"I want to order" → bot collects name &amp; number.</p></div>
+          <div class="jstep night"><span class="jn">4</span><div class="jt">Overnight</div><h4>Lead created</h4><p>Saved with full summary, even though the shop is closed.</p></div>
+          <div class="jstep"><span class="jn">5</span><div class="jt">Next morning</div><h4>Sales team sees it</h4><p>New lead with details &amp; summary waiting in the dashboard.</p></div>
+          <div class="jstep win"><span class="jn">6</span><div class="jt">Follow-up</div><h4>Conversion</h4><p>Team calls, answers final questions, confirms the order.</p></div>
+        </div>
+        <div class="grid3 mt">
+          <div class="card"><div class="benefit"><span class="ic ic-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h4>24/7 availability</h4><p>Never miss a visitor, day or night.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><h4>Instant responses</h4><p>Answers land before the customer loses interest.</p></div></div></div>
+          <div class="card"><div class="benefit"><span class="ic ic-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 16v-6M12 16V9M16 16v-4"/></svg></span><div><h4>Higher conversions</h4><p>More qualified leads become paying customers.</p></div></div></div>
+        </div>
+        <div class="cta-row"><button class="btn btn-primary" onclick="tryLive('shop')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg> See it live</button></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ============ BUSINESS DATA ============ */
+const BUSINESSES = {
+  shop:{
+    site:"rongdhonufashion.com.bd",logo:"Rongdhonu",nav:["New In","Panjabi","Sarees","Kids","Sale"],
+    heroTag:"EID COLLECTION 2026 · LIVE NOW",heroH:"Dress the whole family for Eid — delivered nationwide.",
+    heroP:"Hand-picked panjabi, sarees and kids' wear. Cash on delivery, easy returns, and a friend in chat who answers instantly.",
+    heroEmoji:"🛍️",pills:["🚚 Free delivery over ৳3000","🔁 7-day return","💬 24/7 chat","💳 bKash · Nagad · COD"],
+    botName:"Rongdhonu Assistant",appName:"Rongdhonu Fashion",
+    greet:{bn:"আসসালামু আলাইকুম! 🌈 Rongdhonu Fashion-এ স্বাগতম। দাম, ডেলিভারি, অফার বা অর্ডার — যেকোনো কিছু জিজ্ঞেস করুন।",en:"Welcome to Rongdhonu Fashion! 🌈 Ask me anything — prices, delivery, offers or to place an order."},
+    quick:["দাম কত?","Delivery charge?","অফার আছে?","Order করব"],
+    kb:{
+      price:{label:"Price",bn:"পাঞ্জাবি ৳১,২০০–৩,৫০০, শাড়ি ৳১,৮০০–৬,০০০ এবং কিডস সেট ৳৮০০–২,০০০। কোন আইটেমটি পছন্দ হয়েছে বলুন, exact দাম জানিয়ে দিচ্ছি।",en:"Panjabi ৳1,200–3,500, sarees ৳1,800–6,000 and kids' sets ৳800–2,000. Tell me which item you liked for the exact price."},
+      delivery:{label:"Delivery",bn:"ঢাকার ভিতরে ৳৬০, ঢাকার বাইরে ৳১২০। ৳৩,০০০-এর বেশি অর্ডারে ডেলিভারি ফ্রি! সাধারণত ২–৪ দিনে পৌঁছে যায়।",en:"Inside Dhaka ৳60, outside Dhaka ৳120. Free over ৳3,000! Usually arrives in 2–4 days."},
+      location:{label:"Location",bn:"শোরুম: শপ ১২, লেভেল ৩, বসুন্ধরা সিটি, ঢাকা। অনলাইনে সারা দেশে ডেলিভারি করি।",en:"Showroom: Shop 12, Level 3, Bashundhara City, Dhaka. We deliver nationwide."},
+      hours:{label:"Hours",bn:"শোরুম প্রতিদিন সকাল ১০টা – রাত ৯টা। আর আমি chat-এ ২৪ ঘণ্টা আছি! 🌙",en:"Showroom daily 10am–9pm. And I'm here in chat 24/7! 🌙"},
+      offer:{label:"Offers",bn:"🎉 Eid Special: যেকোনো ২টি পাঞ্জাবিতে ২০% ছাড়! প্রথম অর্ডারে কোড RONG10 দিলে ১০% extra ছাড়।",en:"🎉 Eid Special: 20% off any 2 panjabis! Use code RONG10 for 10% extra off your first order."},
+      payment:{label:"Payment",bn:"bKash, Nagad, কার্ড অথবা ক্যাশ অন ডেলিভারি — যেটা সুবিধা। অগ্রিম লাগে না।",en:"bKash, Nagad, card or cash on delivery — no advance needed."},
+      product:{label:"Products",bn:"আমাদের আছে পাঞ্জাবি, শাড়ি, থ্রি-পিস, কিডস সেট ও কম্বো। সব সাইজ S–XXL। কোনটা দেখতে চান?",en:"Panjabi, sarees, three-piece, kids' sets and combos. Sizes S–XXL. Which would you like to see?"},
+      order:{label:"Order",bn:"দারুণ! 🛒 অর্ডার confirm করতে শুধু নাম ও মোবাইল নম্বর দিন — টিম ৫ মিনিটে কল দেবে।",en:"Great choice! 🛒 To confirm, just share your name and mobile number — our team will call within 5 minutes."},
+      "return":{label:"Returns",bn:"হাতে পাওয়ার ৭ দিনের মধ্যে পছন্দ না হলে ফ্রি এক্সচেঞ্জ বা ফেরত। কোনো ঝামেলা নেই।",en:"Free exchange or return within 7 days. No hassle."}
+    }
+  },
+  clinic:{
+    site:"dristieyecare.com.bd",logo:"Dristi Eye Care",nav:["Doctors","Services","Lasik","Glasses","Contact"],
+    heroTag:"NOW BOOKING · NEW BRANCH IN UTTARA",heroH:"Clear vision starts with one easy appointment.",
+    heroP:"Cataract, Lasik, glasses and routine checkups by experienced consultants. Book your serial in seconds — even at midnight.",
+    heroEmoji:"👁️",pills:["🩺 Senior consultants","⚡ Same-day serials","🧾 Insurance accepted","🅿️ Free parking"],
+    botName:"Dristi Assistant",appName:"Dristi Eye Care",
+    greet:{bn:"আসসালামু আলাইকুম! 👁️ Dristi Eye Care-এ স্বাগতম। অ্যাপয়েন্টমেন্ট, ডাক্তার, ফি বা সার্ভিস — যা জানতে চান বলুন।",en:"Welcome to Dristi Eye Care! 👁️ Ask about appointments, doctors, fees or services."},
+    quick:["অ্যাপয়েন্টমেন্ট নেব","ভিজিট ফি কত?","ঠিকানা কোথায়?","Lasik খরচ?"],
+    kb:{
+      price:{label:"Fees",bn:"কনসালটেশন ৳৮০০, ফলো-আপ ৳৪০০। ফুল চেকআপ প্যাকেজ ৳১,৫০০। নির্দিষ্ট ডাক্তারের ফি জানতে বলুন।",en:"Consultation ৳800, follow-up ৳400. Full eye checkup ৳1,500. Ask for a specific doctor's fee."},
+      delivery:{label:"Reports",bn:"টেস্ট রিপোর্ট সাধারণত একই দিনে, চাইলে SMS/ইমেইলেও পাঠানো হয়।",en:"Reports usually same-day; can be sent by SMS or email."},
+      location:{label:"Location",bn:"House 7, Road 12, Sector 4, Uttara, Dhaka। ফ্রি পার্কিং আছে।",en:"House 7, Road 12, Sector 4, Uttara, Dhaka. Free parking."},
+      hours:{label:"Hours",bn:"চেম্বার প্রতিদিন সকাল ৯টা – রাত ৮টা (শুক্র বিকেল ৪টা থেকে)। অনলাইন বুকিং ২৪ ঘণ্টা।",en:"Open daily 9am–8pm (Fri from 4pm). Online booking 24/7."},
+      offer:{label:"Offers",bn:"এই মাসে ফুল চেকআপ প্যাকেজে ২৫% ছাড় ও ফ্রি চশমার power টেস্ট।",en:"This month: 25% off the full checkup package plus a free spectacle power test."},
+      payment:{label:"Payment",bn:"ক্যাশ, কার্ড, bKash ও Nagad। অধিকাংশ ইনস্যুরেন্স কাভার করা হয়।",en:"Cash, card, bKash and Nagad. Most insurance covered."},
+      product:{label:"Services",bn:"চোখের চেকআপ, ছানি অপারেশন, Lasik, গ্লুকোমা, শিশুদের চোখ ও চশমা। Lasik শুরু ৳৩৫,০০০ থেকে।",en:"Checkups, cataract surgery, Lasik, glaucoma care, pediatric eye care and glasses. Lasik from ৳35,000."},
+      appointment:{label:"Appointment",bn:"নিশ্চয়ই! 🗓️ সিরিয়াল নিশ্চিত করতে নাম ও মোবাইল নম্বর দিন — কল করে সময় ও ডাক্তার ঠিক করে দেব।",en:"Of course! 🗓️ Share your name and mobile number — we'll call to confirm your time and doctor."}
+    }
+  },
+  travel:{
+    site:"akashtravels.com.bd",logo:"Akash Travels",nav:["Packages","Visa","Air Ticket","Hajj & Umrah","About"],
+    heroTag:"SUMMER DEALS · DUBAI · MALAYSIA · THAILAND",heroH:"Your trip abroad, sorted by a friend in chat.",
+    heroP:"Tour packages, air tickets and visa processing for 40+ countries. Ask about prices and requirements any time — day or night.",
+    heroEmoji:"✈️",pills:["🛂 Visa assistance","🏝️ Custom packages","💺 Cheapest fares","🕋 Hajj & Umrah"],
+    botName:"Akash Assistant",appName:"Akash Travels",
+    greet:{bn:"আসসালামু আলাইকুম! ✈️ Akash Travels-এ স্বাগতম। প্যাকেজ, ভিসা, এয়ার টিকেট বা খরচ — যা জানতে চান বলুন।",en:"Welcome to Akash Travels! ✈️ Ask about packages, visas, air tickets or costs — anytime."},
+    quick:["Dubai package কত?","ভিসা লাগবে?","ঠিকানা কোথায়?","Booking করব"],
+    kb:{
+      price:{label:"Package price",bn:"৩ রাত ৪ দিনের Dubai প্যাকেজ ৳৪৯,৯০০ থেকে (হোটেল+টিকেট)। Malaysia ৳৩৯,৯০০, Thailand ৳৩৪,৯০০ থেকে। কোন দেশ ভাবছেন?",en:"Dubai 3N/4D from ৳49,900 (hotel+ticket). Malaysia from ৳39,900, Thailand from ৳34,900. Which destination?"},
+      delivery:{label:"Processing",bn:"ভিসা প্রসেসিং সাধারণত ৭–১৫ কর্মদিবস (দেশভেদে)। ডকুমেন্ট গাইডলাইন দিয়ে দেব।",en:"Visa processing usually 7–15 working days. We'll guide the documents."},
+      location:{label:"Office",bn:"Level 5, Police Plaza Concord, Gulshan-1, Dhaka। অনলাইনে সারা দেশে সার্ভিস।",en:"Level 5, Police Plaza Concord, Gulshan-1, Dhaka. Nationwide online service."},
+      hours:{label:"Hours",bn:"অফিস শনি–বৃহস্পতি সকাল ১০টা – সন্ধ্যা ৭টা। চ্যাটে ২৪ ঘণ্টা।",en:"Office Sat–Thu 10am–7pm. Chat 24/7."},
+      offer:{label:"Offers",bn:"🎉 গ্রুপ বুকিং (৪+ জন) এ জনপ্রতি ৳৩,০০০ ছাড় ও ফ্রি ট্রাভেল ইনস্যুরেন্স।",en:"🎉 Group bookings (4+) get ৳3,000 off per person plus free travel insurance."},
+      payment:{label:"Payment",bn:"বুকিং নিশ্চিত করতে কিছু অগ্রিম, বাকিটা টিকেট issue-র আগে। bKash, ব্যাংক ও কার্ড।",en:"Small advance confirms booking, rest before ticket issue. bKash, bank transfer and card."},
+      product:{label:"Services",bn:"ট্যুর প্যাকেজ, এয়ার টিকেট, ভিসা প্রসেসিং, হোটেল বুকিং এবং Hajj ও Umrah প্যাকেজ।",en:"Tour packages, air tickets, visa processing, hotel bookings and Hajj & Umrah packages."},
+      visa:{label:"Visa",bn:"ভিসা ফি দেশভেদে — Dubai tourist ৳১৮,৫০০, Malaysia ৳৬,৫০০। গন্তব্য জানিয়ে নাম ও নম্বর দিন, আমরা process করব।",en:"Visa fees vary — Dubai tourist ৳18,500, Malaysia ৳6,500. Share destination, then name & number and we'll process it."},
+      appointment:{label:"Booking",bn:"দারুণ! 🧳 বুকিং নিশ্চিত করতে নাম ও মোবাইল নম্বর দিন — আমাদের কনসালট্যান্ট best অপশন নিয়ে কল করবেন।",en:"Great! 🧳 To confirm your booking, share your name and mobile number — our consultant will call with the best options."}
+    }
+  }
+};
+
+const INTENTS=[
+  {id:"greeting",kw:["hi","hello","hey","assalam","salam","হ্যালো","হাই","আসসালাম","নমস্কার"]},
+  {id:"price",kw:["price","cost","dam","daam","koto","kto","rate","fee","fees","taka","budget","package","tour","trip","দাম","মূল্য","কত","কতো","ফি","খরচ","প্যাকেজ","ট্যুর"]},
+  {id:"delivery",kw:["delivery","deliver","shipping","ship","courier","charge","pouch","kobe","report","ডেলিভারি","কুরিয়ার","চার্জ","পৌঁছ","কবে","রিপোর্ট","processing"]},
+  {id:"location",kw:["location","address","koi","kothay","where","map","showroom","branch","office","ঠিকানা","কই","কোথায়","শোরুম","ব্রাঞ্চ","অফিস"]},
+  {id:"hours",kw:["time","hours","open","close","khola","bondho","kokhon","সময়","খোলা","বন্ধ","কখন","কয়টা"]},
+  {id:"offer",kw:["offer","discount","sale","promo","deal","coupon","chhar","chad","অফার","ডিসকাউন্ট","ছাড়","সেল","কুপন"]},
+  {id:"payment",kw:["payment","pay","bkash","bikash","nagad","card","cash","cod","advance","অগ্রিম","পেমেন্ট","বিকাশ","নগদ","কার্ড","ক্যাশ"]},
+  {id:"order",kw:["order","kinbo","kinte","buy","cart","nibo","purchase","অর্ডার","কিনব","কিনতে","নেব","নিতে চাই","কিনবো"]},
+  {id:"appointment",kw:["appointment","booking","book","serial","doctor","checkup","dekhabo","visit","অ্যাপয়েন্টমেন্ট","বুকিং","সিরিয়াল","ডাক্তার","চেকআপ","দেখাব","ভিজিট"]},
+  {id:"visa",kw:["visa","passport","umrah","hajj","ভিসা","পাসপোর্ট","উমরাহ","হজ"]},
+  {id:"product",kw:["product","item","collection","size","panjabi","saree","dress","service","ticket","flight","জামা","পাঞ্জাবি","শাড়ি","কালেকশন","সাইজ","কি কি","সার্ভিস","পণ্য","টিকেট","ফ্লাইট"]},
+  {id:"return",kw:["return","exchange","refund","ferot","ফেরত","এক্সচেঞ্জ","রিফান্ড","বদল"]},
+  {id:"human",kw:["human","agent","manush","representative","talk to","real person","এজেন্ট","মানুষ","কথা বলব","কল দেন"]}
+];
+const INTENT_LABEL={price:"Pricing",delivery:"Delivery",location:"Location",hours:"Hours",offer:"Offers",payment:"Payment",order:"Order intent",appointment:"Appointment",visa:"Visa / package",product:"Products",return:"Return",greeting:"Greeting",human:"Wants a human"};
+
+/* ============ STATE ============ */
+let bizKey="shop",afterHours=false,messages=[],leadFlow="idle",pendingIntent=null,captured=false,sessionIntents=[],activeChannel="web",pendingLead={};
+let liveLeads=[],leadSeed=[],questionCounts={},hourCounts=[];
+const NAMES=[["Sumaiya Akter","01711-902 334"],["Tanvir Hasan","01819-447 210"],["Nadia Rahman","01521-330 988"],["Arif Chowdhury","01777-651 042"],["Mitu Begum","01612-208 119"],["Rakib Islam","01985-774 560"]];
+
+function seedFor(bk){
+  const sums={
+    shop:["Asked price + delivery, wants 2 panjabis for Eid","Wants to order a saree, asked about COD","Checked offers, interested in kids' set","Asked delivery time to Chittagong","Asked about return policy on a dress","Price of family combo + bKash payment"],
+    clinic:["Wants a cataract checkup appointment","Asked Lasik cost + booking","Consultation fee + Friday timing","Wants serial with senior consultant","Asked about insurance + checkup package","Glasses power test booking"],
+    travel:["Asked Dubai package price, wants to book","Malaysia visa cost + documents","Group booking for 5, asked discount","Air ticket to KL + visa processing","Umrah package enquiry","Thailand package + payment terms"]
+  }[bk];
+  let intentTags=["price","order","offer","delivery","return","price"];
+  if(bk==="clinic") intentTags=["appointment","price","price","appointment","product","appointment"];
+  if(bk==="travel") intentTags=["visa","visa","offer","visa","product","price"];
+  const channels=["web","mobile","web","web","mobile","web"];
+  const times=["2 min ago","18 min ago","41 min ago","1 hr ago","Last night, 11:42pm","Last night, 1:08am"];
+  const nights=[false,false,false,false,true,true];
+  leadSeed=NAMES.map((n,i)=>({id:"seed"+i,name:n[0],phone:n[1],intent:intentTags[i],summary:sums[i],channel:channels[i],time:times[i],night:nights[i],handover:false,isNew:false}));
+  questionCounts = bk==="shop"?{price:48,delivery:39,offer:27,location:18,product:22,payment:14,order:31,return:9}
+    : bk==="clinic"?{appointment:44,price:38,location:21,product:26,hours:17,payment:11,offer:13}
+    : {visa:46,price:41,location:19,product:24,offer:15,payment:12,hours:9};
+  hourCounts=[{t:"9a",day:3,night:0},{t:"11a",day:6,night:0},{t:"1p",day:5,night:0},{t:"3p",day:8,night:0},{t:"5p",day:7,night:0},{t:"7p",day:9,night:0},{t:"9p",day:4,night:2},{t:"11p",day:0,night:6},{t:"1a",day:0,night:5},{t:"3a",day:0,night:3}];
+}
+
+/* ============ ENGINE ============ */
+function detectLang(t){return /[\u0980-\u09FF]/.test(t)?"bn":"en";}
+function detectIntent(t){const s=" "+t.toLowerCase()+" ";let best=null,bs=0;for(const it of INTENTS){let sc=0;for(const k of it.kw){if(s.includes(k.toLowerCase()))sc+=k.length>3?2:1;}if(sc>bs){bs=sc;best=it.id;}}return bs>0?best:null;}
+
+function botReply(userText){
+  const b=BUSINESSES[bizKey],lang=detectLang(userText),out=[];
+  if(leadFlow==="awaitName"){
+    const name=userText.trim().replace(/^(my name is|amar nam|ami)\s*/i,"").trim()||"Customer";
+    pendingLead.name=name;leadFlow="awaitPhone";
+    out.push({who:"bot",text:lang==="bn"?`ধন্যবাদ ${name}! এখন আপনার মোবাইল নম্বরটা দিন, আমরা কল করব। 📞`:`Thanks ${name}! Now please share your mobile number and we'll call you shortly. 📞`});
+    return out;
+  }
+  if(leadFlow==="awaitPhone"){
+    const phone=(userText.match(/[\d\s\-\+]{6,}/)||[userText.trim()])[0].trim();
+    pendingLead.phone=phone;finalizeLead();leadFlow="idle";captured=true;
+    out.push({who:"bot",text:lang==="bn"?`পেয়ে গেছি! ✅ ${pendingLead.name}, আমরা ${phone} নম্বরে কল করব। আর কিছু জানতে চান?`:`Got it! ✅ ${pendingLead.name}, we'll call you at ${phone}. Anything else?`});
+    out.push({who:"sys",text:lang==="bn"?"🎯 নতুন lead সেভ হয়েছে — Leads & Analytics দেখুন":"🎯 New lead saved — see Leads & Analytics"});
+    return out;
+  }
+  const intent=detectIntent(userText);
+  if(leadFlow==="idle"&&pendingIntent&&intent===null&&/^[^?0-9]{2,40}$/.test(userText.trim())){
+    resetPendingLead(pendingIntent);pendingLead.name=userText.trim();leadFlow="awaitPhone";
+    out.push({who:"bot",text:lang==="bn"?`ধন্যবাদ ${pendingLead.name}! এখন মোবাইল নম্বরটা দিন, আমরা কল করব। 📞`:`Thanks ${pendingLead.name}! Now share your mobile number and we'll call you. 📞`});
+    return out;
+  }
+  if(intent==="human"||intent===null){
+    if(intent===null&&sessionIntents.length>0){
+      out.push({who:"bot",text:lang==="bn"?"দুঃখিত, এটা ঠিক বুঝতে পারিনি। 🙏 একজন এজেন্টকে যুক্ত করে দিচ্ছি — একটু পরেই reply দেবেন।":"Sorry, I didn't quite get that. 🙏 Let me connect you to a human agent — they'll reply shortly."});
+    } else {
+      out.push({who:"bot",text:lang==="bn"?"অবশ্যই! 👤 একজন এজেন্টকে যুক্ত করছি। যোগাযোগের জন্য নাম ও নম্বর দিন।":"Of course! 👤 Connecting you to a human agent. Please share your name and number."});
+    }
+    out.push({who:"sys",text:lang==="bn"?"👤 Human support-এ পাঠানো হলো (ticket #"+(2000+Math.floor(Math.random()*900))+")":"👤 Handed over to human support (ticket #"+(2000+Math.floor(Math.random()*900))+")"});
+    leadFlow="awaitName";pendingIntent="human";resetPendingLead("human");return out;
+  }
+  if(intent==="greeting"){out.push({who:"bot",text:b.greet[lang]});return out;}
+  const entry=b.kb[intent];
+  if(entry){
+    out.push({who:"bot",text:entry[lang]});
+    if(!sessionIntents.includes(intent))sessionIntents.push(intent);
+    bumpQuestion(intent);
+    if(!captured&&leadFlow==="idle"){
+      if(intent==="order"||intent==="appointment"||intent==="visa"){leadFlow="awaitName";pendingIntent=intent;resetPendingLead(intent);}
+      else if(intent==="price"||intent==="product"){pendingIntent=intent;out.push({who:"bot",text:lang==="bn"?"চাইলে আপনার নাম ও নম্বরটা দিন — best অফার সহ কল করে জানাব। 😊":"If you like, share your name & number — we'll call you with the best offer. 😊"});}
+    }
+  } else {
+    out.push({who:"bot",text:lang==="bn"?"ভালো প্রশ্ন! একজন এজেন্ট detail জানাবে। নাম ও নম্বর দিলে কল করব।":"Good question! An agent will give you details. Share your name & number and we'll call."});
+    leadFlow="awaitName";resetPendingLead(intent||"product");
+  }
+  return out;
+}
+function resetPendingLead(intent){pendingLead={name:"",phone:"",intent:intent,channel:activeChannel,night:afterHours};}
+function finalizeLead(){
+  const summary=buildSummary();
+  liveLeads.unshift({id:"live"+Date.now(),name:pendingLead.name||"Customer",phone:pendingLead.phone||"—",intent:pendingLead.intent||"product",summary,channel:pendingLead.channel||activeChannel,time:"just now",night:pendingLead.night||afterHours,handover:pendingLead.intent==="human",isNew:true});
+  renderAdmin();
+}
+function buildSummary(){const labels=sessionIntents.map(i=>INTENT_LABEL[i]||i).filter((v,i,a)=>a.indexOf(v)===i);if(labels.length===0)return afterHours?"After-hours: requested a callback":"Requested a callback";return (afterHours?"After-hours: asked about ":"Asked about ")+labels.join(", ").toLowerCase();}
+function bumpQuestion(intent){questionCounts[intent]=(questionCounts[intent]||0)+1;renderAnalytics();}
+
+/* ============ CHAT RENDER ============ */
+function pushMessage(who,text){messages.push({who,text});renderChats();}
+function renderChats(){["webBody","mobileBody"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.innerHTML="";messages.forEach(m=>{const d=document.createElement("div");d.className="msg "+m.who;if(/[\u0980-\u09FF]/.test(m.text))d.classList.add("bn");d.textContent=m.text;el.appendChild(d);});el.scrollTop=el.scrollHeight;});}
+function showTyping(){["webBody","mobileBody"].forEach(id=>{const el=document.getElementById(id);if(!el)return;const t=document.createElement("div");t.className="typing";t.dataset.typing="1";t.innerHTML="<span></span><span></span><span></span>";el.appendChild(t);el.scrollTop=el.scrollHeight;});}
+function hideTyping(){document.querySelectorAll('[data-typing="1"]').forEach(e=>e.remove());}
+function handleUserMessage(text,channel){if(!text.trim())return;activeChannel=channel;pushMessage("user",text);showTyping();const replies=botReply(text);let delay=650;replies.forEach((r,i)=>{setTimeout(()=>{if(i===0)hideTyping();pushMessage(r.who,r.text);},delay*(i+1));});}
+function startSession(){messages=[];leadFlow="idle";captured=false;sessionIntents=[];pendingIntent=null;const b=BUSINESSES[bizKey];if(afterHours){pushMessage("sys","🌙 Outside office hours — auto-reply active");pushMessage("bot","আমরা এখন বন্ধ আছি, কিন্তু আমি আপনার AI সহকারী — এখনই সাহায্য করছি! ✨\n("+b.greet.en+")");}else{pushMessage("bot",b.greet.bn+"\n\n"+b.greet.en);}renderQuick();}
+function renderQuick(){const b=BUSINESSES[bizKey];["webQuick","mobileQuick"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.innerHTML="";b.quick.forEach(q=>{const btn=document.createElement("button");btn.className=/[\u0980-\u09FF]/.test(q)?"bn":"";btn.textContent=q;btn.onclick=()=>handleUserMessage(q,id==="mobileQuick"?"mobile":"web");el.appendChild(btn);});});}
+
+/* ============ SITE + PHONE ============ */
+function renderSite(){
+  const b=BUSINESSES[bizKey];
+  document.getElementById("siteUrl").lastChild.textContent=" "+b.site;
+  document.getElementById("siteContent").innerHTML=`
+    <div class="site-nav"><div class="site-logo">${b.logo}</div><nav>${b.nav.map(n=>`<span>${n}</span>`).join("")}</nav><span class="cart">🛒 Cart (0)</span></div>
+    <div class="hero"><div><span class="hero-tag">${b.heroTag}</span><h2>${b.heroH}</h2><p>${b.heroP}</p>
+      <div class="buy"><button class="btn btn-primary">Shop now</button><button class="btn btn-ghost">Browse</button></div></div>
+      <div class="hero-card">${b.heroEmoji}</div></div>
+    <div class="strip">${b.pills.map(p=>`<span class="pill bn">${p}</span>`).join("")}</div>
+    <div class="site-fade"></div>
+    <div class="widget-launcher" id="launcher">
+      <div class="launch-bubble">Have a question? Ask me!<span class="bn">দাম, ডেলিভারি বা অর্ডার — জিজ্ঞেস করুন 💬</span></div>
+      <button class="launch-btn" id="launchBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8 8 0 01-8 8 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.2A8 8 0 1121 12z" fill="rgba(255,255,255,.12)"/><circle cx="9" cy="12" r="1.1" fill="#fff"/><circle cx="13" cy="12" r="1.1" fill="#fff"/><circle cx="17" cy="12" r="1.1" fill="#fff"/></svg></button>
+    </div>
+    <div class="chatbox" id="chatbox">
+      <div class="chat-head"><div class="ava"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8 8 0 01-8 8 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.2A8 8 0 1121 12z"/><circle cx="9" cy="12" r="1" fill="#fff"/><circle cx="13" cy="12" r="1" fill="#fff"/><circle cx="17" cy="12" r="1" fill="#fff"/></svg></div>
+        <div><div class="ttl">${b.botName}</div><div class="st"><span class="g"></span> ${afterHours?"Auto-reply · we're closed":"Online · replies instantly"}</div></div>
+        <button class="x" id="chatClose">×</button></div>
+      <div class="chat-body" id="webBody"></div>
+      <div class="quick" id="webQuick"></div>
+      <div class="chat-input"><input id="webInput" placeholder="Type in Bangla or English…" autocomplete="off"><button id="webSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg></button></div>
+      <div class="chat-foot">Powered by <b>SupportBondhu AI</b></div>
+    </div>`;
+  wireWebChat();
+}
+function wireWebChat(){
+  const box=document.getElementById("chatbox"),launcher=document.getElementById("launcher");
+  document.getElementById("launchBtn").onclick=()=>{box.classList.add("open");launcher.style.display="none";if(messages.length===0)startSession();else renderChats();};
+  document.getElementById("chatClose").onclick=()=>{box.classList.remove("open");launcher.style.display="flex";};
+  const input=document.getElementById("webInput"),send=()=>{const v=input.value;input.value="";handleUserMessage(v,"web");};
+  document.getElementById("webSend").onclick=send;input.onkeydown=e=>{if(e.key==="Enter")send();};
+}
+function renderMobileHead(){const b=BUSINESSES[bizKey];document.getElementById("appHead").innerHTML=`<span class="back">‹</span><div class="ava"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8 8 0 01-8 8 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.2A8 8 0 1121 12z"/><circle cx="9" cy="12" r="1" fill="#fff"/><circle cx="13" cy="12" r="1" fill="#fff"/><circle cx="17" cy="12" r="1" fill="#fff"/></svg></div><div><div class="ttl">${b.appName}</div><div class="st"><span class="g"></span> ${afterHours?"Auto-reply active":"Typically replies instantly"}</div></div>`;}
+function wireMobileChat(){const input=document.getElementById("mobileInput"),send=()=>{const v=input.value;input.value="";handleUserMessage(v,"mobile");};document.getElementById("mobileSend").onclick=send;input.onkeydown=e=>{if(e.key==="Enter")send();};}
+
+/* ============ ADMIN RENDER ============ */
+function allLeads(){return liveLeads.concat(leadSeed);}
+function renderAdmin(){renderKpis();renderLeads();renderAnalytics();renderKB();}
+function renderKpis(){const all=allLeads();const e=document.getElementById("kpiLeads");if(!e)return;e.textContent=all.length;document.getElementById("kpiLeadsD").textContent=liveLeads.length>0?("+"+liveLeads.length+" from this demo"):"captured automatically";document.getElementById("kpiNight").textContent=all.filter(l=>l.night).length;}
+function renderLeads(){const tb=document.getElementById("leadsTable");if(!tb)return;tb.innerHTML=allLeads().map(l=>{const chTag=l.channel==="web"?'<span class="tag web">🌐 Website</span>':'<span class="tag mobile">📱 Mobile</span>';const intentTag=l.handover?'<span class="tag handover">👤 Handover</span>':`<span class="tag intent">${INTENT_LABEL[l.intent]||l.intent}</span>`;const nightTag=l.night?' <span class="tag night">🌙 After-hours</span>':'';const isBn=/[\u0980-\u09FF]/.test(l.summary);return `<tr class="${l.isNew?'new-row':''}"><td><div class="lead-name">${l.name}</div><div class="lead-phone">${l.phone}</div></td><td>${intentTag}${nightTag}</td><td class="lead-sum ${isBn?'bn':''}">${l.summary}</td><td>${chTag}</td><td class="lead-time">${l.time}</td></tr>`;}).join("");allLeads().forEach(l=>l.isNew=false);}
+function renderAnalytics(){const bl=document.getElementById("barList");if(!bl)return;const entries=Object.entries(questionCounts).sort((a,b)=>b[1]-a[1]).slice(0,7);const max=Math.max(...entries.map(e=>e[1]),1);bl.innerHTML=entries.map(([k,v])=>`<div class="bar-row"><span class="blab">${INTENT_LABEL[k]||k}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.round(v/max*100)}%"></span></span><span class="bnum">${v}</span></div>`).join("");const maxH=Math.max(...hourCounts.map(h=>h.day+h.night),1);document.getElementById("spark").innerHTML=hourCounts.map(h=>{const total=h.day+h.night,isNight=h.night>h.day;return `<div class="col"><div class="b ${isNight?'night':''}" style="height:${Math.round(total/maxH*100)}%"></div><div class="d">${h.t}</div></div>`;}).join("");}
+function renderKB(){const b=BUSINESSES[bizKey],el=document.getElementById("kbList");if(!el)return;document.getElementById("kbSub").textContent=`${b.logo} · ${Object.keys(b.kb).length} trained answers · edit anytime`;const sq={price:"\"দাম কত? / What's the price?\"",delivery:"\"Delivery charge koto?\"",location:"\"ঠিকানা কোথায়?\"",hours:"\"কখন খোলা?\"",offer:"\"কোনো অফার আছে?\"",payment:"\"bKash চলবে?\"",product:"\"কি কি আছে?\"",order:"\"Order করব\"",appointment:"\"অ্যাপয়েন্টমেন্ট নেব\"",visa:"\"Visa cost koto?\"",return:"\"Return করা যাবে?\""};el.innerHTML=Object.entries(b.kb).map(([intent,e])=>`<div class="kb-item"><div class="q"><span class="tg">${e.label}</span> ${sq[intent]||""}</div><div class="a bn"><b>BN:</b> ${e.bn}</div><div class="a"><b>EN:</b> ${e.en}</div></div>`).join("");}
+
+function exportCSV(){const all=allLeads();const rows=[["Name","Phone","Wanted","Summary","Channel","After-hours","Time"]];all.forEach(l=>rows.push([l.name,l.phone,INTENT_LABEL[l.intent]||l.intent,l.summary.replace(/"/g,"'"),l.channel,l.night?"Yes":"No",l.time]));const csv=rows.map(r=>r.map(c=>`"${c}"`).join(",")).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`supportbondhu-leads-${bizKey}.csv`;a.click();URL.revokeObjectURL(url);}
+
+/* ============ NAV ============ */
+function showSection(sec){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById("sec-"+sec).classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.sec===sec));document.querySelector(".content").scrollTop=0;window.scrollTo({top:0,behavior:"smooth"});if(sec==="omni"&&messages.length===0)startSession();if(sec==="dash")renderAdmin();}
+document.getElementById("sidebar").addEventListener("click",e=>{const b=e.target.closest(".nav-btn");if(b)showSection(b.dataset.sec);});
+document.getElementById("dashTabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll("#dashTabs button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("#sec-dash .subpanel").forEach(p=>p.classList.remove("active"));document.getElementById("sub-"+b.dataset.sub).classList.add("active");if(b.dataset.sub==="analytics")renderAnalytics();});
+
+function tryLive(bk){document.getElementById("bizSelect").value=bk;applyBiz();showSection("omni");setTimeout(()=>{const box=document.getElementById("chatbox"),launcher=document.getElementById("launcher");if(box){box.classList.add("open");launcher.style.display="none";if(messages.length===0)startSession();else renderChats();}},80);}
+function applyBiz(){bizKey=document.getElementById("bizSelect").value;seedFor(bizKey);liveLeads=[];messages=[];leadFlow="idle";captured=false;sessionIntents=[];pendingIntent=null;renderSite();renderMobileHead();renderQuick();renderAdmin();}
+
+document.getElementById("bizSelect").addEventListener("change",()=>{applyBiz();const box=document.getElementById("chatbox");if(box&&box.classList.contains("open"))startSession();});
+document.getElementById("afterHours").addEventListener("change",e=>{afterHours=e.target.checked;renderSite();renderMobileHead();messages=[];leadFlow="idle";captured=false;sessionIntents=[];renderQuick();const box=document.getElementById("chatbox");if(box&&box.classList.contains("open"))startSession();});
+document.getElementById("exportBtn").addEventListener("click",exportCSV);
+document.getElementById("afterTryBtn").addEventListener("click",()=>{document.getElementById("afterHours").checked=true;afterHours=true;renderSite();renderMobileHead();renderQuick();tryLive(bizKey);});
+
+/* ============ LOGIN ============ */
+function enterApp(){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";seedFor("shop");renderSite();renderMobileHead();wireMobileChat();renderQuick();renderAdmin();startSession();}
+document.getElementById("loginBtn").addEventListener("click",enterApp);
+document.getElementById("guestBtn").addEventListener("click",enterApp);
+document.getElementById("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")enterApp();});
+document.getElementById("logoutBtn").addEventListener("click",()=>{document.getElementById("app").style.display="none";document.getElementById("login").style.display="grid";window.scrollTo(0,0);});
+</script>
+</body>
+</html>

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD Seller OS — Facebook/WhatsApp Order + COD Manager (Demo)</title>
+<style>
+:root{
+  --ink:#15241D; --muted:#5C6B62; --line:#DDE5DE; --bg:#F3F6F2; --card:#FFFFFF;
+  --green:#0E6B4F; --green-deep:#0A3D2E; --green-soft:#E3F0E9;
+  --red:#CE3B34; --red-soft:#FBE9E7;
+  --amber:#B97514; --amber-bright:#E8A13D; --amber-soft:#FCF1DC;
+  --blue:#2A5FA8; --blue-soft:#E6EEF9; --violet:#6B4FA8; --violet-soft:#EEE9F8;
+  --radius:12px;
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:16px;
+  background:var(--green-deep);color:#EAF4EE;padding:10px 18px;box-shadow:0 2px 10px rgba(10,40,30,.25)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--green);display:grid;place-items:center;
+  font-family:var(--mono);font-weight:700;font-size:15px;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.brand h1{font-size:16px;font-weight:700;letter-spacing:.02em}
+.brand small{display:block;font-weight:400;font-size:11px;color:#9DC3AF;letter-spacing:.04em}
+.view-toggle{display:flex;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:3px;margin-left:auto}
+.view-toggle button{background:none;border:0;color:#C9DED2;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600}
+.view-toggle button.on{background:#fff;color:var(--green-deep)}
+.tour-btn{background:var(--amber-bright);color:#3A2604;border:0;border-radius:10px;padding:9px 16px;font-weight:700;font-size:13px}
+.tour-btn:hover{filter:brightness(1.05)}
+.demo-tag{font-size:11px;border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:3px 10px;color:#C9DED2;letter-spacing:.08em}
+
+/* ---------- Web layout ---------- */
+.web-wrap{display:flex;min-height:calc(100vh - 55px)}
+.sidebar{width:212px;background:#0C4A38;color:#D6E8DE;padding:16px 10px;flex-shrink:0}
+.sidebar .sec{font-size:10px;letter-spacing:.14em;color:#7FAE97;margin:14px 10px 6px;text-transform:uppercase}
+.side-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;color:#D6E8DE;
+  padding:9px 12px;border-radius:9px;font-size:13.5px;font-weight:500;margin-bottom:2px}
+.side-item:hover{background:rgba(255,255,255,.08)}
+.side-item.on{background:#fff;color:var(--green-deep);font-weight:700}
+.side-item .ic{width:18px;text-align:center}
+.content{flex:1;padding:22px 26px;max-width:1120px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.page-head h2{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.page-head p{color:var(--muted);font-size:13px;margin-top:2px}
+.btn{border:0;border-radius:9px;padding:9px 15px;font-weight:700;font-size:13px}
+.btn-primary{background:var(--green);color:#fff}
+.btn-primary:hover{background:#0C5C44}
+.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:#B9C7BC}
+.btn-amber{background:var(--amber-bright);color:#3A2604}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:7px}
+
+/* ---------- Cards / stats ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.stat .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.stat .val{font-size:24px;font-weight:800;margin-top:4px}
+.stat .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.stat.hot{background:linear-gradient(135deg,#FFF8EA,#FCF1DC);border-color:#EED9AE}
+.stat.hot .val{color:var(--amber)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.card h3{font-size:14px;font-weight:800;margin-bottom:10px;letter-spacing:.01em}
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+
+/* Cash lane — signature element */
+.cashlane{background:var(--card);border:1px solid #EED9AE;border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.cashlane .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.cashlane .top b{font-size:14px}
+.cashlane .total{font-size:20px;font-weight:800;color:var(--amber)}
+.lane{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid #EED9AE}
+.lane div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#3A2604;white-space:nowrap;overflow:hidden;min-width:0}
+.lane-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
+.lane-legend .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* ---------- Tables ---------- */
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid #EBF0EA;font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:#F7FAF6}
+.oid{font-family:var(--mono);font-weight:700;font-size:12.5px}
+.cell-sub{color:var(--muted);font-size:12px;margin-top:1px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:99px;background:currentColor}
+.chip.pending{background:var(--amber-soft);color:var(--amber)}
+.chip.packed{background:var(--blue-soft);color:var(--blue)}
+.chip.shipped{background:var(--violet-soft);color:var(--violet)}
+.chip.delivered{background:var(--green-soft);color:var(--green)}
+.chip.returned{background:var(--red-soft);color:var(--red)}
+.cod-yes{color:var(--green);font-weight:700;font-size:12px}
+.cod-no{color:var(--amber);font-weight:700;font-size:12px}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.filters button.on{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
+.stock-bar{height:6px;border-radius:99px;background:#EBF0EA;overflow:hidden;width:110px}
+.stock-bar i{display:block;height:100%;border-radius:99px}
+.low-badge{background:var(--red-soft);color:var(--red);font-size:10.5px;font-weight:800;border-radius:5px;padding:2px 6px;letter-spacing:.04em}
+
+/* ---------- Forms / modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(12,35,26,.45);z-index:80;display:none;align-items:flex-start;justify-content:center;padding:30px 14px;overflow:auto}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:640px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal h3{font-size:17px;font-weight:800;margin-bottom:2px}
+.modal .hint{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow.one{grid-template-columns:1fr}
+.field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px;letter-spacing:.03em}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#FBFDFB}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--green);outline-offset:0;border-color:var(--green)}
+.item-row{display:grid;grid-template-columns:1fr 84px 30px;gap:8px;margin-bottom:8px;align-items:center}
+.item-row .rm{background:var(--red-soft);color:var(--red);border:0;border-radius:7px;height:34px;font-weight:800}
+.totals{background:var(--green-soft);border-radius:10px;padding:12px 14px;margin:12px 0}
+.totals .row{display:flex;justify-content:space-between;font-size:13px;padding:2px 0}
+.totals .row.big{font-weight:800;font-size:16px;border-top:1px dashed #B9D4C6;margin-top:6px;padding-top:8px;color:var(--green-deep)}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.msgr-fill{background:var(--blue-soft);border:1px dashed #A9C4E4;color:var(--blue);border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;width:100%;margin-bottom:12px}
+
+/* ---------- Reports ---------- */
+.bars{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar-col .b{width:100%;max-width:44px;background:linear-gradient(180deg,#199468,var(--green));border-radius:6px 6px 0 0;min-height:3px}
+.bar-col .d{font-size:10.5px;color:var(--muted);font-weight:600}
+.bar-col .v{font-size:10.5px;font-weight:700;color:var(--green-deep)}
+.reason-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12.5px}
+.reason-row .rb{height:10px;border-radius:99px;background:var(--red);opacity:.85}
+.reason-row .rl{width:150px;color:var(--muted)}
+
+/* ---------- Invoice ---------- */
+.invoice{border:1px solid var(--line);border-radius:10px;padding:22px;font-size:13px}
+.inv-head{display:flex;justify-content:space-between;border-bottom:2px solid var(--green-deep);padding-bottom:12px;margin-bottom:14px}
+.inv-head h4{font-size:18px;color:var(--green-deep)}
+.inv-head small{color:var(--muted)}
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.inv-grid b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
+.inv-table th{background:#F3F6F2}
+.cod-box{background:var(--amber-soft);border:1.5px dashed var(--amber-bright);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.cod-box b{font-size:12px;letter-spacing:.06em;color:var(--amber)}
+.cod-box .amt{font-size:22px;font-weight:800;color:var(--amber)}
+.inv-foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px}
+
+/* ---------- WhatsApp preview ---------- */
+.wa-shell{background:#E5DDD5;border-radius:12px;padding:18px}
+.wa-bubble{background:#DCF8C6;border-radius:10px;padding:12px 14px;max-width:92%;margin-left:auto;font-size:13px;white-space:pre-wrap;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.wa-time{text-align:right;font-size:10.5px;color:#6b7a6b;margin-top:6px}
+
+/* ---------- Mobile view ---------- */
+.mobile-stage{display:none;min-height:calc(100vh - 55px);padding:34px 16px;background:
+  radial-gradient(700px 380px at 50% 0%,#16543F,#0A3D2E 70%)}
+.mobile-stage.on{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.phone{width:376px;background:#000;border-radius:38px;padding:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);flex-shrink:0}
+.screen{background:var(--bg);border-radius:30px;overflow:hidden;height:730px;display:flex;flex-direction:column;position:relative}
+.m-status{background:var(--green-deep);color:#fff;font-size:11px;display:flex;justify-content:space-between;padding:8px 18px 4px;font-family:var(--mono)}
+.m-head{background:var(--green-deep);color:#fff;padding:8px 16px 14px;display:flex;align-items:center;justify-content:space-between}
+.m-head h4{font-size:16px;font-weight:800}
+.m-head small{display:block;font-size:10.5px;color:#9DC3AF;font-weight:400}
+.m-body{flex:1;overflow-y:auto;padding:14px 14px 80px}
+.m-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:6px 4px 14px}
+.m-nav button{flex:1;background:none;border:0;font-size:10px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.m-nav button .mi{font-size:19px}
+.m-nav button.on{color:var(--green)}
+.m-nav .fab{background:var(--green);color:#fff;border-radius:16px;margin:-22px 6px 0;padding:8px 0 6px;box-shadow:0 6px 16px rgba(14,107,79,.45);max-width:64px}
+.m-nav .fab .mi{font-size:22px}
+.m-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.m-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.m-stat .lbl{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.m-stat .val{font-size:19px;font-weight:800;margin-top:3px}
+.m-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.m-card .r1{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.m-card .nm{font-weight:700;font-size:13.5px}
+.m-card .meta{font-size:11.5px;color:var(--muted)}
+.m-sec-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 2px 8px}
+.side-note{max-width:290px;color:#CFE4D7;font-size:13.5px;line-height:1.6;padding-top:30px}
+.side-note h3{color:#fff;font-size:19px;margin-bottom:10px}
+.side-note li{margin-bottom:8px;margin-left:16px}
+@media(max-width:820px){.side-note{display:none}}
+
+/* ---------- Tour ---------- */
+.tour{position:fixed;right:18px;bottom:18px;width:330px;background:#fff;border-radius:14px;
+  box-shadow:0 16px 50px rgba(10,40,30,.35);border:1px solid var(--line);z-index:100;display:none;overflow:hidden}
+.tour.open{display:block}
+.tour-head{background:var(--green-deep);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+.tour-head b{font-size:12px;letter-spacing:.06em}
+.tour-head button{background:none;border:0;color:#9DC3AF;font-size:16px}
+.tour-body{padding:14px}
+.tour-body h4{font-size:14.5px;margin-bottom:6px}
+.tour-body p{font-size:13px;color:var(--muted);line-height:1.55}
+.tour-foot{display:flex;justify-content:space-between;align-items:center;padding:0 14px 14px}
+.tour-foot .steps{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,161,61,.65)}70%{box-shadow:0 0 0 12px rgba(232,161,61,0)}100%{box-shadow:0 0 0 0 rgba(232,161,61,0)}}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+
+
+/* ---------- Feature guide (explainer tabs) ---------- */
+.ex-hero{background:linear-gradient(120deg,var(--green-deep),var(--green));color:#fff;border-radius:var(--radius);padding:18px 20px;margin-bottom:16px;display:flex;gap:14px;align-items:center}
+.ex-hero .ic{font-size:30px}
+.ex-hero h3{font-size:18px;color:#fff;margin:0}
+.ex-hero p{color:#CFE4D7;font-size:13px;margin-top:3px;max-width:760px}
+.ex-grid{display:grid;gap:12px;margin-top:12px}
+.ex-grid.c2{grid-template-columns:1fr 1fr}
+.ex-grid.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:920px){.ex-grid.c2,.ex-grid.c3{grid-template-columns:1fr}}
+.ex-grid .card{margin:0}
+.courier-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:920px){.courier-row{grid-template-columns:repeat(2,1fr)}}
+.courier-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;font-size:13px}
+.courier-card .lg{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;margin:0 auto 8px;font-size:15px}
+.flow{display:flex;align-items:stretch;flex-wrap:wrap}
+.flow-step{flex:1;min-width:160px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;font-size:13px}
+.flow-arrow{display:flex;align-items:center;padding:0 8px;color:var(--green);font-size:20px;font-weight:800}
+.step-n{width:26px;height:26px;border-radius:99px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:800;margin:0 auto 8px;font-size:13px}
+.benefit-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.benefit{background:var(--green-soft);color:var(--green-deep);border-radius:99px;padding:6px 13px;font-size:12px;font-weight:700}
+.calc{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.calc .cbox{flex:1;min-width:160px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.calc .op{font-size:22px;font-weight:800;color:var(--muted)}
+.calc .cbox.total{background:var(--amber-soft);border-color:#EED9AE}
+.mini-alert{border-radius:9px;padding:10px 12px;font-size:12.5px;font-weight:600;margin-top:10px}
+.mini-alert.bad{background:var(--red-soft);color:var(--red);border:1px solid #F3C6C2}
+.mini-alert.good{background:var(--green-soft);color:var(--green-deep);border:1px solid #BFDCCB}
+.stage-row{display:flex;align-items:stretch;flex-wrap:wrap;gap:0}
+.stage{flex:1;min-width:130px;border-radius:12px;padding:12px;text-align:center;border:1px solid var(--line);background:#fff}
+.donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:6px auto 12px;background:conic-gradient(var(--green) 0 91.67%,#E4EBE4 0)}
+.donut .in{width:110px;height:110px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #EBF0EA;font-size:13px;align-items:center}
+.risk-good{border-left:4px solid var(--green)}
+.risk-warn{border-left:4px solid var(--amber-bright)}
+.wa-mini{background:#DCF8C6;border-radius:10px;padding:10px 12px;font-size:12.5px;white-space:pre-wrap;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+
+/* ---------- Print ---------- */
+@media print{
+  body.printing *{visibility:hidden}
+  body.printing #invSheet,body.printing #invSheet *{visibility:visible}
+  body.printing #invSheet{position:absolute;top:0;left:0;width:100%}
+}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--green-deep);color:#fff;
+  padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:120;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none}
+.toast.on{display:block}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">৳</div>
+    <div><h1>BD Seller OS <small>Facebook / WhatsApp Order + COD Manager</small></h1></div>
+  </div>
+  <span class="demo-tag">CLIENT DEMO</span>
+  <a class="demo-tag" href="pricing.html" style="text-decoration:none">💳 Pricing</a>
+  <div class="view-toggle">
+    <button id="tgWeb" class="on" onclick="setView('web')">🖥 Web Dashboard</button>
+    <button id="tgMob" onclick="setView('mobile')">📱 Mobile App</button>
+  </div>
+  <button class="tour-btn" onclick="startTour()">▶ Guided demo</button>
+</header>
+
+<!-- ================= WEB VIEW ================= -->
+<div class="web-wrap" id="webView">
+  <nav class="sidebar">
+    <div class="sec">Daily work</div>
+    <button class="side-item" data-tab="dashboard" onclick="setTab('dashboard')"><span class="ic">◧</span>Dashboard</button>
+    <button class="side-item" data-tab="orders" onclick="setTab('orders')"><span class="ic">🧾</span>Orders</button>
+    <button class="side-item" data-tab="cod" onclick="setTab('cod')"><span class="ic">💵</span>COD Settlement</button>
+    <div class="sec">Catalogue</div>
+    <button class="side-item" data-tab="products" onclick="setTab('products')"><span class="ic">📦</span>Products &amp; Stock</button>
+    <button class="side-item" data-tab="customers" onclick="setTab('customers')"><span class="ic">👤</span>Customers</button>
+    <div class="sec">Insight</div>
+    <button class="side-item" data-tab="reports" onclick="setTab('reports')"><span class="ic">📈</span>Reports</button>
+    <button class="side-item" data-tab="team" onclick="setTab('team')"><span class="ic">🧑‍🤝‍🧑</span>Team Roles</button>
+    <div class="sec">Feature guide</div>
+    <button class="side-item" data-tab="f1" onclick="setTab('f1')"><span class="ic num" style="font-size:11px">01</span>Courier Selection</button>
+    <button class="side-item" data-tab="f2" onclick="setTab('f2')"><span class="ic num" style="font-size:11px">02</span>COD Calculation</button>
+    <button class="side-item" data-tab="f3" onclick="setTab('f3')"><span class="ic num" style="font-size:11px">03</span>Stock Checking</button>
+    <button class="side-item" data-tab="f4" onclick="setTab('f4')"><span class="ic num" style="font-size:11px">04</span>Key Features</button>
+    <button class="side-item" data-tab="f5" onclick="setTab('f5')"><span class="ic num" style="font-size:11px">05</span>Status & Dashboard</button>
+    <button class="side-item" data-tab="f6" onclick="setTab('f6')"><span class="ic num" style="font-size:11px">06</span>Settlement & Cash</button>
+    <button class="side-item" data-tab="f7" onclick="setTab('f7')"><span class="ic num" style="font-size:11px">07</span>Customers & Invoice</button>
+    <button class="side-item" data-tab="f8" onclick="setTab('f8')"><span class="ic num" style="font-size:11px">08</span>Reports & Analysis</button>
+  </nav>
+  <main class="content" id="webContent"></main>
+</div>
+
+<!-- ================= MOBILE VIEW ================= -->
+<div class="mobile-stage" id="mobileStage">
+  <div class="phone">
+    <div class="screen">
+      <div class="m-status"><span>09:41</span><span>▲ ▼ ▮ 87%</span></div>
+      <div class="m-head">
+        <div><h4 id="mTitle">Rupsha Collection</h4><small id="mSub">Owner · Dhaka</small></div>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff" onclick="openNewOrder()">+ Order</button>
+      </div>
+      <div class="m-body" id="mBody"></div>
+      <div class="m-nav" id="mNav">
+        <button data-m="home" onclick="setMTab('home')"><span class="mi">◧</span>Home</button>
+        <button data-m="orders" onclick="setMTab('orders')"><span class="mi">🧾</span>Orders</button>
+        <button class="fab" onclick="openNewOrder()"><span class="mi">＋</span>New</button>
+        <button data-m="stock" onclick="setMTab('stock')"><span class="mi">📦</span>Stock</button>
+        <button data-m="cash" onclick="setMTab('cash')"><span class="mi">💵</span>Cash</button>
+      </div>
+    </div>
+  </div>
+  <aside class="side-note">
+    <h3>Same account, pocket-sized.</h3>
+    <p>Everything the seller does on the web dashboard works from the phone — because most Bangladeshi sellers run their whole shop from Messenger and WhatsApp on mobile.</p>
+    <ul>
+      <li>Create an order while chatting with the customer</li>
+      <li>Mark packed / shipped / delivered from anywhere</li>
+      <li>See cash waiting at couriers in one tap</li>
+      <li>Low-stock alerts before you oversell</li>
+    </ul>
+    <p style="margin-top:10px">Try it — the phone is fully interactive and shares live data with the web view.</p>
+  </aside>
+</div>
+
+<!-- ================= MODALS ================= -->
+<div class="overlay" id="ovOrder">
+  <div class="modal">
+    <h3>Create order</h3>
+    <div class="hint">Copy the details straight from the Messenger / WhatsApp chat — it takes under a minute.</div>
+    <button class="msgr-fill" onclick="fillFromMessenger()">⚡ Demo: auto-fill from a Messenger conversation</button>
+    <div class="frow">
+      <div class="field"><label>Customer name</label><input id="fName" placeholder="e.g. Nusrat Jahan"></div>
+      <div class="field"><label>Phone</label><input id="fPhone" placeholder="01XXXXXXXXX"></div>
+    </div>
+    <div class="frow one">
+      <div class="field"><label>Delivery address</label><textarea id="fAddr" rows="2" placeholder="House, road, area, district"></textarea></div>
+    </div>
+    <div class="field" style="margin-bottom:8px"><label>Products</label></div>
+    <div id="itemRows"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addItemRow()">+ Add another product</button>
+    <div class="frow" style="margin-top:12px">
+      <div class="field"><label>Delivery zone</label>
+        <select id="fZone" onchange="recalc()">
+          <option value="70">Inside Dhaka — ৳70</option>
+          <option value="130">Outside Dhaka — ৳130</option>
+        </select>
+      </div>
+      <div class="field"><label>Courier</label>
+        <select id="fCourier">
+          <option>Steadfast</option><option>Pathao Courier</option><option>RedX</option><option>Paperfly</option><option>Sundarban Courier</option>
+        </select>
+      </div>
+    </div>
+    <div class="totals" id="orderTotals"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovOrder')">Cancel</button>
+      <button class="btn btn-primary" id="saveOrderBtn" onclick="saveOrder()">Save order</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ovReturn">
+  <div class="modal" style="max-width:420px">
+    <h3>Mark as returned</h3>
+    <div class="hint">Pick the reason — it feeds the returns report so you can fix the root cause.</div>
+    <div class="field"><label>Return reason</label>
+      <select id="fReason">
+        <option>Customer refused at door</option>
+        <option>Phone unreachable</option>
+        <option>Wrong / incomplete address</option>
+        <option>Damaged in transit</option>
+        <option>Late delivery</option>
+      </select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovReturn')">Cancel</button>
+      <button class="btn" style="background:var(--red);color:#fff" onclick="confirmReturn()">Confirm return</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ovInvoice">
+  <div class="modal" style="max-width:560px">
+    <div id="invSheet"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovInvoice')">Close</button>
+      <button class="btn btn-primary" onclick="printInvoice()">🖨 Print invoice</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ovWa">
+  <div class="modal" style="max-width:470px">
+    <h3>Order confirmation message</h3>
+    <div class="hint">Sent automatically by SMS or WhatsApp the moment the order is saved.</div>
+    <div class="wa-shell"><div class="wa-bubble" id="waMsg"></div><div class="wa-time">✓✓ delivered</div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovWa')">Close</button>
+      <button class="btn" style="background:#25D366;color:#fff" onclick="toast('Demo: message sent to customer ✓');closeOv('ovWa')">Send via WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ovHistory">
+  <div class="modal" style="max-width:520px" id="histBody"></div>
+</div>
+
+<!-- Tour panel -->
+<div class="tour" id="tourBox">
+  <div class="tour-head"><b>GUIDED DEMO</b><button onclick="endTour()">✕</button></div>
+  <div class="tour-body"><h4 id="tourTitle"></h4><p id="tourText"></p></div>
+  <div class="tour-foot">
+    <span class="steps" id="tourSteps"></span>
+    <span>
+      <button class="btn btn-ghost btn-sm" onclick="tourMove(-1)">← Back</button>
+      <button class="btn btn-primary btn-sm" id="tourNext" onclick="tourMove(1)">Next →</button>
+    </span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+/* ================= DATA ================= */
+const COST_RATIO = 0.68; // demo assumption: cost of goods = 68% of price
+let PRODUCTS = [
+  {id:1, name:"Matte Lipstick Set (6 pc)", cat:"Cosmetics", price:850,  stock:24},
+  {id:2, name:"Herbal Face Pack",          cat:"Cosmetics", price:420,  stock:40},
+  {id:3, name:"Premium Cotton Panjabi",    cat:"Clothing",  price:1850, stock:12},
+  {id:4, name:"Jamdani Motif Saree",       cat:"Clothing",  price:3200, stock:6},
+  {id:5, name:"TWS Earbuds X9",            cat:"Gadgets",   price:1250, stock:18},
+  {id:6, name:"Smart Watch D20",           cat:"Gadgets",   price:990,  stock:3},
+  {id:7, name:"Deshi Honey 500g",          cat:"Food",      price:650,  stock:30},
+];
+const COURIERS = ["Steadfast","Pathao Courier","RedX","Paperfly","Sundarban Courier"];
+const dayName = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+function daysAgo(n){ const d=new Date(); d.setDate(d.getDate()-n); return d; }
+
+let seq = 1040;
+function mkOrder(off, name, phone, addr, items, zone, courier, status, cod, reason){
+  return {id:"BD-"+(seq++), date:daysAgo(off), customer:{name,phone,addr},
+    items, delivery:zone, courier, status, codReceived:!!cod, returnReason:reason||null};
+}
+let ORDERS = [
+  mkOrder(6,"Sadia Islam","01711-234567","House 12, Road 5, Dhanmondi, Dhaka",[{pid:1,qty:1},{pid:2,qty:2}],70,"Steadfast","Delivered",true),
+  mkOrder(6,"Tanvir Ahmed","01822-556677","Sadar Road, Barishal",[{pid:5,qty:1}],130,"Sundarban Courier","Delivered",true),
+  mkOrder(5,"Farzana Akter","01919-887766","Block C, Halishahar, Chattogram",[{pid:4,qty:1}],130,"Pathao Courier","Delivered",true),
+  mkOrder(5,"Rakibul Islam","01633-445566","College Road, Rangpur",[{pid:6,qty:1}],130,"RedX","Returned",false,"Phone unreachable"),
+  mkOrder(4,"Sumaiya Khatun","01744-112233","Mirpur 10, Dhaka",[{pid:2,qty:3}],70,"Steadfast","Delivered",true),
+  mkOrder(4,"Arif Chowdhury","01555-998877","Zindabazar, Sylhet",[{pid:3,qty:1}],130,"Paperfly","Delivered",false),
+  mkOrder(3,"Nafisa Rahman","01812-334455","Uttara Sector 7, Dhaka",[{pid:1,qty:2}],70,"Pathao Courier","Delivered",true),
+  mkOrder(3,"Mahmudul Hasan","01766-778899","Station Road, Khulna",[{pid:7,qty:2},{pid:2,qty:1}],130,"Sundarban Courier","Returned",false,"Customer refused at door"),
+  mkOrder(2,"Jannatul Ferdous","01922-119911","Banasree Block D, Dhaka",[{pid:4,qty:1},{pid:2,qty:1}],70,"Steadfast","Delivered",false),
+  mkOrder(2,"Shakil Mia","01677-665544","Muradpur, Chattogram",[{pid:5,qty:2}],130,"RedX","Shipped",false),
+  mkOrder(1,"Rima Akter","01733-221100","Savar Bazar, Dhaka",[{pid:3,qty:1}],70,"Steadfast","Shipped",false),
+  mkOrder(1,"Imran Hossain","01899-443322","Kandirpar, Cumilla",[{pid:7,qty:3}],130,"Paperfly","Shipped",false),
+  mkOrder(0,"Nusrat Jahan","01710-556644","Lalmatia Block B, Dhaka",[{pid:1,qty:1}],70,"Pathao Courier","Packed",false),
+  mkOrder(0,"Mehedi Hasan","01611-778855","Bogura Sadar",[{pid:6,qty:1}],130,"RedX","Pending",false),
+];
+
+let state = {view:'web', tab:'dashboard', mtab:'home', filter:'All', returnTarget:null};
+
+/* ================= HELPERS ================= */
+const P = id => PRODUCTS.find(p=>p.id===id);
+const tk = n => "৳"+n.toLocaleString('en-IN');
+const subtotal = o => o.items.reduce((s,i)=>s+P(i.pid).price*i.qty,0);
+const codAmt = o => subtotal(o)+o.delivery;
+const isToday = d => d.toDateString()===new Date().toDateString();
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('on'),2600); }
+function openOv(id){ document.getElementById(id).classList.add('open'); }
+function closeOv(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+
+function chip(o){
+  const cls=o.status.toLowerCase();
+  return `<span class="chip ${cls}">${o.status}</span>`;
+}
+function actionBtns(o, small){
+  const b=[]; const sm='btn btn-sm ';
+  if(o.status==='Pending')  b.push(`<button class="${sm}btn-primary" onclick="setStatus('${o.id}','Packed')">Mark packed</button>`);
+  if(o.status==='Packed')   b.push(`<button class="${sm}btn-primary" onclick="setStatus('${o.id}','Shipped')">Mark shipped</button>`);
+  if(o.status==='Shipped'){ b.push(`<button class="${sm}btn-primary" onclick="setStatus('${o.id}','Delivered')">Delivered ✓</button>`);
+                            b.push(`<button class="${sm}" style="background:var(--red-soft);color:var(--red)" onclick="askReturn('${o.id}')">Returned</button>`);}
+  if(o.status==='Delivered' && !o.codReceived) b.push(`<button class="${sm}btn-amber" onclick="markCod('${o.id}')">COD received ৳</button>`);
+  if(!small){ b.push(`<button class="${sm}btn-ghost" onclick="showInvoice('${o.id}')">Invoice</button>`);
+              b.push(`<button class="${sm}btn-ghost" onclick="showWa('${o.id}')">WhatsApp</button>`);}
+  return `<span class="actions">${b.join('')}</span>`;
+}
+
+/* ================= ACTIONS ================= */
+function setStatus(id, st){
+  const o=ORDERS.find(x=>x.id===id); o.status=st;
+  toast(`Order ${id} → ${st}`); renderAll();
+}
+function markCod(id){
+  const o=ORDERS.find(x=>x.id===id); o.codReceived=true;
+  toast(`COD ${tk(codAmt(o))} received for ${id} 🎉`); renderAll();
+}
+function askReturn(id){ state.returnTarget=id; openOv('ovReturn'); }
+function confirmReturn(){
+  const o=ORDERS.find(x=>x.id===state.returnTarget);
+  o.status='Returned'; o.returnReason=document.getElementById('fReason').value;
+  o.items.forEach(i=>P(i.pid).stock+=i.qty); // stock back on return
+  closeOv('ovReturn'); toast(`Order ${o.id} marked returned — stock restored`); renderAll();
+}
+
+/* ================= NEW ORDER ================= */
+let draftItems=[];
+function openNewOrder(fromTour){
+  draftItems=[{pid:PRODUCTS[0].id, qty:1}];
+  ['fName','fPhone','fAddr'].forEach(i=>document.getElementById(i).value='');
+  renderItemRows(); recalc(); openOv('ovOrder');
+}
+function fillFromMessenger(){
+  document.getElementById('fName').value='Nusrat Jahan';
+  document.getElementById('fPhone').value='01710-556644';
+  document.getElementById('fAddr').value='Lalmatia Block B, House 21, Dhaka';
+  draftItems=[{pid:1,qty:1},{pid:2,qty:1}];
+  document.getElementById('fZone').value='70';
+  renderItemRows(); recalc();
+  toast('Demo details filled — exactly what a seller copies from the inbox');
+}
+function addItemRow(){ draftItems.push({pid:PRODUCTS[0].id, qty:1}); renderItemRows(); recalc(); }
+function rmItemRow(i){ draftItems.splice(i,1); if(!draftItems.length) draftItems=[{pid:PRODUCTS[0].id,qty:1}]; renderItemRows(); recalc(); }
+function renderItemRows(){
+  document.getElementById('itemRows').innerHTML = draftItems.map((it,i)=>`
+    <div class="item-row">
+      <select onchange="draftItems[${i}].pid=+this.value;recalc()">
+        ${PRODUCTS.map(p=>`<option value="${p.id}" ${p.id===it.pid?'selected':''}>${esc(p.name)} — ${tk(p.price)} (${p.stock} left)</option>`).join('')}
+      </select>
+      <input type="number" min="1" value="${it.qty}" onchange="draftItems[${i}].qty=Math.max(1,+this.value||1);recalc()">
+      <button class="rm" onclick="rmItemRow(${i})" title="Remove">✕</button>
+    </div>`).join('');
+}
+function recalc(){
+  const sub=draftItems.reduce((s,i)=>s+P(i.pid).price*i.qty,0);
+  const del=+document.getElementById('fZone').value;
+  const over=draftItems.find(i=>i.qty>P(i.pid).stock);
+  document.getElementById('orderTotals').innerHTML=`
+    <div class="row"><span>Product subtotal</span><b class="num">${tk(sub)}</b></div>
+    <div class="row"><span>Delivery charge</span><b class="num">${tk(del)}</b></div>
+    <div class="row big"><span>COD to collect</span><span class="num">${tk(sub+del)}</span></div>
+    ${over?`<div class="row" style="color:var(--red);font-weight:700">⚠ Not enough stock of ${esc(P(over.pid).name)} (${P(over.pid).stock} left)</div>`:''}`;
+  document.getElementById('saveOrderBtn').disabled=!!over;
+  document.getElementById('saveOrderBtn').style.opacity=over?0.5:1;
+}
+function saveOrder(){
+  const name=document.getElementById('fName').value.trim();
+  const phone=document.getElementById('fPhone').value.trim();
+  const addr=document.getElementById('fAddr').value.trim();
+  if(!name||!phone||!addr){ toast('Please fill customer name, phone and address'); return; }
+  const o=mkOrder(0,name,phone,addr,draftItems.map(i=>({...i})),+document.getElementById('fZone').value,
+    document.getElementById('fCourier').value,'Pending',false);
+  o.items.forEach(i=>P(i.pid).stock-=i.qty); // stock deduction
+  ORDERS.push(o);
+  closeOv('ovOrder'); renderAll(); showWa(o.id);
+  toast(`Order ${o.id} created — stock updated, confirmation ready`);
+  if(tourOn && tourStep===2) tourMove(1);
+}
+
+/* ================= INVOICE & WHATSAPP ================= */
+function showInvoice(id){
+  const o=ORDERS.find(x=>x.id===id);
+  document.getElementById('invSheet').innerHTML=`
+  <div class="invoice">
+    <div class="inv-head">
+      <div><h4>Rupsha Collection</h4><small>Facebook: fb.com/rupshacollection · 01700-000000</small></div>
+      <div style="text-align:right"><b style="font-size:15px">INVOICE</b><br><small class="num">${o.id} · ${dayName(o.date)}</small></div>
+    </div>
+    <div class="inv-grid">
+      <div><b>Deliver to</b>${esc(o.customer.name)}<br>${esc(o.customer.phone)}<br>${esc(o.customer.addr)}</div>
+      <div><b>Courier</b>${o.courier}<br><b style="margin-top:8px">Payment</b>Cash on Delivery</div>
+    </div>
+    <table class="inv-table">
+      <tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Price</th><th style="text-align:right">Total</th></tr>
+      ${o.items.map(i=>`<tr><td>${esc(P(i.pid).name)}</td><td style="text-align:center" class="num">${i.qty}</td>
+        <td style="text-align:right" class="num">${tk(P(i.pid).price)}</td><td style="text-align:right" class="num">${tk(P(i.pid).price*i.qty)}</td></tr>`).join('')}
+      <tr><td colspan="3" style="text-align:right;color:var(--muted)">Delivery charge</td><td style="text-align:right" class="num">${tk(o.delivery)}</td></tr>
+    </table>
+    <div class="cod-box"><b>CASH TO COLLECT (COD)</b><span class="amt num">${tk(codAmt(o))}</span></div>
+    <div class="inv-foot">Thank you for shopping with us! For exchange, contact within 3 days of delivery.</div>
+  </div>`;
+  openOv('ovInvoice');
+}
+function printInvoice(){
+  document.body.classList.add('printing');
+  window.print();
+  setTimeout(()=>document.body.classList.remove('printing'),400);
+}
+function showWa(id){
+  const o=ORDERS.find(x=>x.id===id);
+  const items=o.items.map(i=>`• ${P(i.pid).name} × ${i.qty}`).join('\n');
+  document.getElementById('waMsg').textContent=
+`আসসালামু আলাইকুম ${o.customer.name}! 🌸
+Your order is confirmed ✅
+
+Order ID: ${o.id}
+${items}
+Delivery: ${tk(o.delivery)} (${o.courier})
+Total COD: ${tk(codAmt(o))}
+
+Please keep the cash ready. Delivery in 1–3 days.
+— Rupsha Collection`;
+  openOv('ovWa');
+}
+/* ================= WEB RENDER ================= */
+function setView(v){
+  state.view=v;
+  document.getElementById('webView').style.display = v==='web'?'flex':'none';
+  document.getElementById('mobileStage').classList.toggle('on', v==='mobile');
+  document.getElementById('tgWeb').classList.toggle('on', v==='web');
+  document.getElementById('tgMob').classList.toggle('on', v==='mobile');
+  renderAll();
+}
+function setTab(t){ state.tab=t; if(state.view!=='web') setView('web'); renderAll(); }
+function setFilter(f){ state.filter=f; renderAll(); }
+function setMTab(t){ state.mtab=t; renderAll(); }
+
+function laneColors(i){ return ['#E8A13D','#F0BC6E','#D98F2B','#F5D7A6','#C77E1C'][i%5]; }
+
+function renderWeb(){
+  const el=document.getElementById('webContent');
+  document.querySelectorAll('.side-item').forEach(b=>b.classList.toggle('on',b.dataset.tab===state.tab));
+  const T={dashboard:rDash, orders:rOrders, cod:rCod, products:rProducts, customers:rCustomers, reports:rReports, team:rTeam};
+  EXLIST.forEach((e,i)=>T['f'+(i+1)]=()=>exPage(i));
+  el.innerHTML=T[state.tab]();
+}
+
+function rDash(){
+  const today=ORDERS.filter(o=>isToday(o.date));
+  const delivered=ORDERS.filter(o=>o.status==='Delivered');
+  const returned=ORDERS.filter(o=>o.status==='Returned');
+  const inTransit=ORDERS.filter(o=>['Shipped'].includes(o.status));
+  const codPendingOrders=ORDERS.filter(o=>(o.status==='Delivered'&&!o.codReceived)||o.status==='Shipped');
+  const codPending=codPendingOrders.reduce((s,o)=>s+codAmt(o),0);
+  const collected=delivered.filter(o=>o.codReceived).reduce((s,o)=>s+codAmt(o),0);
+  const profit=Math.round(delivered.filter(o=>o.codReceived).reduce((s,o)=>s+subtotal(o)*(1-COST_RATIO),0));
+  // best sellers
+  const sold={};
+  delivered.forEach(o=>o.items.forEach(i=>sold[i.pid]=(sold[i.pid]||0)+i.qty));
+  const best=Object.entries(sold).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  // cash lane per courier
+  const byCourier={};
+  codPendingOrders.forEach(o=>byCourier[o.courier]=(byCourier[o.courier]||0)+codAmt(o));
+  const lane=Object.entries(byCourier);
+  const recent=[...ORDERS].sort((a,b)=>b.date-a.date).slice(0,6);
+  return `
+  <div class="page-head">
+    <div><h2>Good morning, Rupsha Collection 👋</h2><p>${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · everything in one place, nothing lost in the inbox</p></div>
+    <button class="btn btn-primary" id="newOrderBtn" onclick="openNewOrder()">＋ New Order</button>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="lbl">Today's orders</div><div class="val num">${today.length}</div><div class="sub">${ORDERS.length} total this week</div></div>
+    <div class="stat"><div class="lbl">Delivered</div><div class="val num" style="color:var(--green)">${delivered.length}</div><div class="sub">${inTransit.length} on the road</div></div>
+    <div class="stat"><div class="lbl">Returned</div><div class="val num" style="color:var(--red)">${returned.length}</div><div class="sub">${ORDERS.length?Math.round(returned.length/ORDERS.length*100):0}% return rate</div></div>
+    <div class="stat hot"><div class="lbl">COD pending</div><div class="val num">${tk(codPending)}</div><div class="sub">cash with couriers</div></div>
+    <div class="stat"><div class="lbl">Est. profit (collected)</div><div class="val num" style="color:var(--green-deep)">${tk(profit)}</div><div class="sub">on ${tk(collected)} collected</div></div>
+  </div>
+
+  <div class="cashlane">
+    <div class="top"><b>💵 Where is your cash right now?</b><span class="total num">${tk(codPending)}</span></div>
+    ${lane.length?`<div class="lane">${lane.map(([c,v],i)=>`<div style="background:${laneColors(i)};flex:${v}" title="${c}: ${tk(v)}">${tk(v)}</div>`).join('')}</div>
+    <div class="lane-legend">${lane.map(([c,v],i)=>`<span><span class="dot" style="background:${laneColors(i)}"></span>${c}</span>`).join('')}</div>`
+    :'<p style="color:var(--muted)">No cash pending — everything settled ✓</p>'}
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Recent orders</h3>
+      <table><tr><th>Order</th><th>Customer</th><th>COD</th><th>Status</th></tr>
+      ${recent.map(o=>`<tr>
+        <td><span class="oid">${o.id}</span><div class="cell-sub">${dayName(o.date)} · ${o.courier}</div></td>
+        <td>${esc(o.customer.name)}<div class="cell-sub">${esc(o.customer.phone)}</div></td>
+        <td class="num"><b>${tk(codAmt(o))}</b></td><td>${chip(o)}</td></tr>`).join('')}
+      </table>
+      <div style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="setTab('orders')">Open all orders →</button></div>
+    </div>
+    <div class="card">
+      <h3>Best-selling products</h3>
+      ${best.map(([pid,q],i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EBF0EA;font-size:13px">
+        <span><b style="color:var(--muted);font-family:var(--mono)">${i+1}.</b> ${esc(P(+pid).name)}</span><b class="num">${q} sold</b></div>`).join('')}
+      <h3 style="margin-top:16px">Low stock warning</h3>
+      ${PRODUCTS.filter(p=>p.stock<=5).map(p=>`<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px">
+        <span>${esc(p.name)}</span><span class="low-badge">${p.stock} LEFT</span></div>`).join('')||'<p style="color:var(--muted);font-size:13px">All good ✓</p>'}
+    </div>
+  </div>`;
+}
+
+function rOrders(){
+  const F=['All','Pending','Packed','Shipped','Delivered','Returned'];
+  let list=[...ORDERS].sort((a,b)=>b.date-a.date);
+  if(state.filter!=='All') list=list.filter(o=>o.status===state.filter);
+  return `
+  <div class="page-head">
+    <div><h2>Orders</h2><p>One row per order — status, COD and actions never leave this screen</p></div>
+    <button class="btn btn-primary" onclick="openNewOrder()">＋ New Order</button>
+  </div>
+  <div class="filters">${F.map(f=>`<button class="${state.filter===f?'on':''}" onclick="setFilter('${f}')">${f}${f==='All'?` (${ORDERS.length})`:''}</button>`).join('')}</div>
+  <div class="card" style="padding:6px 10px">
+  <table>
+    <tr><th>Order</th><th>Customer</th><th>Items</th><th>COD</th><th>Status</th><th>COD paid?</th><th>Actions</th></tr>
+    ${list.map(o=>`<tr>
+      <td><span class="oid">${o.id}</span><div class="cell-sub">${dayName(o.date)}<br>${o.courier}</div></td>
+      <td><b>${esc(o.customer.name)}</b><div class="cell-sub">${esc(o.customer.phone)}<br>${esc(o.customer.addr)}</div></td>
+      <td style="font-size:12.5px">${o.items.map(i=>`${esc(P(i.pid).name)} ×${i.qty}`).join('<br>')}</td>
+      <td class="num"><b>${tk(codAmt(o))}</b></td>
+      <td>${chip(o)}${o.returnReason?`<div class="cell-sub" style="color:var(--red)">${o.returnReason}</div>`:''}</td>
+      <td>${o.status==='Delivered'?(o.codReceived?'<span class="cod-yes">✓ Received</span>':'<span class="cod-no">⏳ Pending</span>'):'<span style="color:#B4BFB6">—</span>'}</td>
+      <td>${actionBtns(o)}</td></tr>`).join('')}
+  </table></div>`;
+}
+
+function rCod(){
+  const pend=ORDERS.filter(o=>o.status==='Delivered'&&!o.codReceived);
+  const transit=ORDERS.filter(o=>o.status==='Shipped');
+  const byC={};
+  [...pend,...transit].forEach(o=>{(byC[o.courier]=byC[o.courier]||[]).push(o)});
+  return `
+  <div class="page-head"><div><h2>COD Settlement</h2><p>Match every taka the courier owes you — the #1 place sellers lose money</p></div></div>
+  ${Object.keys(byC).length?Object.entries(byC).map(([c,os])=>`
+    <div class="card">
+      <h3>${c} <span style="color:var(--amber);float:right" class="num">${tk(os.reduce((s,o)=>s+codAmt(o),0))} pending</span></h3>
+      <table><tr><th>Order</th><th>Customer</th><th>COD amount</th><th>Stage</th><th></th></tr>
+      ${os.map(o=>`<tr>
+        <td class="oid">${o.id}</td><td>${esc(o.customer.name)}</td>
+        <td class="num"><b>${tk(codAmt(o))}</b></td>
+        <td>${o.status==='Shipped'?'<span class="chip shipped">On the road</span>':'<span class="chip delivered">Delivered — awaiting payout</span>'}</td>
+        <td>${o.status==='Delivered'?`<button class="btn btn-sm btn-amber" onclick="markCod('${o.id}')">Mark settled ৳</button>`:''}</td></tr>`).join('')}
+      </table>
+    </div>`).join('')
+  :'<div class="card"><p style="color:var(--muted)">🎉 Nothing pending. Every courier has settled.</p></div>'}`;
+}
+
+function rProducts(){
+  const max=Math.max(...PRODUCTS.map(p=>p.stock),1);
+  return `
+  <div class="page-head"><div><h2>Products &amp; Stock</h2><p>Stock goes down automatically on every order, and comes back on returns</p></div>
+  <button class="btn btn-ghost" onclick="toast('Demo: product form would open here')">＋ Add product</button></div>
+  <div class="card" style="padding:6px 10px">
+  <table><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
+  ${PRODUCTS.map(p=>`<tr>
+    <td><b>${esc(p.name)}</b></td><td style="color:var(--muted)">${p.cat}</td>
+    <td class="num">${tk(p.price)}</td>
+    <td><div style="display:flex;align-items:center;gap:8px"><div class="stock-bar"><i style="width:${Math.min(100,p.stock/max*100)}%;background:${p.stock<=5?'var(--red)':'var(--green)'}"></i></div><b class="num">${p.stock}</b></div></td>
+    <td>${p.stock<=5?'<span class="low-badge">RESTOCK SOON</span>':''}</td></tr>`).join('')}
+  </table></div>`;
+}
+
+function rCustomers(){
+  const map={};
+  ORDERS.forEach(o=>{ (map[o.customer.phone]=map[o.customer.phone]||{c:o.customer,os:[]}).os.push(o); });
+  const rows=Object.values(map).sort((a,b)=>b.os.length-a.os.length);
+  return `
+  <div class="page-head"><div><h2>Customers</h2><p>Every buyer's full history builds itself — spot repeat customers and risky ones</p></div></div>
+  <div class="card" style="padding:6px 10px">
+  <table><tr><th>Customer</th><th>Orders</th><th>Lifetime COD</th><th>Returns</th><th></th></tr>
+  ${rows.map(r=>{
+    const rets=r.os.filter(o=>o.status==='Returned').length;
+    return `<tr><td><b>${esc(r.c.name)}</b><div class="cell-sub">${esc(r.c.phone)} · ${esc(r.c.addr)}</div></td>
+    <td class="num">${r.os.length}</td>
+    <td class="num"><b>${tk(r.os.reduce((s,o)=>s+codAmt(o),0))}</b></td>
+    <td>${rets?`<span style="color:var(--red);font-weight:700">${rets} ⚠</span>`:'<span style="color:var(--green)">0</span>'}</td>
+    <td><button class="btn btn-sm btn-ghost" onclick="showHistory('${esc(r.c.phone)}')">History</button></td></tr>`;}).join('')}
+  </table></div>`;
+}
+function showHistory(phone){
+  const os=ORDERS.filter(o=>o.customer.phone===phone).sort((a,b)=>b.date-a.date);
+  const c=os[0].customer;
+  document.getElementById('histBody').innerHTML=`
+    <h3>${esc(c.name)}</h3><div class="hint">${esc(c.phone)} · ${esc(c.addr)}</div>
+    <table><tr><th>Order</th><th>Date</th><th>COD</th><th>Status</th></tr>
+    ${os.map(o=>`<tr><td class="oid">${o.id}</td><td>${dayName(o.date)}</td><td class="num">${tk(codAmt(o))}</td><td>${chip(o)}</td></tr>`).join('')}
+    </table>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeOv('ovHistory')">Close</button></div>`;
+  openOv('ovHistory');
+}
+
+function rReports(){
+  // last 7 days revenue (delivered orders by order date)
+  const days=[...Array(7)].map((_,i)=>daysAgo(6-i));
+  const rev=days.map(d=>ORDERS.filter(o=>o.status==='Delivered'&&o.date.toDateString()===d.toDateString())
+    .reduce((s,o)=>s+codAmt(o),0));
+  const mx=Math.max(...rev,1);
+  const reasons={};
+  ORDERS.filter(o=>o.status==='Returned').forEach(o=>reasons[o.returnReason]=(reasons[o.returnReason]||0)+1);
+  const rmax=Math.max(...Object.values(reasons),1);
+  const del=ORDERS.filter(o=>o.status==='Delivered');
+  return `
+  <div class="page-head"><div><h2>Reports</h2><p>The daily numbers a seller checks before going to sleep</p></div>
+  <button class="btn btn-ghost" onclick="toast('Demo: report would download as PDF/Excel')">⬇ Export</button></div>
+  <div class="grid-2">
+    <div class="card"><h3>Daily sales — last 7 days (delivered value)</h3>
+      <div class="bars">${days.map((d,i)=>`<div class="bar-col">
+        <span class="v num">${rev[i]?tk(rev[i]):''}</span>
+        <div class="b" style="height:${Math.max(3,rev[i]/mx*100)}%"></div>
+        <span class="d">${dayName(d)}</span></div>`).join('')}</div>
+    </div>
+    <div class="card"><h3>Why orders came back</h3>
+      ${Object.keys(reasons).length?Object.entries(reasons).map(([r,n])=>`
+        <div class="reason-row"><span class="rl">${r}</span><span class="rb" style="width:${n/rmax*140}px"></span><b class="num">${n}</b></div>`).join('')
+      :'<p style="color:var(--muted)">No returns yet ✓</p>'}
+      <h3 style="margin-top:18px">This week</h3>
+      <div class="totals" style="margin:0">
+        <div class="row"><span>Orders taken</span><b class="num">${ORDERS.length}</b></div>
+        <div class="row"><span>Delivered</span><b class="num">${del.length}</b></div>
+        <div class="row"><span>Delivery success rate</span><b class="num">${Math.round(del.length/Math.max(1,del.length+ORDERS.filter(o=>o.status==='Returned').length)*100)}%</b></div>
+        <div class="row big"><span>Cash collected</span><span class="num">${tk(del.filter(o=>o.codReceived).reduce((s,o)=>s+codAmt(o),0))}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function rTeam(){
+  const roles=[
+    {r:"Owner", who:"Rupsha (you)", can:"Everything — reports, profit, COD settlement, team control", ic:"👑"},
+    {r:"Manager", who:"Shanto", can:"Create orders, update status, reply to customers. Cannot see profit.", ic:"🧑‍💼"},
+    {r:"Packer", who:"Liton", can:"Sees only today's Pending list. One button: Mark packed.", ic:"📦"},
+  ];
+  return `
+  <div class="page-head"><div><h2>Team Roles</h2><p>Grow beyond one person without giving away your profit numbers</p></div>
+  <button class="btn btn-ghost" onclick="toast('Demo: invite by phone number')">＋ Invite member</button></div>
+  ${roles.map(x=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start">
+    <div style="font-size:26px">${x.ic}</div>
+    <div><h3 style="margin-bottom:2px">${x.r} — ${x.who}</h3><p style="color:var(--muted);font-size:13px">${x.can}</p></div>
+  </div>`).join('')}`;
+}
+
+/* ================= MOBILE RENDER ================= */
+function renderMobile(){
+  document.querySelectorAll('#mNav [data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===state.mtab));
+  const el=document.getElementById('mBody');
+  const M={home:mHome, orders:mOrders, stock:mStock, cash:mCash};
+  el.innerHTML=M[state.mtab]();
+}
+function mCard(o, small){
+  return `<div class="m-card">
+    <div class="r1"><span class="nm">${esc(o.customer.name)}</span>${chip(o)}</div>
+    <div class="meta">${o.id} · ${o.courier} · ${dayName(o.date)}</div>
+    <div class="meta">${o.items.map(i=>`${esc(P(i.pid).name)} ×${i.qty}`).join(', ')}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <b class="num" style="font-size:15px;color:var(--green-deep)">${tk(codAmt(o))}</b>
+      ${actionBtns(o,true)}
+    </div></div>`;
+}
+function mHome(){
+  const today=ORDERS.filter(o=>isToday(o.date));
+  const codPend=ORDERS.filter(o=>(o.status==='Delivered'&&!o.codReceived)||o.status==='Shipped').reduce((s,o)=>s+codAmt(o),0);
+  const del=ORDERS.filter(o=>o.status==='Delivered');
+  const act=[...ORDERS].filter(o=>['Pending','Packed','Shipped'].includes(o.status)).sort((a,b)=>b.date-a.date);
+  return `
+  <div class="m-stat-grid">
+    <div class="m-stat"><div class="lbl">Today</div><div class="val num">${today.length} orders</div></div>
+    <div class="m-stat" style="background:var(--amber-soft);border-color:#EED9AE"><div class="lbl">COD pending</div><div class="val num" style="color:var(--amber)">${tk(codPend)}</div></div>
+    <div class="m-stat"><div class="lbl">Delivered</div><div class="val num" style="color:var(--green)">${del.length}</div></div>
+    <div class="m-stat"><div class="lbl">Success rate</div><div class="val num">${Math.round(del.length/Math.max(1,del.length+ORDERS.filter(o=>o.status==='Returned').length)*100)}%</div></div>
+  </div>
+  <div class="m-sec-title">Needs your action</div>
+  ${act.map(o=>mCard(o)).join('')||'<p style="color:var(--muted);font-size:13px;padding:6px">All caught up ✓</p>'}`;
+}
+function mOrders(){
+  const F=['All','Pending','Packed','Shipped','Delivered','Returned'];
+  let list=[...ORDERS].sort((a,b)=>b.date-a.date);
+  if(state.filter!=='All') list=list.filter(o=>o.status===state.filter);
+  return `<div class="filters" style="margin-bottom:10px">${F.map(f=>`<button class="${state.filter===f?'on':''}" onclick="setFilter('${f}')">${f}</button>`).join('')}</div>
+  ${list.map(o=>mCard(o)).join('')||'<p style="color:var(--muted);padding:8px">No orders in this filter.</p>'}`;
+}
+function mStock(){
+  return PRODUCTS.map(p=>`<div class="m-card">
+    <div class="r1"><span class="nm">${esc(p.name)}</span>${p.stock<=5?'<span class="low-badge">LOW</span>':''}</div>
+    <div class="meta">${p.cat} · ${tk(p.price)}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px"><div class="stock-bar" style="flex:1;width:auto"><i style="width:${Math.min(100,p.stock/40*100)}%;background:${p.stock<=5?'var(--red)':'var(--green)'}"></i></div><b class="num">${p.stock} pcs</b></div>
+  </div>`).join('');
+}
+function mCash(){
+  const pend=ORDERS.filter(o=>o.status==='Delivered'&&!o.codReceived);
+  const transit=ORDERS.filter(o=>o.status==='Shipped');
+  const tot=[...pend,...transit].reduce((s,o)=>s+codAmt(o),0);
+  return `
+  <div class="m-stat" style="background:var(--amber-soft);border-color:#EED9AE;margin-bottom:12px">
+    <div class="lbl">Total cash with couriers</div><div class="val num" style="color:var(--amber)">${tk(tot)}</div></div>
+  <div class="m-sec-title">Awaiting courier payout</div>
+  ${pend.map(o=>mCard(o)).join('')||'<p style="color:var(--muted);font-size:13px;padding:6px">Nothing to settle ✓</p>'}
+  <div class="m-sec-title">Still on the road</div>
+  ${transit.map(o=>mCard(o)).join('')||'<p style="color:var(--muted);font-size:13px;padding:6px">No parcels in transit.</p>'}`;
+}
+
+function renderAll(){ if(state.view==='web') renderWeb(); else renderMobile(); }
+
+/* ================= GUIDED TOUR ================= */
+let tourOn=false, tourStep=0;
+const TOUR=[
+ {t:"Welcome 👋", d:"This 3-minute walkthrough follows one real order — from a Facebook Messenger chat all the way to cash in the seller's hand. Everything you click is live demo data.", go:()=>{setView('web');setTab('dashboard');}},
+ {t:"The seller's morning view", d:"One glance shows today's orders, what's delivered, what came back — and the amber box every seller cares about most: how much cash is sitting with couriers. The gold bar below breaks that cash down courier by courier.", go:()=>{setView('web');setTab('dashboard');}},
+ {t:"Step 1 · Create the order", d:"A customer just messaged on Facebook. Press Next and we'll open the order form — then tap the blue “auto-fill from Messenger” bar to see how fast entry is. Choose a courier and hit Save order.", go:()=>{setView('web');setTab('dashboard');openNewOrder(true);}},
+ {t:"Confirmation goes out instantly", d:"The moment the order is saved: stock is deducted, the order enters the Pending queue, and this WhatsApp/SMS confirmation is ready — the customer knows the exact COD amount before the parcel ships. Close the message to continue.", go:()=>{}},
+ {t:"Step 2 · Pack it, ship it", d:"This is the Orders screen — the packer's world. Find the newest Pending order and click Mark packed, then Mark shipped. Notice the status chip walking through the pipeline.", go:()=>{closeOv('ovWa');setTab('orders');setFilter('All');}},
+ {t:"Step 3 · Delivered!", d:"When the courier confirms delivery, one click marks it Delivered. But the money isn't home yet — COD paid? still shows ⏳ Pending. That gap is where sellers lose money in notebooks.", go:()=>{setTab('orders');}},
+ {t:"Step 4 · Get your cash back", d:"This screen exists for one reason: couriers settle COD days later, in lump sums. Every taka they owe you is listed by courier. When the payout lands in bKash or bank, click Mark settled ৳.", go:()=>{setTab('cod');}},
+ {t:"When an order comes back", d:"Returns happen — the system makes them cheap. Marking an order Returned asks for a reason and puts the stock back automatically. The reasons feed a report so you can fix root causes (wrong addresses, unreachable phones).", go:()=>{setTab('orders');setFilter('Shipped');}},
+ {t:"Stock that manages itself", d:"Every saved order deducts stock; every return restores it. Low-stock items are flagged before you promise a customer something you don't have.", go:()=>{setFilter('All');setTab('products');}},
+ {t:"Numbers before bed 📈", d:"Daily sales, delivery success rate, cash collected, and why orders came back — the exact numbers a seller checks every night, computed automatically instead of in a notebook.", go:()=>{setTab('reports');}},
+ {t:"The same shop, in a pocket", d:"Switch complete — this is the mobile app, sharing the same live data. Tap through Home, Orders, Stock and Cash. Sellers run their whole day from here while chatting with customers.", go:()=>{setView('mobile');setMTab('home');}},
+ {t:"That's the full loop ✅", d:"Inbox → order → courier → cash → report. No lost orders, no COD confusion, no notebook. This is what your customers will pay monthly for. Restart the tour anytime, or keep exploring — everything is clickable.", go:()=>{}},
+];
+function startTour(){ tourOn=true; tourStep=0; document.getElementById('tourBox').classList.add('open'); applyTour(); }
+function endTour(){ tourOn=false; document.getElementById('tourBox').classList.remove('open'); }
+function tourMove(d){
+  tourStep=Math.min(TOUR.length-1,Math.max(0,tourStep+d));
+  applyTour();
+}
+function applyTour(){
+  const s=TOUR[tourStep];
+  document.getElementById('tourTitle').textContent=s.t;
+  document.getElementById('tourText').textContent=s.d;
+  document.getElementById('tourSteps').textContent=(tourStep+1)+" / "+TOUR.length;
+  document.getElementById('tourNext').textContent = tourStep===TOUR.length-1 ? "Finish ✓" : "Next →";
+  if(tourStep===TOUR.length-1) document.getElementById('tourNext').onclick=endTour;
+  else document.getElementById('tourNext').onclick=()=>tourMove(1);
+  s.go();
+  const nb=document.getElementById('newOrderBtn'); if(nb) nb.classList.toggle('pulse', tourStep===2);
+}
+
+/* ================= FEATURE GUIDE (marketing explainer tabs) ================= */
+function exHero(ic,t,s){return `<div class="ex-hero"><div class="ic">${ic}</div><div><h3>${t}</h3><p>${s}</p></div></div>`;}
+function whyRow(items){return `<div class="card" style="margin-top:14px;background:#F7FBF8"><h3>Why it matters</h3><div class="benefit-row">${items.map(i=>`<span class="benefit">${i}</span>`).join('')}</div></div>`;}
+
+function rF1(){return exHero('🚚','Courier Selection','Manage several courier companies from one dashboard — assign at order creation, visible through the whole lifecycle.')+`
+<div class="courier-row">
+${[['S','Steadfast','#2A5FA8'],['P','Pathao Courier','#CE3B34'],['R','RedX','#B3261E'],['F','Paperfly','#6B4FA8'],['SB','Sundarban','#1B7A3D']].map(c=>`
+<div class="courier-card"><div class="lg" style="background:${c[2]}">${c[0]}</div><b>${c[1]}</b><div class="cell-sub">COD supported</div></div>`).join('')}
+</div>
+<div class="flow">
+ <div class="flow-step"><div class="step-n">1</div><b>Create order</b><p class="cell-sub">Add customer, product and delivery details.</p></div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-step"><div class="step-n">2</div><b>Assign courier</b><p class="cell-sub">Pick the best courier based on district, charge and speed.</p></div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-step"><div class="step-n">3</div><b>Track in central list</b><p class="cell-sub">The assigned courier stays visible through the whole order lifecycle.</p></div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Choose couriers by what actually matters</h3>
+<div class="benefit-row"><span class="benefit">📍 District coverage</span><span class="benefit">⚡ Delivery speed</span><span class="benefit">৳ Delivery charge</span><span class="benefit">↩ Return performance</span><span class="benefit">⭐ Service quality</span></div>
+<p style="color:var(--muted);font-size:13px;margin-top:10px">Instead of checking five different courier dashboards to find where parcels were sent, the seller reviews courier information inside one central order list.</p></div>`;}
+
+function rF2(){return exHero('🧮','Automatic COD Calculation','BD Seller OS calculates the exact Cash-on-Delivery amount for every order — no wrong collections at the door.')+`
+<div class="card"><h3>How COD is calculated</h3>
+<div class="calc">
+ <div class="cbox"><div class="cell-sub">PRODUCT VALUE</div><div class="val num" style="font-size:22px;font-weight:800">৳1,250</div><div class="cell-sub">TWS Earbuds × 2 @ ৳625</div></div>
+ <div class="op">＋</div>
+ <div class="cbox"><div class="cell-sub">DELIVERY CHARGE</div><div class="val num" style="font-size:22px;font-weight:800">৳80</div><div class="cell-sub">Inside Dhaka zone</div></div>
+ <div class="op">＝</div>
+ <div class="cbox total"><div class="cell-sub" style="color:var(--amber)">TOTAL COD AMOUNT</div><div class="val num" style="font-size:24px;font-weight:800;color:var(--amber)">৳1,330</div><div class="cell-sub">collected from customer</div></div>
+</div></div>
+<div class="ex-grid c3">
+ <div class="card" style="margin:0"><h3>📋 On the order</h3>
+   <div class="kv"><span>Order ID</span><b class="num">BD-00012345</b></div>
+   <div class="kv"><span>Customer</span><b>Rafiq Ahmed</b></div>
+   <div class="kv"><span>Courier</span><b>Pathao Courier</b></div>
+   <div class="kv"><span>Payment</span><b>Cash on Delivery</b></div>
+   <div class="kv" style="border:0"><span>Total COD</span><b class="num" style="color:var(--amber)">৳1,330</b></div></div>
+ <div class="card" style="margin:0"><h3>💬 In the message</h3>
+   <div class="wa-mini">Hi Rafiq Ahmed,
+Your order #BD-00012345 is confirmed.
+Pay <b>৳1,330</b> to the courier when you receive your order.
+Thanks for shopping with us!</div></div>
+ <div class="card" style="margin:0"><h3>🧾 On the invoice</h3>
+   <div class="kv"><span>Subtotal</span><b class="num">৳1,250</b></div>
+   <div class="kv"><span>Delivery charge</span><b class="num">৳80</b></div>
+   <div class="cod-box" style="margin-top:10px"><b>CASH TO COLLECT</b><span class="amt num" style="font-size:18px">৳1,330</span></div></div>
+</div>
+<p style="color:var(--muted);font-size:13px;margin-top:12px">The same amount is shown on the order, the confirmation message and the invoice — so the courier is never instructed to collect the wrong amount.</p>
+`+whyRow(['✓ Accurate amount every time','🛡 Avoids collection errors','⏱ Saves time for you & couriers','😊 Better customer experience']);}
+
+function rF3(){return exHero('📦','Stock Checking Before Saving an Order','The system verifies available stock before an order can be saved — overselling becomes impossible.')+`
+<div class="ex-grid c2">
+ <div class="card" style="margin:0;border-top:4px solid var(--red)"><h3>Create new order <span class="chip returned" style="float:right">Not enough stock</span></h3>
+  <table><tr><th>Product</th><th>Available</th><th>Quantity</th><th>Total</th></tr>
+  <tr><td><b>Premium Cotton T-Shirt</b><div class="cell-sub">Black / Large</div></td><td><b class="num" style="color:var(--red)">8 units</b></td><td><b class="num" style="border:1.5px solid var(--red);border-radius:6px;padding:3px 10px">12</b></td><td class="num">৳6,600</td></tr></table>
+  <div class="mini-alert bad">⚠ Not enough stock! Only 8 unit(s) available, you entered 12. Reduce the quantity to 8 or less to save this order.</div>
+  <div class="modal-foot"><button class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-sm" style="background:#C9D2CB;color:#7d8a80;cursor:not-allowed">🔒 Save order</button></div></div>
+ <div class="card" style="margin:0;border-top:4px solid var(--green)"><h3>Create new order <span class="chip delivered" style="float:right">Stock available</span></h3>
+  <table><tr><th>Product</th><th>Available</th><th>Quantity</th><th>Total</th></tr>
+  <tr><td><b>Premium Cotton T-Shirt</b><div class="cell-sub">Black / Large</div></td><td><b class="num" style="color:var(--green)">8 units</b></td><td><b class="num" style="border:1.5px solid var(--green);border-radius:6px;padding:3px 10px">8</b></td><td class="num">৳4,400</td></tr></table>
+  <div class="mini-alert good">✓ Stock is available. You can save this order.</div>
+  <div class="modal-foot"><button class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-primary btn-sm">🔓 Save order</button></div></div>
+</div>
+<div class="ex-grid c2" style="margin-top:12px">
+ <div class="card" style="margin:0"><h3>What happens behind the scenes</h3>
+  <div class="kv"><span>🔍 Real-time stock check</span><span class="cell-sub">verified before saving</span></div>
+  <div class="kv"><span>⚠ Instant warning</span><span class="cell-sub">if quantity exceeds stock</span></div>
+  <div class="kv"><span>🔒 Save button restricted</span><span class="cell-sub">until quantity is corrected</span></div>
+  <div class="kv" style="border:0"><span>🛡 Prevent overselling</span><span class="cell-sub">across Facebook, WhatsApp, Instagram</span></div></div>
+ <div class="card" style="margin:0"><h3>Why sellers oversell today</h3>
+  <p style="font-size:13px;color:var(--muted);line-height:1.7">The same product is advertised across Facebook, WhatsApp and Instagram while stock is maintained manually in notebooks or spreadsheets. With BD Seller OS, the current quantity is visible during order entry — never sell more than you have.</p></div>
+</div>`+whyRow(['🛒 Avoid lost sales','📦 Accurate inventory','📊 Better business control','😊 Happy customers','📈 Grow with confidence']);}
+
+function rF4(){return exHero('⚙️','Key Features — AI-Enabled Platform','Automatic stock deduction and instant order confirmation: smart automation, real-time accuracy, better customer experience.')+`
+<div class="card"><h3>1 · Automatic Stock Deduction</h3>
+<div class="flow">
+ <div class="flow-step"><div class="cell-sub">PRODUCT</div><b>TWS Earbuds</b><p class="cell-sub">SKU: EB-TWS-001</p><div class="val num" style="font-size:20px;font-weight:800;margin-top:4px">24 units</div><div class="cell-sub">initial stock</div></div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-step" style="border-color:var(--green)"><div class="chip delivered" style="margin-bottom:6px">New order created</div><b class="num">Order BD-1001</b><p class="cell-sub">TWS Earbuds</p><div class="val num" style="font-size:20px;font-weight:800;margin-top:4px">× 2</div><div class="cell-sub">quantity ordered</div></div>
+ <div class="flow-arrow">→</div>
+ <div class="flow-step" style="background:var(--green-soft);border-color:#BFDCCB"><div class="cell-sub" style="color:var(--green)">STOCK AUTO-UPDATED ✓</div><div class="val num" style="font-size:24px;font-weight:800;color:var(--green-deep);margin-top:6px">22 units</div><div class="cell-sub num">(24 − 2 = 22)</div></div>
+</div>
+<div class="benefit-row"><span class="benefit">Real-time accuracy across all channels</span><span class="benefit">No separate spreadsheets</span><span class="benefit">Prevents overselling</span><span class="benefit">Same data on web & mobile app</span></div></div>
+<div class="ex-grid c2">
+ <div class="card" style="margin:0"><h3>2 · Order Confirmation by WhatsApp or SMS</h3>
+  <div class="kv"><span>👤 Customer name</span><b>Rafiq Ahmed</b></div>
+  <div class="kv"><span>🧾 Order number</span><b class="num">BD-1001</b></div>
+  <div class="kv"><span>📦 Products & quantity</span><b>TWS Earbuds × 2</b></div>
+  <div class="kv"><span>🚚 Delivery charge / courier</span><b class="num">৳80 · Pathao</b></div>
+  <div class="kv"><span>💵 Total COD amount</span><b class="num" style="color:var(--amber)">৳1,330</b></div>
+  <div class="kv" style="border:0"><span>⏱ Estimated delivery</span><b>1–3 days</b></div></div>
+ <div class="card" style="margin:0"><h3>WhatsApp preview</h3>
+  <div class="wa-shell" style="padding:12px"><div class="wa-bubble">Hi Rafiq Ahmed,
+Your order is confirmed ✅ Please keep the cash ready. Delivery will take 1 to 3 days.
+
+🧾 Order No: BD-1001
+📦 TWS Earbuds × 2
+🚚 Delivery: ৳80 (Pathao Courier)
+💵 Total COD: ৳1,330
+
+Thank you for shopping with us!</div><div class="wa-time">✓✓ 11:30 AM</div></div>
+  <div class="modal-foot" style="justify-content:flex-start"><button class="btn btn-sm" style="background:#25D366;color:#fff">Send via WhatsApp</button><button class="btn btn-sm" style="background:var(--blue);color:#fff">Send via SMS</button></div>
+  <p class="cell-sub" style="margin-top:8px">Automatic delivery requires the relevant messaging provider / API integration.</p></div>
+</div>`;}
+
+function rF5(){return exHero('🔄','Order Status Management & Orders Dashboard','Every order moves through a clear pipeline — updated with one click, tracked from one active working dashboard.')+`
+<div class="card"><h3>The status pipeline</h3>
+<div class="stage-row">
+ <div class="stage" style="border-top:4px solid var(--amber-bright)"><span class="chip pending">Pending</span><p class="cell-sub" style="margin-top:8px">Order created, not yet packed</p><button class="btn btn-ghost btn-sm" style="margin-top:8px">Mark packed</button></div>
+ <div class="flow-arrow">→</div>
+ <div class="stage" style="border-top:4px solid var(--blue)"><span class="chip packed">Packed</span><p class="cell-sub" style="margin-top:8px">Prepared, ready for courier pickup</p><button class="btn btn-ghost btn-sm" style="margin-top:8px">Mark shipped</button></div>
+ <div class="flow-arrow">→</div>
+ <div class="stage" style="border-top:4px solid var(--violet)"><span class="chip shipped">Shipped</span><p class="cell-sub" style="margin-top:8px">Handed to courier, on the way</p><button class="btn btn-ghost btn-sm" style="margin-top:8px">Mark delivered</button></div>
+ <div class="flow-arrow">→</div>
+ <div class="stage" style="border-top:4px solid var(--green)"><span class="chip delivered">Delivered</span><p class="cell-sub" style="margin-top:8px">Successfully delivered to customer</p><button class="btn btn-ghost btn-sm" style="margin-top:8px">COD received ৳</button></div>
+ <div class="flow-arrow">↩</div>
+ <div class="stage" style="border-top:4px solid var(--red)"><span class="chip returned">Returned</span><p class="cell-sub" style="margin-top:8px">Came back without completed delivery</p><button class="btn btn-ghost btn-sm" style="margin-top:8px">Pick reason</button></div>
+</div></div>
+<div class="card"><h3>Orders dashboard — filter by status</h3>
+<div class="filters"><button class="on">All orders</button><button>Pending</button><button>Packed</button><button>Shipped</button><button>Delivered</button><button>Returned</button></div>
+<table><tr><th>Order</th><th>Customer</th><th>Product</th><th>Courier</th><th>COD</th><th>Status</th><th>Settlement</th></tr>
+<tr><td class="oid">BDOS-1001</td><td>Rafiq Hasan<div class="cell-sub">Dhanmondi, Dhaka</div></td><td>Wireless Earbuds ×1</td><td>Steadfast</td><td class="num"><b>৳1,490</b></td><td><span class="chip pending">Pending</span></td><td class="cod-no">⏳ Pending</td></tr>
+<tr><td class="oid">BDOS-1002</td><td>Sumaiya Akter<div class="cell-sub">Uttara, Dhaka</div></td><td>Men's T-Shirt ×2</td><td>Pathao Courier</td><td class="num"><b>৳890</b></td><td><span class="chip packed">Packed</span></td><td class="cod-no">⏳ Pending</td></tr>
+<tr><td class="oid">BDOS-1003</td><td>Mahmudul Islam<div class="cell-sub">Chattogram</div></td><td>Bluetooth Speaker ×1</td><td>RedX</td><td class="num"><b>৳2,150</b></td><td><span class="chip shipped">Shipped</span></td><td class="cod-no">⏳ Pending</td></tr>
+<tr><td class="oid">BDOS-1004</td><td>Nusrat Jahan<div class="cell-sub">Sylhet</div></td><td>Skin Care Set ×1</td><td>Steadfast</td><td class="num"><b>৳1,250</b></td><td><span class="chip delivered">Delivered</span></td><td class="cod-yes">✓ Settled</td></tr></table>
+<p class="cell-sub" style="margin-top:10px">Packers can view only pending orders, while owners review delivered orders still waiting for courier payment.</p></div>
+`+whyRow(['📋 Active working order list','⚡ One-click status updates','🧑‍🤝‍🧑 Clear team workflow','🚚 Better courier & COD tracking']);}
+
+function rF6(){return exHero('💵','COD Settlement & Courier-Wise Cash Tracking','Delivered does not always mean paid — parcel status and payment status are tracked separately, courier by courier.')+`
+<div class="ex-grid c2">
+ <div class="card" style="margin:0"><h3>1 · COD Settlement Tracking</h3>
+ <table><tr><th>Order</th><th>Customer</th><th>Parcel status</th><th>Payment status</th><th>COD</th></tr>
+ <tr><td class="oid">ORD-1001</td><td>Rafiq Ahmed</td><td><span class="chip shipped">Shipped</span></td><td class="cod-no">COD pending</td><td class="num">৳1,330</td></tr>
+ <tr><td class="oid">ORD-1002</td><td>Sadia Islam</td><td><span class="chip delivered">Delivered</span></td><td class="cod-no">COD pending</td><td class="num">৳2,450</td></tr>
+ <tr><td class="oid">ORD-1003</td><td>Jahid Hasan</td><td><span class="chip delivered">Delivered</span></td><td class="cod-yes">✓ COD received</td><td class="num">৳1,680</td></tr>
+ <tr><td class="oid">ORD-1004</td><td>Farhana Akter</td><td><span class="chip returned">Returned</span></td><td style="color:#B4BFB6">N/A</td><td class="num">৳980</td></tr></table>
+ <p class="cell-sub" style="margin-top:10px">An order can be Delivered while its COD payment remains pending. Without this distinction, a seller may assume delivered sales are already available cash.</p></div>
+ <div class="card" style="margin:0"><h3>2 · Courier-Wise Cash Tracking</h3>
+ <div class="stat hot" style="margin-bottom:12px"><div class="lbl">Total pending COD amount</div><div class="val num">৳2,87,450</div><div class="sub">across 5 couriers</div></div>
+ <div class="kv"><span><b>Steadfast</b> <span class="cell-sub">28 pending orders</span></span><b class="num">৳78,250</b></div>
+ <div class="kv"><span><b>Pathao Courier</b> <span class="cell-sub">35 pending orders</span></span><b class="num">৳96,800</b></div>
+ <div class="kv"><span><b>RedX</b> <span class="cell-sub">18 pending orders</span></span><b class="num">৳45,600</b></div>
+ <div class="kv"><span><b>Paperfly</b> <span class="cell-sub">15 pending orders</span></span><b class="num">৳38,900</b></div>
+ <div class="kv" style="border:0"><span><b>Sundarban Courier</b> <span class="cell-sub">12 pending orders</span></span><b class="num">৳27,900</b></div>
+ <div class="lane" style="margin-top:10px"><div style="background:#E8A13D;flex:78250">৳78k</div><div style="background:#F0BC6E;flex:96800">৳97k</div><div style="background:#D98F2B;flex:45600">৳46k</div><div style="background:#F5D7A6;flex:38900">৳39k</div><div style="background:#C77E1C;flex:27900">৳28k</div></div>
+ <p class="cell-sub" style="margin-top:10px">Compare courier statements, identify delayed settlements and follow up — without checking each delivered parcel manually.</p></div>
+</div>`+whyRow(['👁 Always know which payments are pending','🔍 Easy reconciliation','⏰ Identify delayed settlements','💰 Improve cash flow']);}
+
+function rF7(){return exHero('👤','Customer Database, Order History & Invoice Generation','Every order builds the customer database automatically — review history, spot risky buyers, print professional invoices.')+`
+<div class="ex-grid c2">
+ <div class="card" style="margin:0"><h3>1 · Customer database</h3>
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px"><div style="width:46px;height:46px;border-radius:99px;background:var(--green-soft);display:grid;place-items:center;font-size:22px">👤</div>
+  <div><b style="font-size:15px">Imran Hossain</b><div class="cell-sub">01712-345678 · House-12, Road-3, Dhanmondi, Dhaka</div><span class="chip delivered" style="margin-top:4px">Active customer</span></div></div>
+  <div class="kv"><span>Total orders</span><b class="num">12</b></div>
+  <div class="kv"><span>Lifetime COD value</span><b class="num">৳48,750</b></div>
+  <div class="kv" style="border:0"><span>Returns</span><b class="num">1</b></div></div>
+ <div class="card" style="margin:0"><h3>2 · Customer order history</h3>
+  <table><tr><th>Order</th><th>Date</th><th>COD</th><th>Status</th><th>Return</th></tr>
+  <tr><td class="oid">BDOS-1245</td><td>16 May</td><td class="num">৳4,950</td><td><span class="chip delivered">Delivered</span></td><td>No return</td></tr>
+  <tr><td class="oid">BDOS-1118</td><td>30 Apr</td><td class="num">৳3,450</td><td><span class="chip delivered">Delivered</span></td><td>No return</td></tr>
+  <tr><td class="oid">BDOS-0987</td><td>12 Apr</td><td class="num">৳5,250</td><td><span class="chip returned">Returned</span></td><td style="color:var(--red)">Returned</td></tr>
+  <tr><td class="oid">BDOS-0845</td><td>28 Mar</td><td class="num">৳2,850</td><td><span class="chip delivered">Delivered</span></td><td>No return</td></tr></table>
+  <p class="cell-sub" style="margin-top:8px">Review previous orders before approving new high-value COD orders.</p></div>
+</div>
+<div class="ex-grid c2" style="margin-top:12px">
+ <div class="card risk-good" style="margin:0"><h3>✓ Reliable customer <span class="chip delivered" style="float:right">Risk: Low</span></h3>
+  <p style="font-size:13px;line-height:1.9;color:var(--muted)">✓ Several successful deliveries<br>✓ Low return count (0–1)<br>✓ Consistent address & good payment behaviour<br>✓ Active repeat orders → <b style="color:var(--green-deep)">approve with confidence</b></p></div>
+ <div class="card risk-warn" style="margin:0"><h3>⚠ Needs verification <span class="chip pending" style="float:right">Risk: Moderate–High</span></h3>
+  <p style="font-size:13px;line-height:1.9;color:var(--muted)">⚠ Repeated returns or cancellation history<br>⚠ Address confirmation needed<br>⚠ Phone verification required<br>⚠ Consider advance / full advance payment</p></div>
+</div>
+<div class="card" style="margin-top:12px"><h3>3 · Invoice generation</h3>
+ <div class="ex-grid c2">
+  <div><div class="kv"><span>Premium Cotton T-Shirt × 1</span><b class="num">৳650</b></div>
+  <div class="kv"><span>Men's Denim Jeans × 1</span><b class="num">৳1,250</b></div>
+  <div class="kv"><span>Leather Belt × 1</span><b class="num">৳450</b></div>
+  <div class="kv" style="border:0"><span>Delivery charge</span><b class="num">৳80</b></div></div>
+  <div><div class="cod-box" style="margin:0"><b>FINAL COD AMOUNT</b><span class="amt num">৳2,430</span></div>
+  <p class="cell-sub" style="margin-top:10px">Print the invoice and include it inside the parcel — clean invoices build customer trust.</p></div>
+ </div></div>`;}
+
+function rF8(){return exHero('📈','Sales Reports, Success Rate, Returns & Best Sellers','Reports turn daily data into clear insight — track performance, find problems early, make better decisions.')+`
+<div class="ex-grid c2">
+ <div class="card" style="margin:0"><h3>1 · Sales report — delivered sales (৳) over 7 days</h3>
+  <div class="bars">${[[18450,'18 May'],[22300,'19 May'],[35600,'20 May'],[28750,'21 May'],[24100,'22 May'],[33800,'23 May'],[24650,'24 May']].map(d=>`
+   <div class="bar-col"><span class="v num">৳${(d[0]/1000).toFixed(1)}k</span><div class="b" style="height:${d[0]/35600*100}%"></div><span class="d">${d[1]}</span></div>`).join('')}</div>
+  <div class="benefit-row" style="margin-top:14px"><span class="benefit">342 total orders ↗15.6%</span><span class="benefit">286 delivered ↗18.4%</span><span class="benefit">৳1,87,650 collected ↗22.7%</span></div>
+  <p class="cell-sub" style="margin-top:10px">💡 20 &amp; 23 May were your strongest days — plan promotions for the weak ones.</p></div>
+ <div class="card" style="margin:0"><h3>2 · Delivery success rate</h3>
+  <div class="donut"><div class="in"><div><b class="num" style="font-size:22px">91.67%</b><div class="cell-sub">success rate</div></div></div></div>
+  <div class="kv"><span>Delivered orders</span><b class="num" style="color:var(--green)">286</b></div>
+  <div class="kv"><span>Returned orders</span><b class="num" style="color:var(--red)">26</b></div>
+  <div class="kv" style="border:0"><span>Total shipped</span><b class="num">312</b></div>
+  <p class="cell-sub" style="margin-top:6px">Delivered ÷ (Delivered + Returned) × 100. If it drops, check phone verification, address quality and courier performance.</p></div>
+</div>
+<div class="ex-grid c2" style="margin-top:12px">
+ <div class="card" style="margin:0"><h3>3 · Return analysis <span class="chip returned" style="float:right">8.33% return rate</span></h3>
+  ${[['Customer refused at the door',8,'30%'],['Phone unreachable',6,'23%'],['Wrong / incomplete address',5,'20%'],['Damaged parcel',4,'15%'],['Late delivery',3,'12%']].map(r=>`
+  <div class="reason-row"><span class="rl">${r[0]}</span><span class="rb" style="width:${r[1]*17}px"></span><b class="num">${r[1]} · ${r[2]}</b></div>`).join('')}
+  <div class="mini-alert bad" style="margin-top:12px">Loss due to returns this period: <b class="num">৳18,720</b> · Potential revenue lost: <b class="num">৳73,650</b></div></div>
+ <div class="card" style="margin:0"><h3>4 · Best-selling products (by delivered qty)</h3>
+  <table><tr><th>#</th><th>Product</th><th style="text-align:right">Delivered qty</th></tr>
+  ${[['Smart Watch X1',256],['TWS Earbuds',198],['Vitamin C Serum',142],['Wireless Speaker',118],['Hoodie Premium',95]].map((p,i)=>`
+  <tr><td class="num">${i+1}</td><td><b>${p[0]}</b></td><td class="num" style="text-align:right"><b>${p[1]}</b></td></tr>`).join('')}</table>
+  <p class="cell-sub" style="margin-top:8px">Plan restocking, allocate ad budget to winners, create bundles and negotiate better with suppliers.</p></div>
+</div>`+whyRow(['📊 Track performance','🔎 Find problems early','🧭 Make better decisions','💰 Increase profits']);}
+
+const EXLIST=[
+ {nav:"Courier Selection", title:"Courier Selection", render:rF1},
+ {nav:"COD Calculation", title:"Automatic COD Calculation", render:rF2},
+ {nav:"Stock Checking", title:"Stock Checking Before Saving an Order", render:rF3},
+ {nav:"Key Features", title:"Key Features — AI Platform & Order Confirmation", render:rF4},
+ {nav:"Status & Dashboard", title:"Order Status Management & Orders Dashboard", render:rF5},
+ {nav:"Settlement & Cash", title:"COD Settlement & Courier-Wise Cash Tracking", render:rF6},
+ {nav:"Customers & Invoice", title:"Customer Database, Order History & Invoice Generation", render:rF7},
+ {nav:"Reports & Analysis", title:"Sales Reports, Success Rate, Returns & Best Sellers", render:rF8},
+];
+function exPage(i){
+  const e=EXLIST[i];
+  return `<div class="page-head"><div><h2>${e.title}</h2><p>Feature guide · exactly as presented on your website, live inside the product</p></div>
+  <button class="btn btn-primary" onclick="openNewOrder()">＋ New Order</button></div>`+e.render();
+}
+
+/* ================= INIT ================= */
+setView('web');
+</script>
+</body>
+</html>

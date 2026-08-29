@@ -251,13 +251,13 @@ section{padding:100px 0}
   padding:36px;
 }
 .product-copy{text-align:left}
-.product-copy .tag{
+.product-copy .tag,.product-card .tag{
   display:inline-flex;align-items:center;gap:8px;
   background:rgba(216,254,145,.08);border:1px solid rgba(216,254,145,.3);
   color:var(--lime);border-radius:999px;padding:6px 12px;
   font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:16px;
 }
-.product-copy .tag i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(216,254,145,.2)}
+.product-copy .tag i,.product-card .tag i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(216,254,145,.2)}
 .product-copy h3{
   font-family:var(--disp);font-weight:400;
   font-size:clamp(30px,3.4vw,40px);
@@ -269,6 +269,24 @@ section{padding:100px 0}
   font-size:12px;font-weight:600;color:rgba(255,255,255,.7);
   border:1px solid var(--line);border-radius:999px;padding:6px 12px;
 }
+
+/* ----- simple product cards (more products) ----- */
+.product-grid{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-top:20px;
+}
+.product-card{
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:16px;padding:26px 22px;
+  transition:border-color .25s;
+}
+.product-card:hover{border-color:rgba(216,254,145,.3)}
+.product-card h3{font-family:var(--disp);font-weight:400;font-size:24px;letter-spacing:-.01em;margin-bottom:10px}
+.product-card p{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.product-card .product-meta{margin-bottom:20px}
+.product-card .card-links{display:flex;flex-wrap:wrap;gap:10px}
+.product-card .btn{padding:9px 16px;font-size:13px}
 
 .preview-link{display:block;border-radius:16px;transition:transform .35s cubic-bezier(.16,1,.3,1)}
 .preview-link:hover{transform:translateY(-6px)}
@@ -378,6 +396,7 @@ footer{
 .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .foot .brand{color:#fff}
 .foot a:hover{color:var(--lime)}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted)}
 
 /* ----- mobile ----- */
 @media (max-width:900px){
@@ -396,7 +415,7 @@ footer{
   .menu-btn{display:flex}
   .about-grid,.product-feature{grid-template-columns:1fr;gap:28px}
   .product-feature{padding:22px}
-  .cap-list,.process-list,.who-grid{grid-template-columns:1fr}
+  .cap-list,.process-list,.who-grid,.product-grid{grid-template-columns:1fr}
   .preview-ui{grid-template-columns:1fr}
   .pv-side{display:none}
   .sec-head,.about-grid,.product-copy{text-align:left}
@@ -569,6 +588,53 @@ footer{
         </div>
       </a>
     </div>
+
+    <div class="product-grid">
+      <article class="product-card">
+        <div class="tag"><i></i> DEMO</div>
+        <h3>BD Seller OS</h3>
+        <p>Facebook &amp; WhatsApp order + COD manager for Bangladeshi sellers — orders, courier selection, and settlement in one dashboard.</p>
+        <div class="product-meta">
+          <span>Orders</span>
+          <span>COD settlement</span>
+          <span>Web + mobile</span>
+        </div>
+        <div class="card-links">
+          <a class="btn btn-primary" href="/bd-seller-os/">Open demo →</a>
+          <a class="btn btn-ghost" href="/bd-seller-os/pricing.html">Pricing</a>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="tag"><i></i> DEMO</div>
+        <h3>StudyCRM BD</h3>
+        <p>CRM built for education consultancies — lead pipeline, student documents, payments, and follow-ups in one place.</p>
+        <div class="product-meta">
+          <span>Lead pipeline</span>
+          <span>Documents</span>
+          <span>Payments</span>
+        </div>
+        <div class="card-links">
+          <a class="btn btn-primary" href="/study-crm/">Open demo →</a>
+          <a class="btn btn-ghost" href="/study-crm/pricing.html">Pricing</a>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="tag"><i></i> DEMO</div>
+        <h3>SupportBondhu AI</h3>
+        <p>AI support agent for local businesses — answers pricing, delivery, and order questions on WhatsApp and Messenger, day or night.</p>
+        <div class="product-meta">
+          <span>AI chat</span>
+          <span>WhatsApp</span>
+          <span>After-hours</span>
+        </div>
+        <div class="card-links">
+          <a class="btn btn-primary" href="/support-bondhu-ai/">Open demo →</a>
+          <a class="btn btn-ghost" href="/support-bondhu-ai/pricing.html">Pricing</a>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -638,7 +704,12 @@ footer{
       gothon.io
     </a>
     <div>© 2026 gothon.io. Software for founders who ship.</div>
-    <a href="/pharma-desk/">PharmaDesk BD</a>
+    <div class="foot-links">
+      <a href="/pharma-desk/">PharmaDesk BD</a>
+      <a href="/bd-seller-os/">BD Seller OS</a>
+      <a href="/study-crm/">StudyCRM BD</a>
+      <a href="/support-bondhu-ai/">SupportBondhu AI</a>
+    </div>
   </div>
 </footer>
 
